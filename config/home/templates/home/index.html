@@ -1,0 +1,353 @@
+{% extends 'base_template.html' %}
+
+{% block title %}
+Ace the Entrance
+{% endblock %}
+
+{% block navbar %}
+    <span class="nav-btn" id="nav-btn">
+      <i class="fas fa-bars"></i>
+    </span>
+    <a href="#" class="login-btn-top">
+      <i class="fas fa-user"></i> Sign In
+    </a>
+    <nav class="navbar" id="navbar">
+      <div class="navbar-header">
+        <span class="nav-close" id="nav-close">
+          <i class="fas fa-times"></i>
+        </span>
+      </div>
+      <ul class="nav-items">
+        <li><a href="index.html" class="nav-link">home</a></li>
+        <li><a href="#about" class="nav-link">updates</a></li>
+        <li><a href="#services" class="nav-link">Discussion</a></li>
+        <li><a href="#skills" class="nav-link">daily questions</a></li>
+        <li><a href="#products" class="nav-link">SXC Model Set</a></li>
+        <li><a href="#contact" class="nav-link">contact</a></li>
+      </ul>
+
+        <div class="nav-auth-container">
+          <a href="#" class="btn nav-auth-btn login-btn">login</a>
+          <a href="#" class="btn nav-auth-btn signup-btn">sign up</a>
+        </div>
+    </nav>
+{% endblock %}
+
+<!-- header -->
+{% block header %}
+    <header class="header">
+      <div class="banner">
+        <h2>Entrance Mastery Starts Here</h2>
+        <h1>Ace The <br/> Entrance </h1>
+        <a href="#skills" class="btn banner-btn">Explore Daily Questions</a>
+      </div>
+    </header>
+{% endblock %}
+<!-- end of header -->
+
+<!-- content divider -->
+<div class="content-divider"></div>
+<!-- end of content divider -->
+
+<!-- Features section -->
+{% block feature %}
+<section class="skills clearfix" id="skills">
+      <!-- single skill -->
+      <article class="skill">
+        <span class="skill-icon">
+          <i class="fas fa-graduation-cap"></i>
+        </span>
+        <h4 class="skill-title">By St. Xavier's Alumni</h4>
+        <p class="skill-text">Created by successful graduates who've cracked these exact entrances—real insights from those who made it.</p>
+      </article>
+      <!-- end of single skill -->
+      <!-- single skill -->
+      <article class="skill">
+        <span class="skill-icon">
+          <i class="fas fa-bullseye"></i>
+        </span>
+        <h4 class="skill-title">Targeted Prep</h4>
+        <p class="skill-text">Specially designed for St. Xavier’s, KMC, SOS, Budhanilkantha & other top +2 colleges—focus on what actually appears.</p>
+      </article>
+      <!-- end of single skill -->
+      <!-- single skill -->
+      <article class="skill">
+        <span class="skill-icon">
+          <i class="fas fa-book-open"></i>
+        </span>
+        <h4 class="skill-title">2500+ MCQs</h4>
+        <p class="skill-text">Massive practice bank with past questions, model sets & high-yield problems to build speed and accuracy.</p>
+      </article>
+      <!-- end of single skill -->
+      <!-- single skill -->
+      <article class="skill">
+        <span class="skill-icon">
+          <i class="fas fa-lightbulb"></i>
+        </span>
+        <h4 class="skill-title">Proven Tricks</h4>
+        <p class="skill-text">Step-by-step solutions, quick shortcuts & concept refreshers—your tested formula to ace the exam.</p>
+      </article>
+      <!-- end of single skill -->
+
+    </section>
+    <!-- end of skills section -->
+    <!-- about section -->
+    <section id="about">
+      <div class="section-center clearfix">
+        <!-- about img -->
+        <article class="about-img">
+          <div class="about-picture-container">
+            <img src="../static/images/about-bcg.png" alt="ace the entrance book" class="about-picture">
+          </div>
+        </article>
+        <!-- about info -->
+        <article class="about-info">
+            <!-- section title -->
+            <div class="section-title">
+              <h3>about our</h3>
+              <h2>Website</h2>
+            </div>
+            <!-- end of section title -->
+              <p class="about-text">
+                Stay ahead in your +2 entrance journey with our dedicated learning community and resources.
+              </p>
+              <p class="about-text">
+                Get daily practice questions curated from past papers and high-yield topics for St. Xavier’s, KMC, SOS, Budhanilkantha, and other top colleges—perfect for sharpening your skills every day.
+              </p>
+              <p class="about-text">
+                Access your personalized learning dashboard to track progress, review weak areas, monitor mock test scores, and get tailored recommendations based on your performance.
+              </p>
+
+              <a href="#about.html" class="btn">Learn More</a>
+        </article>
+      </div>
+    </section>
+{% endblock %}
+<!-- end of feature section -->
+
+<!-- about section -->
+{% block about_book %}
+   <section class="products" id="products">
+      <div class="section-center clearfix">
+        <!-- products info -->
+        <article class="products-info">
+          <!-- section title -->
+          <div class="section-title">
+            <h3>check out</h3>
+            <h2>our products</h2>
+          </div>
+          <!-- end of section title -->
+          <p class="products-text">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique, commodi sit, recusandae molestias pariatur mollitia assumenda non saepe nulla est omnis nisi sed, ipsum deleniti.
+          </p>
+          <a href="#products.html" class="btn">inventory</a>
+        </article>
+        <!-- products inventory -->
+        <article class="products-inventory clearfix">
+          <!-- single product -->
+          <div class="product">
+            <img src="./images/product-1.jpeg" alt="single product" class="product-img">
+            <h4 class="product-title">ginger peach tea</h4>
+            <h4 class="product-price">$6.99</h4>
+          </div>
+          <!-- end of single product -->
+          <!-- single product -->
+          <div class="product">
+            <img src="./images/product-2.jpeg" alt="single product" class="product-img">
+            <h4 class="product-title">fruit sangria</h4>
+            <h4 class="product-price">$6.99</h4>
+          </div>
+          <!-- end of single product -->
+          <!-- single product -->
+          <div class="product">
+            <img src="./images/product-3.jpeg" alt="single product" class="product-img">
+            <h4 class="product-title">white tea</h4>
+            <h4 class="product-price">$6.99</h4>
+          </div>
+          <!-- end of single product -->
+        </article>
+      </div>
+    </section>
+{% endblock %}
+<!-- end of about section -->
+
+<!-- authors -->
+{% block about_author %}
+    <section class="services" id="services">
+      <!-- section title -->
+      <div class="section-title services-title">
+        <h3>explore</h3>
+        <h2>our services</h2>
+      </div>
+      <!-- end of section title -->
+
+      <div class="section-center clearfix">
+        <!-- single card 1-->
+        <article class="service-card">
+          <!-- img container -->
+          <div class="service-img-container">
+            <!-- img -->
+            <img src="./images/product-1.jpeg" alt="single service" class="service-img">
+            <!-- service icon  -->
+            <span class="service-icon">
+              <i class="fas fa-mortar-pestle fa-fw"></i>
+            </span>
+          </div>
+          <!-- service info -->
+          <div class="service-info">
+            <h4>custom recipes</h4>
+            <p>Lorem ipsum dolor sit amet consectetur,
+               adipisicing elit. Nemo illo, reprehenderit magni
+               placeat dolores delectus!
+            </p>
+            <a href="#products.html" class="btn service-btn">read more</a>
+          </div>
+        </article>
+        <!-- end of single card -->
+
+        <!-- single card 2-->
+        <article class="service-card">
+          <!-- img container -->
+          <div class="service-img-container">
+            <!-- img -->
+            <img src="./images/product-2.jpeg" alt="single service" class="service-img">
+            <!-- service icon  -->
+            <span class="service-icon">
+              <i class="fas fa-home fa-fw"></i>
+            </span>
+          </div>
+          <!-- service info -->
+          <div class="service-info">
+            <h4>Home delivery</h4>
+            <p>Lorem ipsum dolor sit amet consectetur,
+              adipisicing elit. Nemo illo, reprehenderit magni
+              placeat dolores delectus!
+            </p>
+            <a href="#products.html" class="btn service-btn">read more</a>
+          </div>
+        </article>
+        <!-- end of single card -->
+
+        <!-- single card 3-->
+        <article class="service-card">
+          <!-- img container -->
+          <div class="service-img-container">
+            <!-- img -->
+            <img src="./images/product-3.jpeg" alt="single service" class="service-img">
+            <!-- service icon  -->
+            <span class="service-icon">
+              <i class="fas fa-mug-hot fa-fw"></i>
+            </span>
+          </div>
+          <!-- service info -->
+          <div class="service-info">
+            <h4>tea aging</h4>
+            <p>Lorem ipsum dolor sit amet consectetur,
+              adipisicing elit. Nemo illo, reprehenderit magni
+              placeat dolores delectus!
+            </p>
+            <a href="#products.html" class="btn service-btn">read more</a>
+          </div>
+        </article>
+        <!-- end of single card -->
+      </div>
+    </section>
+{% endblock %}
+<!-- end of authors -->
+
+<!-- contact -->
+{% block contact %}
+ <section class="contact" id="contact">
+      <div class="section-center clearfix">
+        <!-- contact info-->
+        <article class="contact-info">
+          <!-- contact item -->
+          <div class="contact-item">
+            <h4 class="contact-title">
+              <span class="contact-icon">
+                <i class="fas fa-location-arrow"></i>
+              </span>
+              address
+            </h4>
+            <h4 class="contact-text">
+              523 N Airofield Avenue <br/>
+              Lingtown, CP 80073
+            </h4>
+          </div>
+          <!-- end of contact item -->
+          <!-- contact item -->
+          <div class="contact-item">
+            <h4 class="contact-title">
+              <span class="contact-icon">
+                <i class="fas fa-envelope"></i>
+              </span>
+              Email
+            </h4>
+            <h4 class="contact-text">
+              email@email.com
+            </h4>
+          </div>
+          <!-- end of contact item -->
+          <!-- contact item -->
+          <div class="contact-item">
+            <h4 class="contact-title">
+              <span class="contact-icon">
+                <i class="fas fa-phone"></i>
+              </span>
+              phone
+            </h4>
+            <h4 class="contact-text">
+              + 123 546 789
+            </h4>
+          </div>
+          <!-- end of contact item -->
+        </article>
+        <!-- contact form -->
+        <article class="contact-form">
+          <h3>contact us</h3>
+          <form action="">
+            <div class="form-group">
+              <!-- inputs -->
+              <input type="text" placeholder="name" class="form-control" name="name"/>
+              <input type="email" placeholder="email" class="form-control" name="email"/>
+              <textarea name="message" placeholder="message" class="form-control" rows="5"></textarea>
+            </div>
+            <!-- button -->
+            <button type="submit" class="submit-btn btn">Submit Here</button>
+          </form>
+        </article>
+      </div>
+    </section>
+{% endblock %}
+<!-- end of contact -->
+
+<!-- footer -->
+{% block footer %}
+<footer class="footer">
+      <div class="section-center">
+        <div class="social-icons">
+          <!-- social icon -->
+          <a href="https://www.facebook.com/p/Ace-The-Entrance-61573984108480/" class="social-icon" target="_blank">
+            <i class="fab fa-facebook"></i>
+          </a>
+          <!-- end of social icon -->
+          <!-- social icon -->
+          <a href="#" class="social-icon">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <!-- end of social icon -->
+          <!-- social icon -->
+          <a href="https://www.instagram.com/ace_the_entrance/" class="social-icon" target="_blank">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <!-- end of social icon -->
+        </div>
+
+        <h4 class="footer-text">
+          &copy; <span id="date"></span>
+          <span class="company">Ace the Entrance</span>
+          all rights reserved
+        </h4>
+      </div>
+    </footer>
+{% endblock %}

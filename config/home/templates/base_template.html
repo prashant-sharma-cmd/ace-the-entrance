@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>{% block title %} {% endblock %}</title>
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- custom css -->
+    <link rel="stylesheet" href="./static/css/styles.css" />
+
+  </head>
+  <body>
+    <!-- navbar -->
+    <!-- nav button -->
+    {% block navbar %}
+    {% endblock %}
+
+    <!-- header -->
+    {% block header %}
+    {% endblock %}
+    <!-- end of header -->
+
+    <!-- content divider -->
+    <div class="content-divider"></div>
+    <!-- end of content divider -->
+
+    <!-- Features section -->
+    {% block feature %}
+    {% endblock %}
+    <!-- end of feature section -->
+
+    <!-- about section -->
+    {% block about_book %}
+    {% endblock %}
+    <!-- end of about section -->
+
+    <!-- authors -->
+    {% block about_author %}
+    {% endblock %}
+    <!-- end of authors -->
+
+    <!-- services -->
+    {% block services %}
+    {% endblock %}
+    <!-- end of services -->
+
+    <!-- contact -->
+    {% block contact %}
+    {% endblock %}
+    <!-- end of contact -->
+
+    <!-- footer -->
+    {% block footer %}
+    {% endblock %}
+
+
+    <script type="text/javascript" src="../static/js/app.js" ></script>
+  </body>
+</html>
