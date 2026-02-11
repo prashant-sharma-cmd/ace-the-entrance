@@ -19,7 +19,7 @@ class Topic(models.Model):
 class Question(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='questions')
     text = models.TextField()
-    last_appeared = models.DateTimeField(null=True, blank=True)
+    last_appeared = models.DateField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -32,4 +32,4 @@ class Choice(models.Model):
 
 class DailyQuiz(models.Model):
     date = models.DateField(unique=True, default=timezone.now)
-    question = models.ManyToManyField(Question)
+    questions = models.ManyToManyField(Question)

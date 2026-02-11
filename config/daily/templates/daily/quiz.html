@@ -1,9 +1,12 @@
-{% extends 'base_template.html' %}
-{% load static %}
-{% block content %}
+<html>
+<head>
+    <title>Quiz</title>
+</head>
+<body>
 <h1>Today's Quiz</h1>
 <form method="post">
     {% csrf_token %}
+    {% if quiz.questions.all %}
     {% for question in quiz.questions.all %}
         <div class="question-block">
             <p>{{ forloop.counter }}. {{ question.text }}</p>
@@ -15,6 +18,10 @@
             {% endfor %}
         </div>
     {% endfor %}
+    {% else %}
+    <p> No Question Available </p>
+    {% endif %}
     <button type="submit">Submit Quiz</button>
 </form>
-{% endblock %}
+</body>
+</html>
