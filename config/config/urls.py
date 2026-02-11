@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('home.urls'), name='home'),
+    path('daily/', include('daily.urls'), name='daily'),
     path('sxcmodel/', include('sxcmodel.urls')),
 ]

@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'daily.apps.DailyConfig',
     'sxcmodel.apps.SxcmodelConfig',
 
+    # Third Party Apps
+    'django_crontab'
 ]
 
 MIDDLEWARE = [
@@ -137,3 +139,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Cronjobs
+
+CRONJOBS = [
+    ('1 0 * * *', 'django.core.management.call_command', ['create_daily_quiz'])
+]
