@@ -14,3 +14,8 @@ navClose.addEventListener("click", () => {
 const date = (document.getElementById(
   "date"
 ).innerHTML = new Date().getFullYear());
+
+window.MathJax = {
+tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+};
+

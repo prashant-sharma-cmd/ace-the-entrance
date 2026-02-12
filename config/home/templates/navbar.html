@@ -1,0 +1,62 @@
+{% extends 'base_template.html' %}
+{% load static %}
+
+{% block navbar %}
+    <span class="nav-btn" id="nav-btn">
+      <i class="fas fa-bars"></i>
+    </span>
+    <a href="#" class="login-btn-top">
+      <i class="fas fa-user"></i> Sign In
+    </a>
+    <nav class="navbar" id="navbar">
+      <div class="navbar-header">
+        <span class="nav-close" id="nav-close">
+          <i class="fas fa-times"></i>
+        </span>
+      </div>
+      <ul class="nav-items">
+        <li><a href="home/index.html" class="nav-link">home</a></li>
+        <li><a href="#about" class="nav-link">updates</a></li>
+        <li><a href="#services" class="nav-link">Discussion</a></li>
+        <li><a href="#skills" class="nav-link">daily questions</a></li>
+        <li><a href="#products" class="nav-link">SXC Model Set</a></li>
+        <li><a href="#contact" class="nav-link">contact</a></li>
+      </ul>
+
+        <div class="nav-auth-container">
+          <a href="#" class="btn nav-auth-btn login-btn">login</a>
+          <a href="#" class="btn nav-auth-btn signup-btn">sign up</a>
+        </div>
+    </nav>
+{% endblock %}
+
+<!-- footer -->
+{% block footer %}
+<footer class="footer">
+      <div class="section-center">
+        <div class="social-icons">
+          <!-- social icon -->
+          <a href="https://www.facebook.com/p/Ace-The-Entrance-61573984108480/" class="social-icon" target="_blank">
+            <i class="fab fa-facebook"></i>
+          </a>
+          <!-- end of social icon -->
+          <!-- social icon -->
+          <a href="#" class="social-icon">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <!-- end of social icon -->
+          <!-- social icon -->
+          <a href="https://www.instagram.com/ace_the_entrance/" class="social-icon" target="_blank">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <!-- end of social icon -->
+        </div>
+
+        <h4 class="footer-text">
+          &copy; <span id="date"></span>
+          <span class="company">Ace the Entrance</span>
+          all rights reserved
+        </h4>
+      </div>
+    </footer>
+{% endblock %}

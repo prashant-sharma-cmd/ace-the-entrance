@@ -1,27 +1,87 @@
-<html>
-<head>
-    <title>Quiz</title>
-</head>
-<body>
-<h1>Today's Quiz</h1>
-<form method="post">
-    {% csrf_token %}
-    {% if quiz.questions.all %}
-    {% for question in quiz.questions.all %}
-        <div class="question-block">
-            <p>{{ forloop.counter }}. {{ question.text }}</p>
-            {% for choice in question.choices.all %}
-                <label>
-                    <input type="radio" name="q{{ question.id }}" value="{{ choice.id }}">
-                    {{ choice.text }}
-                </label><br>
-            {% endfor %}
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block title %}Quiz Application{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'daily/css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="quiz-container">
+    <div id="loading" class="loading">Loading quiz</div>
+
+    <div id="quiz-content" style="display: none;">
+        <div class="quiz-header">
+            <div>
+                <span>Question <span id="current-question">1</span> of <span id="total-questions">0</span></span>
+            </div>
+            <div class="score-display">
+                Score: <span id="score">0</span>/<span id="total-answered">0</span>
+            </div>
         </div>
-    {% endfor %}
-    {% else %}
-    <p> No Question Available </p>
-    {% endif %}
-    <button type="submit">Submit Quiz</button>
-</form>
-</body>
-</html>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+
+        <div class="question-card" id="question-container">
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" id="prev-btn" onclick="previousQuestion()">
+                ← Previous
+            </button>
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">
+                Next →
+            </button>
+            <button class="btn btn-primary" id="submit-btn" style="display: none;" onclick="submitQuiz()">
+                Submit Quiz
+            </button>
+        </div>
+    </div>
+
+    <div id="results" style="display: none;">
+        <div class="results-card">
+            <h2>Quiz Complete!</h2>
+            <div class="results-stats">
+                <p>Your Score: <strong id="final-score">0</strong> out of <strong id="final-total">0</strong></p>
+                <p>Percentage: <strong id="percentage">0</strong>%</p>
+            </div>
+            <button class="btn btn-primary" onclick="restartQuiz()">
+                Restart Quiz
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    window.QUIZ_API_URL = "{% url 'daily:get_questions' %}";
+</script>
+<script src="{% static 'daily/js/app.js' %}"></script>
+{% endblock %}
+
+
+<!--<form method="post">-->
+<!--    {% csrf_token %}-->
+<!--    {% if quiz.questions.all %}-->
+<!--    {% for question in quiz.questions.all %}-->
+<!--        <div class="question-block">-->
+<!--            <p>{{ forloop.counter }}. {{ question.text }}</p>-->
+<!--            {% for choice in question.choices.all %}-->
+<!--                <label>-->
+<!--                    <input type="radio" name="q{{ question.id }}" value="{{ choice.id }}">-->
+<!--                    {{ choice.text }}-->
+<!--                </label><br>-->
+<!--            {% endfor %}-->
+<!--        </div>-->
+<!--    {% endfor %}-->
+<!--    {% else %}-->
+<!--    <p> No Question Available </p>-->
+<!--    {% endif %}-->
+<!--    <button type="submit">Submit Quiz</button>-->
+<!--</form>-->
+

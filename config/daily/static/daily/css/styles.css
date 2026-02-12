@@ -1,0 +1,262 @@
+/* Quiz Container */
+.quiz-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Question Card */
+.question-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.question-text {
+    font-size: 1.3em;
+    margin-bottom: 25px;
+    color: #333;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+/* Choice Buttons */
+.choice-btn {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.choice-btn:hover {
+    border-color: #4CAF50;
+    background: #f5f5f5;
+    transform: translateX(5px);
+}
+
+.choice-btn.selected {
+    border-color: #2196F3;
+    background: #E3F2FD;
+}
+
+.choice-btn.correct {
+    border-color: #4CAF50;
+    background: #E8F5E9;
+}
+
+.choice-btn.incorrect {
+    border-color: #f44336;
+    background: #FFEBEE;
+}
+
+.choice-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Progress Bar */
+.progress-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #8BC34A);
+    transition: width 0.3s ease;
+}
+
+/* Quiz Header */
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.quiz-header > div {
+    font-size: 1.1em;
+    color: #666;
+}
+
+.score-display {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+/* Navigation Buttons */
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-primary {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+.btn-secondary {
+    background: #2196F3;
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #0b7dda;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+}
+
+.btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Results Card */
+.results-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.results-card h2 {
+    color: #4CAF50;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.results-stats {
+    font-size: 1.2em;
+    margin: 20px 0;
+    color: #333;
+}
+
+.results-stats p {
+    margin: 15px 0;
+}
+
+.results-stats strong {
+    color: #4CAF50;
+    font-size: 1.3em;
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2em;
+    color: #666;
+}
+
+.loading::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+/* Error State */
+.error-message {
+    background: #FFEBEE;
+    border: 2px solid #f44336;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    color: #c62828;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .quiz-container {
+        padding: 10px;
+        margin: 20px auto;
+    }
+
+    .question-card {
+        padding: 20px;
+    }
+
+    .question-text {
+        font-size: 1.1em;
+    }
+
+    .quiz-header {
+        font-size: 0.9em;
+    }
+
+    .nav-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .results-card h2 {
+        font-size: 1.5em;
+    }
+
+    .results-stats {
+        font-size: 1em;
+    }
+}
+
+/* Animation for question transitions */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.question-card {
+    animation: fadeIn 0.3s ease;
+}
