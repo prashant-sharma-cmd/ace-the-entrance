@@ -780,3 +780,79 @@ FOOTER
   color: var(--clr-primary);
 }
 
+/* ── Toast Container ── */
+#toast-container {
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  pointer-events: none !important;
+  width: auto !important;
+  max-width: 360px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+}
+
+/* ── Base Toast ── */
+#toast-container .toast-msg {
+  all: unset;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 10px 16px !important;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
+  pointer-events: auto !important;
+  opacity: 0 !important;
+  transform: translateX(20px) !important;
+  animation: toastIn 0.3s ease forwards, toastOut 0.4s ease forwards 3.5s !important;
+  box-sizing: border-box !important;
+  white-space: normal !important;
+  text-decoration: none !important;
+}
+
+#toast-container .toast-icon {
+  font-size: 14px !important;
+  flex-shrink: 0 !important;
+  line-height: 1 !important;
+}
+
+/* ── Variants ── */
+#toast-container .toast-success {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border-left: 3px solid #22c55e !important;
+}
+
+#toast-container .toast-error,
+#toast-container .toast-danger {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+  border-left: 3px solid #ef4444 !important;
+}
+
+#toast-container .toast-warning {
+  background: #fef9c3 !important;
+  color: #854d0e !important;
+  border-left: 3px solid #eab308 !important;
+}
+
+/* ── Animations ── */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(20px); }
+}

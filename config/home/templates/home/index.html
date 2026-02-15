@@ -80,7 +80,7 @@ Ace the Entrance
             <!-- section title -->
             <div class="section-title">
               <h3>about our</h3>
-              <h2>Website</h2>
+              <h2>Book</h2>
             </div>
             <!-- end of section title -->
               <p class="about-text">
@@ -108,12 +108,12 @@ Ace the Entrance
         <article class="products-info">
           <!-- section title -->
           <div class="section-title">
-            <h3>check out</h3>
-            <h2>our products</h2>
+            <h3>Explore</h3>
+            <h2>Our Website</h2>
           </div>
           <!-- end of section title -->
           <p class="products-text">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique, commodi sit, recusandae molestias pariatur mollitia assumenda non saepe nulla est omnis nisi sed, ipsum deleniti.
+            Stay ahead in your +2 entrance journey with our dedicated learning community and resources.
           </p>
           <a href="#products.html" class="btn">inventory</a>
         </article>
@@ -121,7 +121,7 @@ Ace the Entrance
         <article class="products-inventory clearfix">
           <!-- single product -->
           <div class="product">
-            <img src="./images/product-1.jpeg" alt="single product" class="product-img">
+            <img src="{% static 'home/images/daily-quiz.jpg' %}" alt="single product" class="product-img">
             <h4 class="product-title">ginger peach tea</h4>
             <h4 class="product-price">$6.99</h4>
           </div>
@@ -151,8 +151,8 @@ Ace the Entrance
     <section class="services" id="services">
       <!-- section title -->
       <div class="section-title services-title">
-        <h3>explore</h3>
-        <h2>our services</h2>
+        <h3>Explore</h3>
+        <h2>Our Website</h2>
       </div>
       <!-- end of section title -->
 
@@ -162,7 +162,7 @@ Ace the Entrance
           <!-- img container -->
           <div class="service-img-container">
             <!-- img -->
-            <img src="./images/product-1.jpeg" alt="single service" class="service-img">
+            <img src="{% static 'home/images/daily-quiz.jpg' %}" alt="single service" class="service-img">
             <!-- service icon  -->
             <span class="service-icon">
               <i class="fas fa-mortar-pestle fa-fw"></i>
@@ -185,7 +185,7 @@ Ace the Entrance
           <!-- img container -->
           <div class="service-img-container">
             <!-- img -->
-            <img src="./images/product-2.jpeg" alt="single service" class="service-img">
+            <img src="{% static 'home/images/sxc-model.jpg' %}" alt="single service" class="service-img">
             <!-- service icon  -->
             <span class="service-icon">
               <i class="fas fa-home fa-fw"></i>
@@ -208,7 +208,7 @@ Ace the Entrance
           <!-- img container -->
           <div class="service-img-container">
             <!-- img -->
-            <img src="./images/product-3.jpeg" alt="single service" class="service-img">
+            <img src="{% static 'home/images/discussion-forum.jpg' %}" alt="single service" class="service-img">
             <!-- service icon  -->
             <span class="service-icon">
               <i class="fas fa-mug-hot fa-fw"></i>
@@ -245,8 +245,8 @@ Ace the Entrance
               address
             </h4>
             <h4 class="contact-text">
-              523 N Airofield Avenue <br/>
-              Lingtown, CP 80073
+              Kathmandu, Bagmati Province <br/>
+              Nepal
             </h4>
           </div>
           <!-- end of contact item -->
@@ -259,7 +259,7 @@ Ace the Entrance
               Email
             </h4>
             <h4 class="contact-text">
-              email@email.com
+              acetheentrance@gmail.com
             </h4>
           </div>
           <!-- end of contact item -->
@@ -272,7 +272,7 @@ Ace the Entrance
               phone
             </h4>
             <h4 class="contact-text">
-              + 123 546 789
+              +977 9742352700
             </h4>
           </div>
           <!-- end of contact item -->
@@ -280,12 +280,17 @@ Ace the Entrance
         <!-- contact form -->
         <article class="contact-form">
           <h3>contact us</h3>
-          <form action="">
+          <form action="{% url 'home:contact_us' %}" method="POST">
+            {% csrf_token %}
             <div class="form-group">
               <!-- inputs -->
-              <input type="text" placeholder="name" class="form-control" name="name"/>
-              <input type="email" placeholder="email" class="form-control" name="email"/>
-              <textarea name="message" placeholder="message" class="form-control" rows="5"></textarea>
+              <input type="text" placeholder="name" class="form-control" name="name" required/>
+              <input type="email" placeholder="email" class="form-control" name="email" required/>
+              <textarea name="message" placeholder="message" class="form-control" rows="5" required></textarea>
+            </div>
+            <div style="display:none;">
+              <label>Keep this blank</label>
+              <input type="text" name="honeypot" tabindex="-1" autocomplete="off">
             </div>
             <!-- button -->
             <button type="submit" class="submit-btn btn">Submit Here</button>

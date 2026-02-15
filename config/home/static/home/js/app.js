@@ -19,3 +19,8 @@ window.MathJax = {
 tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
 };
 
+document.querySelectorAll('.toast-msg').forEach(el => {
+  el.addEventListener('animationend', (e) => {
+    if (e.animationName === 'toastOut') el.remove();
+  });
+});
