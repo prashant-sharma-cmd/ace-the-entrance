@@ -12,7 +12,7 @@ Ace the Entrance
       <div class="banner">
         <h2>Entrance Mastery Starts Here</h2>
         <h1>Ace The <br/> Entrance </h1>
-        <a href="#skills" class="btn banner-btn">Explore Daily Questions</a>
+        <a href="{% url 'daily:quiz'%}" class="btn banner-btn">Explore Daily Questions</a>
       </div>
     </header>
 {% endblock %}
@@ -300,3 +300,34 @@ Ace the Entrance
     </section>
 {% endblock %}
 <!-- end of contact -->
+
+<!-- footer -->
+{% block footer %}
+<footer class="footer">
+      <div class="section-center">
+        <div class="social-icons">
+          <!-- social icon -->
+          <a href="{% url 'home:facebook' %}" class="social-icon" target="_blank">
+            <i class="fab fa-facebook"></i>
+          </a>
+          <!-- end of social icon -->
+          <!-- social icon -->
+          <a href="{% url 'home:daraz' %}" class="social-icon" target="_blank">
+            <i class="fas fa-shopping-cart"></i>
+          </a>
+          <!-- end of social icon -->
+          <!-- social icon -->
+          <a href="{% url 'home:instagram' %}" class="social-icon" target="_blank">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <!-- end of social icon -->
+        </div>
+
+        <h4 class="footer-text">
+          &copy; <span id="date"></span>
+          <span class="company">Ace the Entrance</span>
+          all rights reserved
+        </h4>
+      </div>
+    </footer>
+{% endblock %}

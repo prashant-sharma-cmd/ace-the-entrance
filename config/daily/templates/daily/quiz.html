@@ -1,87 +1,153 @@
-{% extends "base_template.html" %}
+{% extends "navbar.html" %}
 {% load static %}
 
-{% block title %}Quiz Application{% endblock %}
+{% block title %} Daily Quiz {% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'daily/css/styles.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="quiz-container">
-    <div id="loading" class="loading">Loading quiz</div>
 
-    <div id="quiz-content" style="display: none;">
+<div class="quiz-scope">
+  <div class="app-background">
+    <div class="quiz-wrapper">
+
+      <div id="splash" class="splash-card">
+
+        <div class="splash-banner">
+          <div class="splash-icon">
+              <svg viewBox="0 0 24 24" xmlns="https://www.w3.org" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="4" y="3" width="16" height="18" rx="2" />
+                  <path d="M8 8h8M8 12h5" stroke-opacity="0.5" />
+                  <circle cx="15" cy="16" r="4" fill="#3b82f6" fill-opacity="0.1" />
+                   <path d="M15 14v2h2" stroke="#3b82f6" />
+              </svg>
+          </div>
+          <h2>Daily Quiz</h2>
+          <p>Test your knowledge</p>
+        </div>
+
+        <div class="splash-meta">
+          <div class="splash-meta-item">
+            <span class="meta-value" id="splash-total">&mdash;</span>
+            <span class="meta-label">Questions</span>
+          </div>
+          <div class="splash-meta-item">
+            <span class="meta-value">&infin;</span>
+            <span class="meta-label">Attempt</span>
+          </div>
+          <div class="splash-meta-item">
+            <span class="meta-value">&#10003;</span>
+            <span class="meta-label">Instant Results</span>
+          </div>
+        </div>
+
+        <div class="splash-body">
+          <p>Answer each question, navigate freely between them, and submit when you are ready. Good luck!</p>
+        </div>
+
+        <div class="fetch-indicator" id="fetch-indicator">
+          <div class="fetch-dot"></div>
+          <div class="fetch-dot"></div>
+          <div class="fetch-dot"></div>
+          <span>Loading questions&hellip;</span>
+        </div>
+
+        <div class="splash-actions">
+          <a href="/" class="btn-splash-back">&#8592; Go Back</a>
+          <button class="btn-splash-start" id="start-btn" onclick="startQuiz()" disabled>
+            Start Quiz &#8594;
+          </button>
+        </div>
+
+      </div><!-- /#splash -->
+
+
+      <!-- ② FULL-SCREEN SPINNER fallback — hidden by CSS, shown only on error -->
+      <div id="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Preparing your quiz&hellip;</p>
+      </div>
+
+
+      <!-- ③ QUIZ CARD — hidden by CSS, shown when startQuiz() fires -->
+      <div id="quiz-content" class="main-card">
+
         <div class="quiz-header">
-            <div>
-                <span>Question <span id="current-question">1</span> of <span id="total-questions">0</span></span>
-            </div>
-            <div class="score-display">
-                Score: <span id="score">0</span>/<span id="total-answered">0</span>
-            </div>
+          <div class="progress-info">
+            <span class="label">Quiz</span>
+            <span class="value">
+              Question <span id="current-question">1</span> of <span id="total-questions">0</span>
+            </span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
         </div>
 
-        <!-- Progress Bar -->
-        <div class="progress-bar">
-            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        <div id="question-container" class="question-area"></div>
+
+        <div class="quiz-footer">
+          <div class="score-pill">
+            Answered: <span id="total-answered">0</span>
+          </div>
+          <div class="nav-actions">
+            <button class="btn btn-text" id="prev-btn" onclick="previousQuestion()">Back</button>
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">Next</button>
+            <button class="btn btn-finish" id="submit-btn" style="display:none" onclick="submitQuiz()">Finish Quiz</button>
+          </div>
         </div>
 
-        <div class="question-card" id="question-container">
-        </div>
+      </div><!-- /#quiz-content -->
 
-        <div class="nav-buttons">
-            <button class="btn btn-secondary" id="prev-btn" onclick="previousQuestion()">
-                ← Previous
-            </button>
-            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()">
-                Next →
-            </button>
-            <button class="btn btn-primary" id="submit-btn" style="display: none;" onclick="submitQuiz()">
-                Submit Quiz
-            </button>
-        </div>
-    </div>
+      <!-- ④ RESULTS — hidden by CSS, shown after submitQuiz() -->
+      <div id="results" class="main-card results-view">
+        <div class="results-content">
+          <div class="score-circle">
+            <span id="percentage">0</span><span class="percent-symbol">%</span>
+          </div>
+          <h2>Quiz Complete!</h2>
+          <p class="stats-text">
+            You got <strong id="final-score">0</strong> out of <strong id="final-total">0</strong> correct.
+          </p>
+          <div id="performance-message-container"></div>
 
-    <div id="results" style="display: none;">
-        <div class="results-card">
-            <h2>Quiz Complete!</h2>
-            <div class="results-stats">
-                <p>Your Score: <strong id="final-score">0</strong> out of <strong id="final-total">0</strong></p>
-                <p>Percentage: <strong id="percentage">0</strong>%</p>
-            </div>
-            <button class="btn btn-primary" onclick="restartQuiz()">
-                Restart Quiz
+          <!-- Action buttons -->
+          <div class="results-actions">
+            <button class="btn btn-primary btn-lg" onclick="restartQuiz()">
+              &#8635; Take Quiz Again
             </button>
+            <a href="/" class="btn btn-outline-primary btn-lg">
+              &#8962; Go Home
+            </a>
+          </div>
+
+          <!-- Facebook CTA banner -->
+          <a href="{% url 'home:facebook' %}" target="_blank" rel="noopener noreferrer"
+             class="fb-cta-banner">
+            <span class="fb-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.514c-1.491 0-1.956.93-1.956 1.886v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
+              </svg>
+            </span>
+            <span class="fb-text">
+              <span class="fb-label">Follow us on Facebook!</span>
+              <span class="fb-sub">We post answers there &#8594;</span>
+            </span>
+          </a>
+
         </div>
-    </div>
-</div>
+      </div><!-- /#results -->
+
+    </div><!-- /.quiz-wrapper -->
+  </div><!-- /.app-background -->
+</div><!-- /.quiz-scope -->
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    window.QUIZ_API_URL = "{% url 'daily:get_questions' %}";
+  window.QUIZ_API_URL = "{% url 'daily:get_questions' %}";
 </script>
 <script src="{% static 'daily/js/app.js' %}"></script>
 {% endblock %}
-
-
-<!--<form method="post">-->
-<!--    {% csrf_token %}-->
-<!--    {% if quiz.questions.all %}-->
-<!--    {% for question in quiz.questions.all %}-->
-<!--        <div class="question-block">-->
-<!--            <p>{{ forloop.counter }}. {{ question.text }}</p>-->
-<!--            {% for choice in question.choices.all %}-->
-<!--                <label>-->
-<!--                    <input type="radio" name="q{{ question.id }}" value="{{ choice.id }}">-->
-<!--                    {{ choice.text }}-->
-<!--                </label><br>-->
-<!--            {% endfor %}-->
-<!--        </div>-->
-<!--    {% endfor %}-->
-<!--    {% else %}-->
-<!--    <p> No Question Available </p>-->
-<!--    {% endif %}-->
-<!--    <button type="submit">Submit Quiz</button>-->
-<!--</form>-->
-

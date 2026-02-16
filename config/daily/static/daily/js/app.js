@@ -1,64 +1,140 @@
 /**
- * Quiz Application - Main JavaScript
+ * Quiz Application — app.js
+ *
+ * Visibility is controlled exclusively via el.style.display.
+ * Inline styles always beat stylesheet rules — no specificity conflicts.
+ *
+ * Flow:
+ *  1. DOMContentLoaded  → hide quiz/results/loading via JS; show splash
+ *  2. loadQuestions()   → fetches silently in the background
+ *  3. Questions ready   → enable Start button, fill question count
+ *  4. startQuiz()       → hide splash, show quiz card
+ *  5. submitQuiz()      → hide quiz, show results
+ *  6. restartQuiz()     → hide results, show splash
  */
 
-// Global variables
-let questions = [];
+let questions            = [];
 let currentQuestionIndex = 0;
-let userAnswers = [];
-let score = 0;
+let userAnswers          = [];
+let score                = 0;
+let questionsReady       = false;
 
+/* ── Inline display helpers — always override CSS ── */
+function showEl(id, displayValue) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = displayValue || 'block';
+}
+function hideEl(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+}
 
+/* ════════════════════════════════════════
+   INIT — set initial state immediately
+════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    /* Force-hide everything except splash via inline style */
+    hideEl('loading');
+    hideEl('quiz-content');
+    hideEl('results');
+
+    /* Splash is already visible in HTML — no need to show it */
+    loadQuestions();
+});
+
+/* ════════════════════════════════════════
+   FETCH QUESTIONS
+════════════════════════════════════════ */
 async function loadQuestions() {
     try {
         const response = await fetch(window.QUIZ_API_URL);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const data   = await response.json();
+        questions    = data.questions;
+        userAnswers  = new Array(questions.length).fill(null);
+        questionsReady = true;
+
+        /* Update splash stats */
+        const splashTotal = document.getElementById('splash-total');
+        if (splashTotal) splashTotal.textContent = questions.length;
+
+        /* Hide fetch dots, unlock Start button */
+        hideEl('fetch-indicator');
+        const startBtn = document.getElementById('start-btn');
+        if (startBtn) startBtn.disabled = false;
+
+    } catch (err) {
+        console.error('Error loading questions:', err);
+        const ind = document.getElementById('fetch-indicator');
+        if (ind) {
+            ind.innerHTML =
+                '<span style="color:#b91c1c;font-size:.85rem">&#9888; Failed to load. Please refresh.</span>';
         }
-
-        const data = await response.json();
-        questions = data.questions;
-
-        // Initialize user answers array
-        userAnswers = new Array(questions.length).fill(null);
-
-        // Hide loading, show quiz
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('quiz-content').style.display = 'block';
-        document.getElementById('total-questions').textContent = questions.length;
-
-        // Display first question
-        displayQuestion();
-    } catch (error) {
-        console.error('Error loading questions:', error);
-        showError('Error loading quiz. Please refresh the page.');
     }
 }
 
+/* ════════════════════════════════════════
+   SPLASH → QUIZ
+════════════════════════════════════════ */
+function startQuiz() {
+    if (!questionsReady) return;
+
+    const splash = document.getElementById('splash');
+
+    /* Animate splash out */
+    splash.style.transition = 'opacity .28s ease, transform .28s ease';
+    splash.style.opacity    = '0';
+    splash.style.transform  = 'translateY(-14px) scale(.98)';
+
+    setTimeout(() => {
+        hideEl('splash');
+        splash.style.transition = '';
+        splash.style.opacity    = '';
+        splash.style.transform  = '';
+
+        document.getElementById('total-questions').textContent = questions.length;
+
+        /* Show quiz card */
+        showEl('quiz-content', 'block');
+        displayQuestion();
+    }, 280);
+}
+
+/* ════════════════════════════════════════
+   QUIZ DISPLAY
+════════════════════════════════════════ */
+
 /**
- * Display current question
+ * Safely format text: escape HTML first, then apply chemistry formatting.
+ * Order matters — escape before injecting <sub> tags.
  */
+function safeFormat(str) {
+    /* 1. Pull out $…$ content first (raw, before escaping) */
+    const stripped = str.replace(/\$([^$]+)\$/g, (_, inner) => inner);
+    /* 2. Escape any remaining HTML special chars */
+    const escaped  = escapeHtml(stripped);
+    /* 3. Now safely convert _2 or _{2} → <sub>2</sub> */
+    return escaped.replace(/_\{?(\w+)\}?/g, '<sub>$1</sub>');
+}
+
 function displayQuestion() {
-    const question = questions[currentQuestionIndex];
+    const question  = questions[currentQuestionIndex];
     const container = document.getElementById('question-container');
 
-    let html = `
-        <div class="question-text">${escapeHtml(question.question)}</div>
-        <div class="choices">
-    `;
+    let html = `<div class="question-text fade-in">${safeFormat(question.question)}</div>
+                <div class="choices">`;
 
-    question.choices.forEach((choice, index) => {
-        const isSelected = userAnswers[currentQuestionIndex] === choice.id;
+    question.choices.forEach((choice) => {
+        const isSelected    = userAnswers[currentQuestionIndex] === choice.id;
         const selectedClass = isSelected ? 'selected' : '';
 
         html += `
             <button class="choice-btn ${selectedClass}"
                     onclick="selectAnswer(${choice.id})"
                     data-choice-id="${choice.id}">
-                ${escapeHtml(choice.text)}
-            </button>
-        `;
+                ${safeFormat(choice.text)}
+            </button>`;
     });
 
     html += '</div>';
@@ -69,17 +145,11 @@ function displayQuestion() {
     updateQuestionCounter();
 }
 
-/**
- * Select an answer for current question
- */
 function selectAnswer(choiceId) {
     userAnswers[currentQuestionIndex] = choiceId;
     displayQuestion();
 }
 
-/**
- * Navigate to next question
- */
 function nextQuestion() {
     if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
@@ -87,9 +157,6 @@ function nextQuestion() {
     }
 }
 
-/**
- * Navigate to previous question
- */
 function previousQuestion() {
     if (currentQuestionIndex > 0) {
         currentQuestionIndex--;
@@ -98,175 +165,108 @@ function previousQuestion() {
 }
 
 function updateNavigation() {
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
+    const prevBtn   = document.getElementById('prev-btn');
+    const nextBtn   = document.getElementById('next-btn');
     const submitBtn = document.getElementById('submit-btn');
 
-    // Disable previous button on first question
     prevBtn.disabled = currentQuestionIndex === 0;
 
-    // Show submit button on last question, otherwise show next
-    if (currentQuestionIndex === questions.length - 1) {
-        nextBtn.style.display = 'none';
-        submitBtn.style.display = 'block';
-    } else {
-        nextBtn.style.display = 'block';
-        submitBtn.style.display = 'none';
-    }
+    const isLast = currentQuestionIndex === questions.length - 1;
+    nextBtn.style.display   = isLast ? 'none'         : 'inline-block';
+    submitBtn.style.display = isLast ? 'inline-block' : 'none';
 }
 
 function updateProgress() {
-    const answeredCount = userAnswers.filter(a => a !== null).length;
-    const progress = (answeredCount / questions.length) * 100;
-    document.getElementById('progress-fill').style.width = progress + '%';
-
-    // Update score display
-    document.getElementById('total-answered').textContent = answeredCount;
+    const answered = userAnswers.filter(a => a !== null).length;
+    document.getElementById('progress-fill').style.width =
+        ((answered / questions.length) * 100) + '%';
+    document.getElementById('total-answered').textContent = answered;
 }
 
 function updateQuestionCounter() {
     document.getElementById('current-question').textContent = currentQuestionIndex + 1;
 }
 
+/* ════════════════════════════════════════
+   SUBMIT & RESULTS
+════════════════════════════════════════ */
 function submitQuiz() {
-    // Check if all questions are answered
     const unanswered = userAnswers.filter(a => a === null).length;
-
     if (unanswered > 0) {
-        const confirmSubmit = confirm(
-            `You have ${unanswered} unanswered question(s). Do you want to submit anyway?`
-        );
-        if (!confirmSubmit) {
-            return;
-        }
+        if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) return;
     }
 
     score = 0;
-    questions.forEach((question, index) => {
-        const userAnswer = userAnswers[index];
-        const correctChoice = question.choices.find(c => c.isCorrect);
-
-        if (userAnswer === correctChoice.id) {
-            score++;
-        }
+    questions.forEach((q, i) => {
+        const correct = q.choices.find(c => c.isCorrect);
+        if (userAnswers[i] === correct.id) score++;
     });
 
     showResults();
 }
 
-/**
- * Display quiz results
- */
 function showResults() {
-    document.getElementById('quiz-content').style.display = 'none';
-    document.getElementById('results').style.display = 'block';
+    hideEl('quiz-content');
+    showEl('results', 'block');
 
-    const percentage = Math.round((score / questions.length) * 100);
-
+    const pct = Math.round((score / questions.length) * 100);
     document.getElementById('final-score').textContent = score;
     document.getElementById('final-total').textContent = questions.length;
-    document.getElementById('percentage').textContent = percentage;
+    document.getElementById('percentage').textContent  = pct;
 
-    // Optional: Add performance message
-    const performanceMsg = getPerformanceMessage(percentage);
-    const resultsCard = document.querySelector('.results-card');
-    const existingMsg = resultsCard.querySelector('.performance-message');
-
-    if (!existingMsg) {
-        const msgElement = document.createElement('p');
-        msgElement.className = 'performance-message';
-        msgElement.style.fontSize = '1.1em';
-        msgElement.style.marginTop = '20px';
-        msgElement.textContent = performanceMsg;
-        resultsCard.insertBefore(msgElement, resultsCard.querySelector('button'));
-    }
+    document.getElementById('performance-message-container').innerHTML =
+        `<p class="performance-msg">${getPerformanceMessage(pct)}</p>`;
 }
 
-/**
- * Get performance message based on percentage
- */
-function getPerformanceMessage(percentage) {
-    if (percentage === 100) return '🎉 Perfect score! Excellent work!';
-    if (percentage >= 80) return '👏 Great job! You did really well!';
-    if (percentage >= 60) return '👍 Good effort! Keep it up!';
-    if (percentage >= 40) return '💪 Not bad, but there\'s room for improvement!';
+function getPerformanceMessage(pct) {
+    if (pct === 100) return '🎉 Perfect score! Excellent work!';
+    if (pct >= 80)   return '👏 Great job! You did really well!';
+    if (pct >= 60)   return '👍 Good effort! Keep it up!';
+    if (pct >= 40)   return "💪 Not bad, but there's room for improvement!";
     return '📚 Keep studying and try again!';
 }
 
-/**
- * Restart the quiz
- */
+/* ════════════════════════════════════════
+   RESTART → back to splash
+════════════════════════════════════════ */
 function restartQuiz() {
     currentQuestionIndex = 0;
-    userAnswers = new Array(questions.length).fill(null);
-    score = 0;
+    userAnswers          = new Array(questions.length).fill(null);
+    score                = 0;
 
-    document.getElementById('results').style.display = 'none';
-    document.getElementById('quiz-content').style.display = 'block';
-    document.getElementById('score').textContent = 0;
-    document.getElementById('total-answered').textContent = 0;
-
-    displayQuestion();
+    hideEl('results');
+    showEl('splash', 'block');
 }
 
-/**
- * Show error message
- */
-function showError(message) {
-    const loading = document.getElementById('loading');
-    loading.innerHTML = `<div class="error-message">${escapeHtml(message)}</div>`;
-}
-
-/**
- * Escape HTML to prevent XSS
- */
+/* ════════════════════════════════════════
+   UTILS
+════════════════════════════════════════ */
 function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
+    const map = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' };
     return text.replace(/[&<>"']/g, m => map[m]);
 }
 
-/**
- * Keyboard navigation
- */
-document.addEventListener('keydown', function(event) {
-    // Only handle keyboard if quiz is active
-    if (document.getElementById('quiz-content').style.display === 'none') {
-        return;
-    }
+/* ════════════════════════════════════════
+   KEYBOARD NAV
+════════════════════════════════════════ */
+document.addEventListener('keydown', (e) => {
+    const qc = document.getElementById('quiz-content');
+    if (!qc || qc.style.display === 'none' || qc.style.display === '') return;
 
-    // Arrow keys for navigation
-    if (event.key === 'ArrowLeft' && currentQuestionIndex > 0) {
-        previousQuestion();
-    } else if (event.key === 'ArrowRight' && currentQuestionIndex < questions.length - 1) {
-        nextQuestion();
-    }
+    if (e.key === 'ArrowLeft'  && currentQuestionIndex > 0)                    previousQuestion();
+    if (e.key === 'ArrowRight' && currentQuestionIndex < questions.length - 1) nextQuestion();
 
-    // Number keys (1-4) for selecting answers
-    if (event.key >= '1' && event.key <= '4') {
-        const choiceIndex = parseInt(event.key) - 1;
-        const question = questions[currentQuestionIndex];
-        if (question.choices[choiceIndex]) {
-            selectAnswer(question.choices[choiceIndex].id);
-        }
+    if (e.key >= '1' && e.key <= '4') {
+        const idx = parseInt(e.key) - 1;
+        const q   = questions[currentQuestionIndex];
+        if (q && q.choices[idx]) selectAnswer(q.choices[idx].id);
     }
 });
 
-/**
- * Initialize quiz when page loads
- */
-document.addEventListener('DOMContentLoaded', function() {
-    loadQuestions();
-});
-
-// Expose functions to global scope for inline onclick handlers
-window.selectAnswer = selectAnswer;
-window.nextQuestion = nextQuestion;
+/* ── Global exposure for inline onclick ── */
+window.startQuiz        = startQuiz;
+window.selectAnswer     = selectAnswer;
+window.nextQuestion     = nextQuestion;
 window.previousQuestion = previousQuestion;
-window.submitQuiz = submitQuiz;
-window.restartQuiz = restartQuiz;
+window.submitQuiz       = submitQuiz;
+window.restartQuiz      = restartQuiz;

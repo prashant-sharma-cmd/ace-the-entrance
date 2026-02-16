@@ -60,3 +60,13 @@ class ContactUsView(View):
         except Exception as e:
             messages.error(request, f'Something went wrong.')
             return redirect('home:index')
+
+def redirect_to_facebook(request):
+    return redirect('https://www.facebook.com/profile.php?id=61573984108480')
+
+def redirect_to_instagram(request):
+    return redirect('https://www.instagram.com/ace_the_entrance/')
+
+def redirect_to_daraz(request):
+    return redirect('https://www.daraz.pk/')
+

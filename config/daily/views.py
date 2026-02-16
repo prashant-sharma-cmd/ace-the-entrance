@@ -45,3 +45,4 @@ class DailyQuizAPI(View):
             })
 
         return JsonResponse({'questions' : quiz_data})
+
