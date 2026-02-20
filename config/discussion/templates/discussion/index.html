@@ -15,10 +15,10 @@
   <div class="masthead">
     <div class="masthead-top">
       <div>
-        <h1>Discussion Forum</h1>
-        <p class="masthead-sub">Ace the Entrance · Questions &amp; Doubts</p>
+        <h1>The <em>Open</em> Forum</h1>
+        <p class="masthead-sub">Est. 2025 · Discourse &amp; Ideas</p>
       </div>
-      <button class="new-btn" id="btn-open-new">+ Ask Question </button>
+      <button class="new-btn" id="btn-open-new">+ Start Thread</button>
     </div>
   </div>
   <div class="content-divider"></div>
@@ -32,10 +32,9 @@
     <!-- Category Filter -->
     <div class="controls" id="category-controls">
       <button class="cat-btn active" data-category="All">All</button>
-      <button class="cat-btn" data-category="Science">Science</button>
-      <button class="cat-btn" data-category="Maths">Maths</button>
-      <button class="cat-btn" data-category="English">English</button>
-      <button class="cat-btn" data-category="GK &amp; IQ">Gk &amp; Iq</button>
+      <button class="cat-btn" data-category="Technology">Technology</button>
+      <button class="cat-btn" data-category="Culture">Culture</button>
+      <button class="cat-btn" data-category="Work &amp; Life">Work &amp; Life</button>
       <button class="cat-btn" data-category="General">General</button>
     </div>
 
@@ -73,6 +72,21 @@
       <h3>Join the discussion</h3>
       <div class="form-group">
         <textarea id="reply-body" placeholder="Write your reply…"></textarea>
+
+        <div class="upload-zone upload-zone--sm" id="reply-upload-zone" tabindex="0" role="button" aria-label="Attach image to reply" style="margin-top:0.75rem;">
+          <div class="upload-zone__idle" id="reply-upload-idle">
+            <span class="upload-icon">📎</span>
+            <span class="upload-label">Attach an image (optional)</span>
+          </div>
+          <div class="upload-zone__preview" id="reply-upload-preview" style="display:none;">
+            <img id="reply-preview-img" src="" alt="Preview">
+            <div class="upload-preview-info">
+              <span id="reply-upload-filename" class="upload-filename"></span>
+              <button type="button" class="upload-remove" id="btn-remove-reply-image" title="Remove image">✕ Remove</button>
+            </div>
+          </div>
+        </div>
+        <input type="file" id="reply-image" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;">
       </div>
       <button class="submit-btn" id="btn-post-reply">Post Reply</button>
     </div>
@@ -113,6 +127,24 @@
         <textarea id="new-body" placeholder="Share your thoughts, question, or idea…" style="min-height:140px;"></textarea>
       </div>
 
+      <div class="field">
+        <label>Image Attachment <span class="field-hint">(optional — JPG, PNG, GIF, WEBP, max 5 MB)</span></label>
+        <div class="upload-zone" id="upload-zone" tabindex="0" role="button" aria-label="Upload image">
+          <div class="upload-zone__idle" id="upload-idle">
+            <span class="upload-icon">📎</span>
+            <span class="upload-label">Click or drag &amp; drop an image</span>
+          </div>
+          <div class="upload-zone__preview" id="upload-preview" style="display:none;">
+            <img id="upload-preview-img" src="" alt="Preview">
+            <div class="upload-preview-info">
+              <span id="upload-filename" class="upload-filename"></span>
+              <button type="button" class="upload-remove" id="btn-remove-image" title="Remove image">✕ Remove</button>
+            </div>
+          </div>
+        </div>
+        <input type="file" id="new-image" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;">
+      </div>
+
       <button class="submit-btn" id="btn-publish">Publish Thread</button>
     </div>
     {% else %}
@@ -128,5 +160,14 @@
 {% endblock %}
 
 {% block extra_js %}
-
+  <script>
+    // Pass Django config to JS safely
+    const FORUM_CONFIG = {
+      apiBase:        "{% url 'forum:api-threads' %}",
+      csrfToken:      "{{ csrf_token }}",
+      isAuthenticated: {{ user.is_authenticated|yesno:"true,false" }},
+      currentUser:    "{{ user.username|default:'' }}",
+    };
+  </script>
+  <script src="{% static 'forum/js/forum.js' %}"></script>
 {% endblock %}

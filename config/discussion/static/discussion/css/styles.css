@@ -1,9 +1,3 @@
-/* ============================================================
-   forum.css  —  matches main site theme (Catamaran / Grand Hotel)
-   Place at:  yourapp/static/forum/css/forum.css
-   ============================================================ */
-
-/* Variables mirror the main site's :root */
 :root {
   --clr-primary:       #01257D;
   --clr-primary-light: #00FFFF;
@@ -540,4 +534,176 @@ textarea {
   .thread-full  { padding: 1.25rem; }
   .masthead h1  { font-size: 2rem; }
   .masthead h1 em { font-size: 2.5rem; }
+}
+
+/* ---- Image upload zone ---- */
+.upload-zone {
+  border: 2px dashed var(--clr-grey-10);
+  border-radius: var(--radius);
+  background: var(--clr-white);
+  padding: 1.5rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  outline: none;
+}
+.upload-zone:hover,
+.upload-zone:focus,
+.upload-zone.dragover {
+  border-color: var(--clr-primary);
+  background: #f0f7ff;
+  box-shadow: 0 0 0 2px var(--clr-primary);
+}
+.upload-zone--sm {
+  padding: 0.85rem 1rem;
+}
+.upload-zone__idle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.upload-icon  { font-size: 1.75rem; line-height: 1; }
+.upload-label {
+  font-family: var(--ff-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--spacing);
+  color: var(--clr-primary);
+}
+.upload-zone--sm .upload-icon  { font-size: 1.2rem; }
+.upload-zone--sm .upload-label { font-size: 0.72rem; }
+
+.field-hint {
+  font-size: 0.7rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #888;
+}
+
+/* Preview state */
+.upload-zone__preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+.upload-zone__preview img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 2px solid var(--clr-grey-10);
+  flex-shrink: 0;
+}
+.upload-zone--sm .upload-zone__preview img {
+  width: 48px;
+  height: 48px;
+}
+.upload-preview-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.upload-filename {
+  font-family: var(--ff-primary);
+  font-size: 0.78rem;
+  color: var(--clr-primary);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+.upload-remove {
+  background: none;
+  border: 1px solid #f87171;
+  color: #b91c1c;
+  font-family: var(--ff-primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--spacing);
+  padding: 2px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  width: fit-content;
+}
+.upload-remove:hover { background: #fee2e2; }
+
+/* ---- Attached image display in thread / reply ---- */
+.thread-image,
+.reply-image {
+  margin-top: 1rem;
+}
+.thread-image img,
+.reply-image img {
+  max-width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  border-radius: var(--radius);
+  border: 1px solid var(--clr-grey-10);
+  display: block;
+  cursor: zoom-in;
+  transition: var(--transition);
+}
+.thread-image img:hover,
+.reply-image img:hover {
+  box-shadow: 0 5px 20px rgba(1, 37, 125, 0.18);
+}
+.reply-image img { max-height: 300px; }
+
+/* Thread card thumbnail */
+.thread-thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--clr-grey-10);
+  flex-shrink: 0;
+}
+.thread-card-inner   { display: flex; gap: 1rem; align-items: flex-start; }
+.thread-card-content { flex: 1; min-width: 0; }
+
+/* ---- Lightbox ---- */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(1, 37, 125, 0.85);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+  animation: fadeIn 0.2s ease;
+}
+.lightbox-overlay img {
+  max-width: 92vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+.lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: var(--transition);
+}
+.lightbox-close:hover { color: var(--clr-primary-light); }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
