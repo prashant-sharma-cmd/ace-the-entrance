@@ -707,3 +707,212 @@ textarea {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
+.owner-actions {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-left: auto;          /* pushes buttons to the right inside flex thread-meta */
+}
+
+.btn-edit,
+.btn-delete {
+  background: none;
+  border: 1px solid transparent;
+  font-family: var(--ff-primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--spacing);
+  padding: 3px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  line-height: 1.4;
+}
+
+.btn-edit {
+  border-color: var(--clr-primary);
+  color: var(--clr-primary);
+}
+.btn-edit:hover {
+  background: var(--clr-primary);
+  color: var(--clr-white);
+}
+
+.btn-delete {
+  border-color: #e05252;
+  color: #c0392b;
+}
+.btn-delete:hover {
+  background: #c0392b;
+  color: var(--clr-white);
+}
+
+
+/* ---- Confirm-delete inline banner ---- */
+/* Appears inside the thread detail box or reply card when user clicks Delete */
+.confirm-delete-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  background: #fee2e2;
+  border: 1px solid #f87171;
+  border-radius: var(--radius);
+  font-family: var(--ff-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #b91c1c;
+  text-transform: uppercase;
+  letter-spacing: var(--spacing);
+  animation: fadeSlideIn 0.18s ease;
+}
+
+.confirm-delete-bar span { flex: 1; }
+
+.btn-confirm-delete {
+  background: #c0392b;
+  color: var(--clr-white);
+  border: none;
+  font-family: var(--ff-primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--spacing);
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-confirm-delete:hover { background: #a93226; }
+
+.btn-cancel-delete {
+  background: none;
+  border: 1px solid #e05252;
+  color: #c0392b;
+  font-family: var(--ff-primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--spacing);
+  padding: 4px 12px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-cancel-delete:hover { background: #fee2e2; }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ---- Edit / Delete modal ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(1, 37, 125, 0.55);
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-box {
+  background: var(--clr-white);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 560px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.5rem;
+  background: var(--clr-primary);
+}
+
+.modal-title {
+  font-family: var(--ff-secondary);
+  font-size: 1.4rem;
+  color: var(--clr-white);
+  margin: 0;
+  letter-spacing: var(--spacing);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--clr-primary-light);
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: var(--transition);
+  padding: 0;
+}
+.modal-close:hover { color: var(--clr-white); }
+
+.modal-body {
+  padding: 1.25rem 1.5rem 0.5rem;
+  background: var(--clr-grey-10);
+}
+
+/* Re-use existing .field styles — they work inside modal-body */
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 1rem 1.5rem;
+  background: var(--clr-grey-10);
+  border-top: 1px solid rgba(1, 37, 125, 0.15);
+}
+
+.modal-cancel-btn {
+  background: none;
+  border: 1px solid var(--clr-primary);
+  color: var(--clr-primary);
+  font-family: var(--ff-primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--spacing);
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.modal-cancel-btn:hover {
+  background: var(--clr-primary);
+  color: var(--clr-white);
+}
+
+/* .modal-save-btn reuses .submit-btn but needs width:auto inside the footer flex */
+.modal-save-btn {
+  width: auto !important;
+  border-radius: var(--radius) !important;
+  padding: 0.5rem 1.4rem !important;
+}
+
+/* Deleted / edited visual feedback on cards */
+.reply-card.being-deleted {
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.thread-full.being-deleted {
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}

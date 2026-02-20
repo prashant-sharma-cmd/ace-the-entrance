@@ -7,7 +7,7 @@ class Thread(models.Model):
         ("Science",  "Science"),
         ("Maths",     "Maths"),
         ("English", "English"),
-        ("GKIQ",     "GKIQ"),
+        ("GK & IQ",     "GK & IQ"),
         ("General",     "General"),
     ]
 

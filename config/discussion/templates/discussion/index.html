@@ -15,10 +15,10 @@
   <div class="masthead">
     <div class="masthead-top">
       <div>
-        <h1>The <em>Open</em> Forum</h1>
-        <p class="masthead-sub">Est. 2025 · Discourse &amp; Ideas</p>
+        <h1>Discussion Forum</h1>
+        <p class="masthead-sub">Ace the Entrance · Questions &amp; Doubts</p>
       </div>
-      <button class="new-btn" id="btn-open-new">+ Start Thread</button>
+      <button class="new-btn" id="btn-open-new">+ Ask Questions</button>
     </div>
   </div>
   <div class="content-divider"></div>
@@ -32,9 +32,10 @@
     <!-- Category Filter -->
     <div class="controls" id="category-controls">
       <button class="cat-btn active" data-category="All">All</button>
-      <button class="cat-btn" data-category="Technology">Technology</button>
-      <button class="cat-btn" data-category="Culture">Culture</button>
-      <button class="cat-btn" data-category="Work &amp; Life">Work &amp; Life</button>
+      <button class="cat-btn" data-category="Science">Science</button>
+      <button class="cat-btn" data-category="Maths">Maths</button>
+      <button class="cat-btn" data-category="English">English</button>
+      <button class="cat-btn" data-category="GK &amp; IQ">Gk &amp; Iq</button>
       <button class="cat-btn" data-category="General">General</button>
     </div>
 
@@ -65,6 +66,41 @@
     <!-- Replies -->
     <div class="divider" id="reply-count-divider">0 replies</div>
     <div id="reply-list"><!-- populated by JS --></div>
+
+    <div id="edit-modal-overlay" class="modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3 id="edit-modal-title" class="modal-title">Edit Post</h3>
+          <button class="modal-close" id="btn-modal-close" title="Close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <!-- shown only when editing a thread -->
+          <div id="edit-thread-fields">
+            <div class="field">
+              <label for="edit-title">Title</label>
+              <input type="text" id="edit-title" maxlength="255" placeholder="Thread title">
+            </div>
+            <div class="field">
+              <label for="edit-category">Category</label>
+              <select id="edit-category">
+                <option value="Technology">Technology</option>
+                <option value="Culture">Culture</option>
+                <option value="Work &amp; Life">Work &amp; Life</option>
+                <option value="General">General</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="edit-body">Body</label>
+            <textarea id="edit-body" style="min-height:120px;" placeholder="Post body"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-cancel-btn" id="btn-modal-cancel">Cancel</button>
+          <button class="submit-btn modal-save-btn" id="btn-modal-save">Save Changes</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Reply Form -->
     {% if user.is_authenticated %}
@@ -110,9 +146,10 @@
       <div class="field">
         <label for="new-category">Category</label>
         <select id="new-category">
-          <option value="Technology">Technology</option>
-          <option value="Culture">Culture</option>
-          <option value="Work &amp; Life">Work &amp; Life</option>
+          <option value="Science">Science</option>
+          <option value="Maths">Maths</option>
+          <option value="English">English</option>
+          <option value="GKIQ">GK &amp; IQ</option>
           <option value="General" selected>General</option>
         </select>
       </div>
@@ -162,12 +199,14 @@
 {% block extra_js %}
   <script>
     // Pass Django config to JS safely
+    console.log("No World");
     const FORUM_CONFIG = {
       apiBase:        "{% url 'forum:api-threads' %}",
       csrfToken:      "{{ csrf_token }}",
       isAuthenticated: {{ user.is_authenticated|yesno:"true,false" }},
       currentUser:    "{{ user.username|default:'' }}",
+      isSuperuser:     {{ user.is_superuser|yesno:"true,false" }},
     };
   </script>
-  <script src="{% static 'forum/js/forum.js' %}"></script>
+  <script src="{% static 'discussion/js/app.js' %}"></script>
 {% endblock %}

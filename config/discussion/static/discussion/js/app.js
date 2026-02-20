@@ -211,13 +211,187 @@ async function likeReply(id) {
   return res.json();
 }
 
+async function patchThread(id, data) {
+  const res = await fetch(`${FORUM_CONFIG.apiBase}${id}/`, {
+    method:  "PATCH",
+    headers: { ...csrfHeader(), "Content-Type": "application/json" },
+    body:    JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to update thread");
+  }
+  return res.json();
+}
+
+/* Delete a thread */
+async function deleteThread(id) {
+  const res = await fetch(`${FORUM_CONFIG.apiBase}${id}/`, {
+    method:  "DELETE",
+    headers: { ...csrfHeader(), "Content-Type": "application/json" },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to delete thread");
+  }
+  // DELETE returns 204 No Content — no body to parse
+}
+
+/* Update (PATCH) a reply */
+async function patchReply(id, body) {
+  const base = FORUM_CONFIG.apiBase.replace(/\/threads\/$/, "/replies/");
+  const res  = await fetch(`${base}${id}/`, {
+    method:  "PATCH",
+    headers: { ...csrfHeader(), "Content-Type": "application/json" },
+    body:    JSON.stringify({ body }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to update reply");
+  }
+  return res.json();
+}
+
+/* Delete a reply */
+async function deleteReply(id) {
+  const base = FORUM_CONFIG.apiBase.replace(/\/threads\/$/, "/replies/");
+  const res  = await fetch(`${base}${id}/`, {
+    method:  "DELETE",
+    headers: { ...csrfHeader(), "Content-Type": "application/json" },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to delete reply");
+  }
+}
+
+/*
+ * editModal — handles the shared Edit modal for both threads and replies.
+ * It stores a callback (onSave) that is set differently depending on
+ * whether the user is editing a thread or a reply.
+ */
+const editModal = {
+  overlay:    null,
+  onSave:     null,   // set before opening
+  editType:   null,   // "thread" | "reply"
+
+  init() {
+    this.overlay = document.getElementById("edit-modal-overlay");
+
+    document.getElementById("btn-modal-close") .addEventListener("click", () => this.close());
+    document.getElementById("btn-modal-cancel").addEventListener("click", () => this.close());
+    document.getElementById("btn-modal-save")  .addEventListener("click", () => this._save());
+
+    // Close when clicking the dim background
+    this.overlay.addEventListener("click", (e) => {
+      if (e.target === this.overlay) this.close();
+    });
+
+    // Close on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && this.overlay.style.display !== "none") this.close();
+    });
+  },
+
+  /** Open the modal pre-filled with existing values */
+  open({ type, title = "", category = "", body = "", onSave }) {
+    this.editType = type;
+    this.onSave   = onSave;
+
+    const threadFields = document.getElementById("edit-thread-fields");
+    threadFields.style.display = (type === "thread") ? "" : "none";
+
+    if (type === "thread") {
+      document.getElementById("edit-title").value    = title;
+      document.getElementById("edit-category").value = category;
+    }
+    document.getElementById("edit-body").value = body;
+    document.getElementById("edit-modal-title").textContent =
+      type === "thread" ? "Edit Thread" : "Edit Reply";
+
+    this.overlay.style.display = "flex";
+    // Focus first input for accessibility
+    const first = this.overlay.querySelector("input, textarea");
+    if (first) setTimeout(() => first.focus(), 50);
+  },
+
+  close() {
+    this.overlay.style.display = "none";
+    this.onSave  = null;
+    this.editType = null;
+  },
+
+  async _save() {
+    const body     = document.getElementById("edit-body").value.trim();
+    const title    = document.getElementById("edit-title")?.value.trim();
+    const category = document.getElementById("edit-category")?.value;
+
+    if (!body) { showToast("Body cannot be empty.", "warning"); return; }
+    if (this.editType === "thread" && !title) {
+      showToast("Title cannot be empty.", "warning"); return;
+    }
+
+    const saveBtn = document.getElementById("btn-modal-save");
+    saveBtn.disabled    = true;
+    saveBtn.textContent = "Saving…";
+
+    try {
+      const payload = (this.editType === "thread")
+        ? { title, category, body }
+        : { body };
+      await this.onSave(payload);
+      this.close();
+    } catch (err) {
+      showToast(err.message, "error");
+    } finally {
+      saveBtn.disabled    = false;
+      saveBtn.textContent = "Save Changes";
+    }
+  },
+};
+
+
+/**
+ * Show a red confirmation bar inside a container element.
+ * Calls onConfirm() when the user clicks "Yes, delete".
+ * Removes itself on Cancel.
+ *
+ * @param {HTMLElement} container  — element to append the bar into
+ * @param {Function}    onConfirm  — async function to call on confirm
+ */
+function showConfirmDeleteBar(container, onConfirm) {
+  // Remove any existing bar first
+  container.querySelector(".confirm-delete-bar")?.remove();
+
+  const bar = document.createElement("div");
+  bar.className = "confirm-delete-bar";
+  bar.innerHTML = `
+    <span>Are you sure you want to delete this?</span>
+    <button class="btn-cancel-delete">Cancel</button>
+    <button class="btn-confirm-delete">Yes, Delete</button>`;
+
+  bar.querySelector(".btn-cancel-delete").addEventListener("click", () => bar.remove());
+  bar.querySelector(".btn-confirm-delete").addEventListener("click", async () => {
+    bar.querySelector(".btn-confirm-delete").disabled    = true;
+    bar.querySelector(".btn-confirm-delete").textContent = "Deleting…";
+    await onConfirm();
+  });
+
+  container.appendChild(bar);
+}
+
 /* ─────────────────────────────────────────
    Render helpers
 ───────────────────────────────────────── */
-function renderThreadCard(thread) {
+function renderThreadCard_NEW(thread) {
   const liked   = state.likedThreads.has(thread.id);
   const replies = thread.reply_count ?? 0;
   const hasImg  = !!thread.image_url;
+
+  // Determine if the current user owns this thread
+  const isOwner = FORUM_CONFIG.isAuthenticated &&
+    (FORUM_CONFIG.currentUser === thread.author_username || FORUM_CONFIG.isSuperuser);
+
   const card    = document.createElement("div");
   card.className  = "thread-card";
   card.dataset.id = thread.id;
@@ -236,41 +410,163 @@ function renderThreadCard(thread) {
           <button class="like-btn${liked ? " liked" : ""}" data-thread-id="${thread.id}">
             &#x2665; <span class="like-count">${thread.likes}</span>
           </button>
+          ${isOwner ? `
+          <span class="owner-actions">
+            <button class="btn-edit"   data-action="edit-thread"   title="Edit thread">&#9998; Edit</button>
+            <button class="btn-delete" data-action="delete-thread" title="Delete thread">&#x1F5D1; Delete</button>
+          </span>` : ""}
         </div>
       </div>
     </div>`;
+
   card.querySelector(".like-btn").addEventListener("click", async (e) => {
     e.stopPropagation();
     await handleThreadLike(thread.id, card.querySelector(".like-btn"));
   });
+
+  // Edit button on card (opens thread then triggers edit)
+  if (isOwner) {
+    card.querySelector("[data-action='edit-thread']").addEventListener("click", async (e) => {
+      e.stopPropagation();
+      await openThread(thread.id);  // navigate to detail view first
+      // Small delay so detail view renders before we open modal
+      setTimeout(() => triggerThreadEdit(), 100);
+    });
+
+    card.querySelector("[data-action='delete-thread']").addEventListener("click", async (e) => {
+      e.stopPropagation();
+      // Show confirm bar inside the card itself
+      showConfirmDeleteBar(card, async () => {
+        card.classList.add("being-deleted");
+        try {
+          await deleteThread(thread.id);
+          showToast("Thread deleted.");
+          await showList();
+        } catch (err) {
+          card.classList.remove("being-deleted");
+          showToast(err.message, "error");
+        }
+      });
+    });
+  }
+
   card.addEventListener("click", () => openThread(thread.id));
   return card;
 }
 
+
+
 function renderReplyCard(reply) {
   const liked  = state.likedReplies.has(reply.id);
   const hasImg = !!reply.image_url;
+
+  // Determine if the current user owns this reply
+  const isOwner = FORUM_CONFIG.isAuthenticated &&
+    (FORUM_CONFIG.currentUser === reply.author_username || FORUM_CONFIG.isSuperuser);
+
   const card   = document.createElement("div");
   card.className  = "reply-card";
   card.dataset.id = reply.id;
   card.innerHTML  = `
     <div class="reply-author">${esc(reply.author_username)}</div>
-    <div class="reply-body">${esc(reply.body)}</div>
+    <div class="reply-body-text">${esc(reply.body)}</div>
     ${hasImg ? `<div class="reply-image"><img src="${esc(reply.image_url)}" alt="Reply attachment"></div>` : ""}
     <div class="reply-meta">
       <span>${timeAgo(reply.created_at)}</span>
       <button class="like-btn${liked ? " liked" : ""}" data-reply-id="${reply.id}">
         &#x2665; <span class="like-count">${reply.likes}</span>
       </button>
+      ${isOwner ? `
+      <span class="owner-actions">
+        <button class="btn-edit"   data-action="edit-reply"   title="Edit reply">&#9998; Edit</button>
+        <button class="btn-delete" data-action="delete-reply" title="Delete reply">&#x1F5D1; Delete</button>
+      </span>` : ""}
     </div>`;
+
   card.querySelector(".like-btn").addEventListener("click", async () => {
     await handleReplyLike(reply.id, card.querySelector(".like-btn"));
   });
+
   if (hasImg) {
     card.querySelector(".reply-image img").addEventListener("click", () => openLightbox(reply.image_url));
   }
+
+  if (isOwner) {
+    // Edit reply
+    card.querySelector("[data-action='edit-reply']").addEventListener("click", () => {
+      editModal.open({
+        type: "reply",
+        body: reply.body,
+        onSave: async ({ body }) => {
+          const updated = await patchReply(reply.id, body);
+          // Update the displayed text in-place without re-fetching
+          card.querySelector(".reply-body-text").textContent = updated.body;
+          reply.body = updated.body;  // keep local state in sync
+          showToast("Reply updated.");
+        },
+      });
+    });
+
+    // Delete reply
+    card.querySelector("[data-action='delete-reply']").addEventListener("click", () => {
+      showConfirmDeleteBar(card, async () => {
+        card.classList.add("being-deleted");
+        try {
+          await deleteReply(reply.id);
+          // Remove from local state array
+          state.activeReplies = state.activeReplies.filter(r => r.id !== reply.id);
+          card.remove();
+          const count = state.activeReplies.length;
+          document.getElementById("reply-count-divider").textContent =
+            `${count} ${count === 1 ? "reply" : "replies"}`;
+          if (!count) {
+            document.getElementById("reply-list").innerHTML =
+              `<div class="empty-state" style="margin-bottom:1rem;">Be the first to reply.</div>`;
+          }
+          showToast("Reply deleted.");
+        } catch (err) {
+          card.classList.remove("being-deleted");
+          showToast(err.message, "error");
+        }
+      });
+    });
+  }
+
   return card;
 }
+
+/**
+ * Opens the edit modal pre-filled with state.activeThread's values.
+ * Updates the thread detail view in-place on save (no full reload).
+ */
+function triggerThreadEdit() {
+  const thread = state.activeThread;
+  if (!thread) return;
+
+  editModal.open({
+    type:     "thread",
+    title:    thread.title,
+    category: thread.category,
+    body:     thread.body,
+    onSave: async ({ title, category, body }) => {
+      const updated = await patchThread(thread.id, { title, category, body });
+
+      // Update local state
+      state.activeThread = { ...thread, ...updated };
+
+      // Patch the visible detail box without a full reload
+      const box = document.getElementById("thread-detail-box");
+      if (box) {
+        box.querySelector(".thread-title").textContent  = updated.title;
+        box.querySelector(".thread-body").textContent   = updated.body;
+        box.querySelector(".thread-cat").textContent    = updated.category;
+      }
+
+      showToast("Thread updated.");
+    },
+  });
+}
+
 
 /* ─────────────────────────────────────────
    Like handlers
@@ -311,7 +607,7 @@ async function showList() {
     state.threads = await fetchThreads();
     list.innerHTML = "";
     if (!state.threads.length) { list.innerHTML = `<div class="empty-state">No threads yet in this category.</div>`; return; }
-    state.threads.forEach(t => list.appendChild(renderThreadCard(t)));
+    state.threads.forEach(t => list.appendChild(renderThreadCard_NEW(t)));
   } catch (err) {
     list.innerHTML = `<div class="empty-state">Could not load threads. Please try again.</div>`;
     console.error(err);
@@ -334,6 +630,9 @@ async function openThread(threadId) {
     state.activeReplies = replies;
     const liked  = state.likedThreads.has(thread.id);
     const hasImg = !!thread.image_url;
+    const isOwner = FORUM_CONFIG.isAuthenticated &&
+      (FORUM_CONFIG.currentUser === thread.author_username || FORUM_CONFIG.isSuperuser);
+
     detailBox.innerHTML = `
       <div class="thread-cat">${esc(thread.category)}</div>
       <div class="thread-title">${esc(thread.title)}</div>
@@ -343,9 +642,44 @@ async function openThread(threadId) {
         <button class="like-btn${liked ? " liked" : ""}" id="detail-like-btn">
           &#x2665; <span class="like-count">${thread.likes}</span>
         </button>
+        ${isOwner ? `
+        <span class="owner-actions">
+          <button class="btn-edit"   id="btn-edit-thread"   title="Edit thread">&#9998; Edit</button>
+          <button class="btn-delete" id="btn-delete-thread" title="Delete thread">&#x1F5D1; Delete</button>
+        </span>` : ""}
       </div>
       <div class="thread-body">${esc(thread.body)}</div>
       ${hasImg ? `<div class="thread-image"><img src="${esc(thread.image_url)}" alt="Thread attachment"></div>` : ""}`;
+
+    // Wire up existing like button
+    detailBox.querySelector("#detail-like-btn").addEventListener("click", async (e) => {
+      await handleThreadLike(thread.id, e.currentTarget);
+    });
+
+    if (hasImg) {
+      detailBox.querySelector(".thread-image img").addEventListener("click", () => openLightbox(thread.image_url));
+    }
+
+    // Wire up owner edit/delete buttons (only present for owners)
+    if (isOwner) {
+      detailBox.querySelector("#btn-edit-thread")?.addEventListener("click", () => {
+        triggerThreadEdit();
+      });
+
+      detailBox.querySelector("#btn-delete-thread")?.addEventListener("click", () => {
+        showConfirmDeleteBar(detailBox, async () => {
+          detailBox.classList.add("being-deleted");
+          try {
+            await deleteThread(thread.id);
+            showToast("Thread deleted.");
+            await showList();
+          } catch (err) {
+            detailBox.classList.remove("being-deleted");
+            showToast(err.message, "error");
+          }
+        });
+      });
+    }
     detailBox.querySelector("#detail-like-btn").addEventListener("click", async (e) => {
       await handleThreadLike(thread.id, e.currentTarget);
     });
@@ -440,6 +774,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     state.category = btn.dataset.category;
+    editModal.init();
     showList();
   });
 
@@ -465,6 +800,8 @@ document.addEventListener("DOMContentLoaded", () => {
     previewImgId: "reply-preview-img", filenameId: "reply-upload-filename",
     removeBtnId: "btn-remove-reply-image",
   });
+
+  editModal.init();
 
   showList();
 });
