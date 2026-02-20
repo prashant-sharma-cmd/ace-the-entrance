@@ -1,0 +1,140 @@
+{% extends "navbar.html" %}
+{% load static %}
+
+{% block title %}The Open Forum{% endblock %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'discussion/css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="forum-wrap">
+
+  <!-- ===================== MASTHEAD ===================== -->
+  <div class="masthead">
+    <div class="masthead-top">
+      <div>
+        <h1>The <em>Open</em> Forum</h1>
+        <p class="masthead-sub">Est. 2025 · Discourse &amp; Ideas</p>
+      </div>
+      <button class="new-btn" id="btn-open-new">+ Start Thread</button>
+    </div>
+  </div>
+  <div class="content-divider"></div>
+
+  <!-- ===================== TOAST ===================== -->
+  <div id="toast-container"></div>
+
+  <!-- ===================== THREAD LIST VIEW ===================== -->
+  <div id="view-list">
+
+    <!-- Category Filter -->
+    <div class="controls" id="category-controls">
+      <button class="cat-btn active" data-category="All">All</button>
+      <button class="cat-btn" data-category="Technology">Technology</button>
+      <button class="cat-btn" data-category="Culture">Culture</button>
+      <button class="cat-btn" data-category="Work &amp; Life">Work &amp; Life</button>
+      <button class="cat-btn" data-category="General">General</button>
+    </div>
+
+    <!-- Sort Row -->
+    <div class="sort-row">
+      Sort by:
+      <button class="sort-opt active" data-sort="recent">Recent</button>
+      <button class="sort-opt" data-sort="popular">Popular</button>
+    </div>
+
+    <!-- Thread Cards -->
+    <div id="thread-list">
+      <div class="loading">Loading threads…</div>
+    </div>
+
+  </div><!-- /#view-list -->
+
+  <!-- ===================== THREAD DETAIL VIEW ===================== -->
+  <div id="view-thread" style="display:none;">
+
+    <button class="back-btn" id="btn-back">&#8592; Back to threads</button>
+
+    <!-- Thread Full -->
+    <div class="thread-full" id="thread-detail-box">
+      <!-- populated by JS -->
+    </div>
+
+    <!-- Replies -->
+    <div class="divider" id="reply-count-divider">0 replies</div>
+    <div id="reply-list"><!-- populated by JS --></div>
+
+    <!-- Reply Form -->
+    {% if user.is_authenticated %}
+    <div class="reply-form" id="reply-form-box">
+      <h3>Join the discussion</h3>
+      <div class="form-group">
+        <textarea id="reply-body" placeholder="Write your reply…"></textarea>
+      </div>
+      <button class="submit-btn" id="btn-post-reply">Post Reply</button>
+    </div>
+    {% else %}
+    <div class="empty-state" style="margin-top:2rem;">
+      <a href="{% url 'login' %}?next={{ request.path }}" class="btn">Log in to reply</a>
+    </div>
+    {% endif %}
+
+  </div><!-- /#view-thread -->
+
+  <!-- ===================== NEW THREAD VIEW ===================== -->
+  <div id="view-new" style="display:none;">
+
+    <button class="back-btn" id="btn-back-new">&#8592; Back to threads</button>
+
+    {% if user.is_authenticated %}
+    <div class="new-thread-view">
+      <h2>Start a New Thread</h2>
+
+      <div class="field">
+        <label for="new-category">Category</label>
+        <select id="new-category">
+          <option value="Technology">Technology</option>
+          <option value="Culture">Culture</option>
+          <option value="Work &amp; Life">Work &amp; Life</option>
+          <option value="General" selected>General</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="new-title">Title</label>
+        <input type="text" id="new-title" placeholder="A clear, interesting title…" maxlength="255">
+      </div>
+
+      <div class="field">
+        <label for="new-body">Body</label>
+        <textarea id="new-body" placeholder="Share your thoughts, question, or idea…" style="min-height:140px;"></textarea>
+      </div>
+
+      <button class="submit-btn" id="btn-publish">Publish Thread</button>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <a href="{% url 'login' %}?next={{ request.path }}" class="btn">Log in to start a thread</a>
+    </div>
+    {% endif %}
+
+  </div><!-- /#view-new -->
+
+</div><!-- /.forum-wrap -->
+
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    // Pass Django config to JS safely
+    const FORUM_CONFIG = {
+      apiBase:        "{% url 'forum:api-threads' %}",
+      csrfToken:      "{{ csrf_token }}",
+      isAuthenticated: {{ user.is_authenticated|yesno:"true,false" }},
+      currentUser:    "{{ user.username|default:'' }}",
+    };
+  </script>
+  <script src="{% static 'forum/js/forum.js' %}"></script>
+{% endblock %}
