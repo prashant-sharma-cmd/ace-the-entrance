@@ -22,5 +22,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('home.urls'), name='home'),
     path('daily/', include('daily.urls'), name='daily'),
+    path('forum/', include('discussion.urls'), name='discussion'),
     path('sxcmodel/', include('sxcmodel.urls')),
 ]

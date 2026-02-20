@@ -1,0 +1,10 @@
+  <script>
+    // Pass Django config to JS safely
+    const FORUM_CONFIG = {
+      apiBase:        "{% url 'forum:api-threads' %}",
+      csrfToken:      "{{ csrf_token }}",
+      isAuthenticated: {{ user.is_authenticated|yesno:"true,false" }},
+      currentUser:    "{{ user.username|default:'' }}",
+    };
+  </script>
+  <script src="{% static 'forum/js/forum.js' %}"></script>

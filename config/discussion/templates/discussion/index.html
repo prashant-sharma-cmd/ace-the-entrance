@@ -1,4 +1,4 @@
-{% extends "navbar.html" %}
+{% extends "base_template.html" %}
 {% load static %}
 
 {% block title %}The Open Forum{% endblock %}
@@ -15,10 +15,10 @@
   <div class="masthead">
     <div class="masthead-top">
       <div>
-        <h1>The <em>Open</em> Forum</h1>
-        <p class="masthead-sub">Est. 2025 · Discourse &amp; Ideas</p>
+        <h1>Discussion Forum</h1>
+        <p class="masthead-sub">Ace the Entrance · Questions &amp; Doubts</p>
       </div>
-      <button class="new-btn" id="btn-open-new">+ Start Thread</button>
+      <button class="new-btn" id="btn-open-new">+ Ask Question </button>
     </div>
   </div>
   <div class="content-divider"></div>
@@ -32,9 +32,10 @@
     <!-- Category Filter -->
     <div class="controls" id="category-controls">
       <button class="cat-btn active" data-category="All">All</button>
-      <button class="cat-btn" data-category="Technology">Technology</button>
-      <button class="cat-btn" data-category="Culture">Culture</button>
-      <button class="cat-btn" data-category="Work &amp; Life">Work &amp; Life</button>
+      <button class="cat-btn" data-category="Science">Science</button>
+      <button class="cat-btn" data-category="Maths">Maths</button>
+      <button class="cat-btn" data-category="English">English</button>
+      <button class="cat-btn" data-category="GK &amp; IQ">Gk &amp; Iq</button>
       <button class="cat-btn" data-category="General">General</button>
     </div>
 
@@ -127,14 +128,5 @@
 {% endblock %}
 
 {% block extra_js %}
-  <script>
-    // Pass Django config to JS safely
-    const FORUM_CONFIG = {
-      apiBase:        "{% url 'forum:api-threads' %}",
-      csrfToken:      "{{ csrf_token }}",
-      isAuthenticated: {{ user.is_authenticated|yesno:"true,false" }},
-      currentUser:    "{{ user.username|default:'' }}",
-    };
-  </script>
-  <script src="{% static 'forum/js/forum.js' %}"></script>
+
 {% endblock %}
