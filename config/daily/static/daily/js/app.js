@@ -51,6 +51,24 @@ async function loadQuestions() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
         const data   = await response.json();
+
+        if (data.weekend === true) {
+            questionsReady = false;
+
+            const indicator = document.getElementById('fetch-indicator');
+            if (indicator) {
+            indicator.innerHTML =
+                '<span style="color:#008000;font-size:.85rem"> &#x1F6CF; Its saturday — take a rest! Fresh questions return on Sunday. </span>';
+            } else {
+                console.warn("Cannot show weekend message: #fetch-indicator element not found");
+            }
+
+            const startBtn = document.getElementById('start-btn');
+            if (startBtn) startBtn.disabled = true;
+
+            return; // ← stop processing
+        }
+
         questions    = data.questions;
         userAnswers  = new Array(questions.length).fill(null);
         questionsReady = true;

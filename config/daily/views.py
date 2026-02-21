@@ -16,6 +16,12 @@ class DailyQuizAPI(View):
     @staticmethod
     def get(request):
         today = timezone.now().date()
+        weekday = today.weekday()
+
+        if weekday == 5:
+            return JsonResponse({
+                'weekend': True,
+            }, status=200)
 
         quiz = DailyQuiz.objects.prefetch_related('questions__choices').filter(
             date=today).first()
