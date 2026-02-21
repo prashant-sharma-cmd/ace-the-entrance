@@ -49,11 +49,20 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Auth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.linedin_oauth2',
+
     # My Apps
     'home.apps.HomeConfig',
     'daily.apps.DailyConfig',
     'sxcmodel.apps.SxcmodelConfig',
     'discussion.apps.DiscussionConfig',
+    'accounts.apps.AccountsConfig',
 
     # Third Party Apps
     'django_crontab'
@@ -129,6 +138,45 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SITE_ID = 1
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+# Allauth config
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'firstname*' , 'lastname*' , 'dob*' ,'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+LOGIN_REDIRECT_URL = '/home/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+
+# Social Providers
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+        'APP': {
+            'client_id': 'YOUR_GOOGLE_CLIENT_ID',
+            'secret': 'YOUR_GOOGLE_SECRET',
+        }
+    },
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+        'APP': {
+            'client_id': 'YOUR_FB_APP_ID',
+            'secret': 'YOUR_FB_SECRET',
+        }
+    },
+    'linkedin_oauth2': {
+        'SCOPE': ['openid', 'profile', 'email'],
+        'APP': {
+            'client_id': 'YOUR_LINKEDIN_CLIENT_ID',
+            'secret': 'YOUR_LINKEDIN_SECRET',
+        }
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
