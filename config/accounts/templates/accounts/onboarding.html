@@ -1,0 +1,228 @@
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block title %}Set Up Your Profile{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/auth.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/onboarding.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page onboarding-page">
+
+  <div class="auth-topbar">
+    <a href="/" class="auth-brand">
+      MySite <span class="auth-brand-dot"></span>
+    </a>
+    <span class="auth-topbar-link" style="cursor:default; opacity:0.5;">
+      <i class="fas fa-user-gear"></i> Profile Setup
+    </span>
+  </div>
+
+  <div class="auth-wrapper" style="align-items:flex-start; padding-top:1.5rem;">
+    <div class="auth-card onboarding-card">
+      <div class="auth-card-stripe"></div>
+
+      <!-- Stepper progress -->
+      <div class="ob-progress">
+        <div class="ob-stepper">
+          {% for i in "1234" %}
+          {% with forloop.counter as n %}
+          <div class="ob-step{% if n == 1 %} active{% endif %}" id="ob-step-{{ n }}">
+            <div class="ob-step-dot" id="ob-dot-{{ n }}">
+              <span>{{ n }}</span>
+            </div>
+            {% if not forloop.last %}
+            <div class="ob-step-line" id="ob-line-{{ n }}"></div>
+            {% endif %}
+          </div>
+          {% endwith %}
+          {% endfor %}
+        </div>
+        <div class="ob-step-labels">
+          <span class="ob-step-label active" id="ob-label-1">Purpose</span>
+          <span class="ob-step-label" id="ob-label-2">Frequency</span>
+          <span class="ob-step-label" id="ob-label-3">Discovery</span>
+          <span class="ob-step-label" id="ob-label-4">Finish</span>
+        </div>
+        <p style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--auth-muted);margin-bottom:0;" id="ob-progress-text">Step 1 of 4</p>
+      </div>
+
+      <div class="auth-card-inner">
+        <form method="post" novalidate id="ob-form">
+          {% csrf_token %}
+
+          <!-- ── Panel 1: Purpose ── -->
+          <div class="ob-panel active" id="ob-panel-1">
+            <h3 class="ob-question">Why are you here?</h3>
+            <p class="ob-hint">Helps us tailor your experience from day one.</p>
+
+            <div class="ob-choice-grid cols-2">
+              {% for value, label in form.primary_purpose.field.choices %}
+              <div>
+                <input type="radio" name="primary_purpose"
+                  id="purpose_{{ value }}" value="{{ value }}"
+                  class="ob-choice-input"
+                  {% if form.primary_purpose.value == value %}checked{% endif %}>
+                <label class="ob-choice-label" for="purpose_{{ value }}">
+                  <span class="ob-choice-icon">
+                    {% if value == 'personal' %}🙋
+                    {% elif value == 'business' %}💼
+                    {% elif value == 'research' %}🔬
+                    {% elif value == 'entertainment' %}🎬
+                    {% elif value == 'ecommerce' %}🛍️
+                    {% else %}✨{% endif %}
+                  </span>
+                  <span class="ob-choice-text">{{ label }}</span>
+                </label>
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="ob-nav">
+              <button type="button" class="auth-btn ob-btn-next" onclick="obGoTo(2)">
+                Continue <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- ── Panel 2: Visit Frequency ── -->
+          <div class="ob-panel" id="ob-panel-2">
+            <h3 class="ob-question">How often will you visit?</h3>
+            <p class="ob-hint">So we know how to keep things fresh for you.</p>
+
+            <div class="ob-choice-grid cols-2">
+              {% for value, label in form.visit_frequency.field.choices %}
+              <div>
+                <input type="radio" name="visit_frequency"
+                  id="freq_{{ value }}" value="{{ value }}"
+                  class="ob-choice-input"
+                  {% if form.visit_frequency.value == value %}checked{% endif %}>
+                <label class="ob-choice-label" for="freq_{{ value }}">
+                  <span class="ob-choice-icon">
+                    {% if value == 'daily' %}📅
+                    {% elif value == 'weekly' %}🗓️
+                    {% elif value == 'monthly' %}📆
+                    {% else %}🌙{% endif %}
+                  </span>
+                  <span class="ob-choice-text">{{ label }}</span>
+                </label>
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="ob-nav">
+              <button type="button" class="ob-btn-back" onclick="obGoTo(1)">
+                <i class="fas fa-arrow-left"></i> Back
+              </button>
+              <button type="button" class="auth-btn ob-btn-next" onclick="obGoTo(3)">
+                Continue <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- ── Panel 3: Discovery + Interests ── -->
+          <div class="ob-panel" id="ob-panel-3">
+            <h3 class="ob-question">How did you find us?</h3>
+            <p class="ob-hint">We'd love to know where you came from.</p>
+
+            <div class="ob-choice-grid cols-3" style="margin-bottom:1.5rem;">
+              {% for value, label in form.how_discovered.field.choices %}
+              <div>
+                <input type="radio" name="how_discovered"
+                  id="disc_{{ value }}" value="{{ value }}"
+                  class="ob-choice-input"
+                  {% if form.how_discovered.value == value %}checked{% endif %}>
+                <label class="ob-choice-label" for="disc_{{ value }}">
+                  <span class="ob-choice-icon">
+                    {% if value == 'google' %}🔍
+                    {% elif value == 'social_media' %}📱
+                    {% elif value == 'friend' %}🤝
+                    {% elif value == 'advertisement' %}📣
+                    {% else %}💫{% endif %}
+                  </span>
+                  <span class="ob-choice-text">{{ label }}</span>
+                </label>
+              </div>
+              {% endfor %}
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-label" for="id_specific_interests">
+                What interests you most?
+              </label>
+              <textarea name="specific_interests" id="id_specific_interests"
+                class="ob-textarea"
+                placeholder="Tell us what you're looking for — topics you love, features you're excited about…">{{ form.specific_interests.value|default:'' }}</textarea>
+            </div>
+
+            <div class="ob-nav">
+              <button type="button" class="ob-btn-back" onclick="obGoTo(2)">
+                <i class="fas fa-arrow-left"></i> Back
+              </button>
+              <button type="button" class="auth-btn ob-btn-next" onclick="obGoTo(4)">
+                Continue <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- ── Panel 4: Newsletter + Finish ── -->
+          <div class="ob-panel" id="ob-panel-4">
+            <h3 class="ob-question">Almost there!</h3>
+            <p class="ob-hint">One last preference before we let you in.</p>
+
+            <!-- Newsletter toggle -->
+            <div class="ob-toggle-card">
+              <div class="ob-toggle-info">
+                <strong>Subscribe to our newsletter</strong>
+                <small>Tips, updates &amp; exclusive content — no spam ever</small>
+              </div>
+              <label class="ob-toggle-switch">
+                <input type="checkbox" name="newsletter_opt_in" id="id_newsletter"
+                  {% if form.newsletter_opt_in.value %}checked{% endif %}>
+                <span class="ob-toggle-knob"></span>
+              </label>
+            </div>
+
+            <!-- Summary -->
+            <div class="ob-summary">
+              <div class="ob-summary-title">Your selections so far</div>
+              <div class="ob-summary-grid">
+                <div class="ob-summary-row">
+                  <span class="ob-summary-key">Purpose</span>
+                  <span class="ob-summary-val" id="sum-purpose">—</span>
+                </div>
+                <div class="ob-summary-row">
+                  <span class="ob-summary-key">Frequency</span>
+                  <span class="ob-summary-val" id="sum-freq">—</span>
+                </div>
+                <div class="ob-summary-row">
+                  <span class="ob-summary-key">Found via</span>
+                  <span class="ob-summary-val" id="sum-disc">—</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="ob-nav">
+              <button type="button" class="ob-btn-back" onclick="obGoTo(3)">
+                <i class="fas fa-arrow-left"></i> Back
+              </button>
+              <button type="submit" class="auth-btn ob-btn-next" id="ob-submit">
+                <i class="fas fa-check"></i> Finish Setup
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'accounts/js/auth.js' %}"></script>
+<script src="{% static 'accounts/js/onboarding.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,185 @@
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block title %}Dashboard — {{ user.username }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/auth.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page dashboard-page">
+
+  <!-- Dashboard top nav -->
+  <nav class="dash-topbar">
+    <a href="/" class="dash-brand">
+      MySite <span class="auth-brand-dot"></span>
+    </a>
+    <div class="dash-nav-right">
+      <div class="dash-user-pill">
+        <div class="dash-avatar">{{ user.username|first|upper }}</div>
+        <span class="dash-username">{{ user.username }}</span>
+      </div>
+      <a href="{% url 'logout' %}" class="dash-logout">
+        <i class="fas fa-right-from-bracket"></i> Log out
+      </a>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="dash-content">
+
+    <!-- Welcome hero -->
+    <div class="dash-hero">
+      <h2>Hello, {{ user.username }}!</h2>
+      <p>Here's a snapshot of your account. Everything looks good.</p>
+      <div class="dash-hero-badges">
+        <span class="dash-hero-badge">
+          <i class="fas fa-circle-check"></i>
+          {% if user.email_verified %}Email Verified{% else %}Email Unverified{% endif %}
+        </span>
+        <span class="dash-hero-badge">
+          <i class="fas fa-calendar"></i>
+          Joined {{ user.date_joined|date:"M d, Y" }}
+        </span>
+        {% if onboarding and onboarding.completed %}
+        <span class="dash-hero-badge">
+          <i class="fas fa-star"></i>
+          Profile Complete
+        </span>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="dash-stats">
+      <div class="dash-stat">
+        <div class="dash-stat-icon"><i class="fas fa-envelope"></i></div>
+        <div class="dash-stat-val">{% if user.email_verified %}✓{% else %}✗{% endif %}</div>
+        <p class="dash-stat-label">Email Status</p>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-icon"><i class="fas fa-layer-group"></i></div>
+        <div class="dash-stat-val">{% if onboarding and onboarding.completed %}100%{% else %}—{% endif %}</div>
+        <p class="dash-stat-label">Profile</p>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-icon"><i class="fas fa-clock"></i></div>
+        <div class="dash-stat-val">{{ user.last_login|date:"M d" }}</div>
+        <p class="dash-stat-label">Last Login</p>
+      </div>
+    </div>
+
+    <!-- Info grid -->
+    <div class="dash-grid">
+
+      <!-- Account details -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <i class="fas fa-user"></i>
+          <h4>Account Details</h4>
+        </div>
+        <div class="dash-card-body">
+          <div class="dash-row">
+            <span class="dash-row-key">Username</span>
+            <span class="dash-row-val">{{ user.username }}</span>
+          </div>
+          <div class="dash-row">
+            <span class="dash-row-key">Email</span>
+            <span class="dash-row-val" style="font-size:0.82rem;">{{ user.email }}</span>
+          </div>
+          <div class="dash-row">
+            <span class="dash-row-key">Status</span>
+            <span>
+              {% if user.email_verified %}
+                <span class="verified-chip"><i class="fas fa-check"></i> Verified</span>
+              {% else %}
+                <span class="unverified-chip"><i class="fas fa-triangle-exclamation"></i> Unverified</span>
+              {% endif %}
+            </span>
+          </div>
+          <div class="dash-row">
+            <span class="dash-row-key">Member Since</span>
+            <span class="dash-row-val">{{ user.date_joined|date:"F Y" }}</span>
+          </div>
+
+          <div class="dash-actions">
+            <a href="#" class="dash-action-btn primary">
+              <i class="fas fa-pen"></i> Edit Profile
+            </a>
+            <a href="{% url 'logout' %}" class="dash-action-btn danger">
+              <i class="fas fa-right-from-bracket"></i> Log Out
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preferences -->
+      <div class="dash-card">
+        <div class="dash-card-head">
+          <i class="fas fa-sliders"></i>
+          <h4>Your Preferences</h4>
+        </div>
+        <div class="dash-card-body">
+          {% if onboarding and onboarding.completed %}
+            <div class="pref-row">
+              <div class="pref-icon"><i class="fas fa-bullseye"></i></div>
+              <div>
+                <div class="pref-key">Primary Purpose</div>
+                <div class="pref-val">{{ onboarding.get_primary_purpose_display }}</div>
+              </div>
+            </div>
+            <div class="pref-row">
+              <div class="pref-icon"><i class="fas fa-clock"></i></div>
+              <div>
+                <div class="pref-key">Visit Frequency</div>
+                <div class="pref-val">{{ onboarding.get_visit_frequency_display }}</div>
+              </div>
+            </div>
+            <div class="pref-row">
+              <div class="pref-icon"><i class="fas fa-magnifying-glass"></i></div>
+              <div>
+                <div class="pref-key">How They Found Us</div>
+                <div class="pref-val">{{ onboarding.get_how_discovered_display }}</div>
+              </div>
+            </div>
+            {% if onboarding.specific_interests %}
+            <div class="pref-row">
+              <div class="pref-icon"><i class="fas fa-heart"></i></div>
+              <div>
+                <div class="pref-key">Interests</div>
+                <div class="pref-val" style="font-weight:500;font-size:0.83rem;">
+                  {{ onboarding.specific_interests|truncatechars:80 }}
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="pref-row">
+              <div class="pref-icon"><i class="fas fa-newspaper"></i></div>
+              <div>
+                <div class="pref-key">Newsletter</div>
+                <div class="pref-val">{% if onboarding.newsletter_opt_in %}Subscribed ✓{% else %}Not subscribed{% endif %}</div>
+              </div>
+            </div>
+          {% else %}
+            <div class="dash-empty">
+              <i class="fas fa-circle-exclamation"></i>
+              <p>You haven't completed your profile setup yet.</p>
+              <a href="{% url 'onboarding' %}" class="dash-action-btn primary">
+                <i class="fas fa-arrow-right"></i> Complete Setup
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'accounts/js/auth.js' %}"></script>
+{% endblock %}

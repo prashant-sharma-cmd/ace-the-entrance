@@ -1,0 +1,82 @@
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block title %}Resend Verification{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/auth.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/email_sent.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+
+  <div class="auth-topbar">
+    <a href="/" class="auth-brand">
+      MySite <span class="auth-brand-dot"></span>
+    </a>
+    <a href="/" class="auth-topbar-link">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+  </div>
+
+  <div class="auth-wrapper">
+    <div class="auth-card" style="max-width:440px;">
+      <div class="auth-card-stripe"></div>
+      <div class="auth-card-inner">
+
+        <div class="auth-card-header">
+          <div class="auth-icon-wrap">
+            <i class="fas fa-rotate-right"></i>
+          </div>
+          <h2>Resend Link</h2>
+          <p>Enter your email and we'll send a fresh verification link</p>
+        </div>
+
+        {% for message in messages %}
+        <div class="auth-alert {% if 'success' in message.tags %}success{% elif 'error' in message.tags %}error{% else %}info{% endif %}">
+          <i class="fas fa-circle-info"></i>
+          <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+
+        <form method="post" novalidate id="resend-form">
+          {% csrf_token %}
+
+          <div class="auth-form-group">
+            <label class="auth-label" for="id_resend_email">Email Address</label>
+            <div class="auth-input-wrap">
+              <i class="fas fa-envelope auth-input-icon"></i>
+              <input type="email" name="email" id="id_resend_email"
+                class="auth-input"
+                placeholder="you@example.com"
+                required autofocus autocomplete="email" />
+            </div>
+          </div>
+
+          <button type="submit" class="auth-btn" id="resend-btn">
+            <i class="fas fa-paper-plane"></i>&nbsp; Send Verification Email
+          </button>
+        </form>
+
+      </div>
+
+      <div class="auth-card-footer">
+        Already verified? <a href="{% url 'login' %}">Sign in</a>
+        &nbsp;·&nbsp;
+        <a href="{% url 'signup' %}">Create new account</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'accounts/js/auth.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    initLoadingSubmit('resend-form', 'resend-btn', 'Sending…');
+  });
+</script>
+{% endblock %}

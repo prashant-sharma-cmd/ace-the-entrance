@@ -1,0 +1,123 @@
+/* ============================================================
+   LOGIN.CSS
+   ============================================================ */
+
+/* Left decorative panel (only shows on wide screens) */
+.login-split {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 3rem 4rem 3rem 3rem;
+  min-height: calc(100vh - 72px);
+}
+
+.login-deco {
+  max-width: 380px;
+  animation: authFadeUp 0.7s ease 0.3s both;
+}
+
+.login-deco-tagline {
+  font-family: var(--auth-font-display);
+  font-size: 3rem;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+.login-deco-tagline em {
+  font-style: italic;
+  color: var(--auth-gold-light);
+}
+
+.login-deco-sub {
+  color: rgba(255,255,255,0.65);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+/* Trust badges */
+.trust-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.trust-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.trust-badge i {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  color: var(--auth-gold-light);
+}
+
+/* Right card panel */
+.login-card-panel {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 3rem 3rem 3rem 2rem;
+  min-height: calc(100vh - 72px);
+  flex: 0 0 52%;
+}
+
+/* Full layout row */
+.login-layout {
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - 72px);
+  position: relative;
+  z-index: 10;
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 900px) {
+  .login-split      { display: none; }
+  .login-card-panel {
+    justify-content: center;
+    padding: 1.5rem;
+    flex: 1;
+    min-height: auto;
+    align-items: flex-start;
+    padding-top: 1rem;
+  }
+  .login-layout { flex-direction: column; min-height: auto; }
+}
+
+/* Floating orbs behind card */
+.login-orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(80px);
+  opacity: 0.35;
+}
+.login-orb-1 {
+  width: 400px; height: 400px;
+  background: var(--clr-primary-light);
+  bottom: -100px; right: 20%;
+  animation: floatY 8s ease-in-out infinite;
+}
+.login-orb-2 {
+  width: 250px; height: 250px;
+  background: var(--auth-gold);
+  top: 10%; left: 15%;
+  animation: floatY 11s ease-in-out 2s infinite;
+}

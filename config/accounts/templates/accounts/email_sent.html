@@ -1,0 +1,78 @@
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block title %}Check Your Email{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/auth.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/email_sent.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+
+  <div class="auth-topbar">
+    <a href="/" class="auth-brand">
+      MySite <span class="auth-brand-dot"></span>
+    </a>
+    <a href="/" class="auth-topbar-link">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+  </div>
+
+  <div class="auth-wrapper">
+    <div class="auth-card" style="max-width:440px;">
+      <div class="auth-card-stripe"></div>
+      <div class="auth-card-inner email-sent-body">
+
+        <!-- Animated envelope -->
+        <div class="email-icon-wrap">
+          <div class="email-icon-circle">
+            <i class="fas fa-envelope-open-text"></i>
+          </div>
+          <div class="email-ping"></div>
+        </div>
+
+        <h2 style="font-family:var(--auth-font-display); color:var(--clr-primary); font-size:1.9rem; text-transform:none; letter-spacing:0; margin-bottom:0.4rem;">
+          Check your inbox!
+        </h2>
+        <p style="color:var(--auth-muted); font-size:0.9rem; max-width:300px; margin:0 auto;">
+          We've sent a verification link to your email. Click it to activate your account.
+        </p>
+
+        <!-- Steps -->
+        <ul class="email-steps">
+          <li class="email-step">
+            <span class="email-step-num">1</span>
+            Open your email inbox
+          </li>
+          <li class="email-step">
+            <span class="email-step-num">2</span>
+            Find the email from <strong>MySite</strong>
+          </li>
+          <li class="email-step">
+            <span class="email-step-num">3</span>
+            Click <em>"Verify Email Address"</em>
+          </li>
+        </ul>
+
+        <p class="email-expiry">
+          <i class="fas fa-clock"></i>
+          Link expires in <strong>&nbsp;24 hours</strong>
+        </p>
+
+      </div>
+
+      <div class="auth-card-footer">
+        Didn't get it? Check spam, or&nbsp;
+        <a href="{% url 'resend_verification' %}">resend the email</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'accounts/js/auth.js' %}"></script>
+{% endblock %}

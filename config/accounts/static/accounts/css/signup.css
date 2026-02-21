@@ -1,0 +1,54 @@
+/* ============================================================
+   SIGNUP.CSS
+   ============================================================ */
+
+/* Wider card for signup — more fields */
+.signup-card { max-width: 520px; }
+
+/* Two-column name row */
+.auth-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+@media (max-width: 480px) {
+  .auth-form-row { grid-template-columns: 1fr; }
+}
+
+/* Terms notice */
+.auth-terms {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--auth-muted);
+  text-align: center;
+  margin-top: 0.85rem;
+  line-height: 1.6;
+}
+.auth-terms a {
+  color: var(--clr-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+.auth-terms a:hover { text-decoration: underline; }
+
+/* Background orbs */
+.signup-orb {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(90px);
+  opacity: 0.3;
+}
+.signup-orb-1 {
+  width: 350px; height: 350px;
+  background: var(--clr-primary-light);
+  top: -80px; left: -80px;
+  animation: floatY 9s ease-in-out infinite;
+}
+.signup-orb-2 {
+  width: 280px; height: 280px;
+  background: var(--auth-gold);
+  bottom: 5%; right: 5%;
+  animation: floatY 12s ease-in-out 3s infinite;
+}
