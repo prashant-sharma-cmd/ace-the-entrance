@@ -38,8 +38,12 @@
   content: '';
   position: fixed;
   inset: 0;
-  background:
-    linear-gradient(135deg, var(--clr-primary) 0%, #021f6b 100%);
+  background: linear-gradient(
+    160deg,
+    #1A1B4B 0%,
+    #0E0F3D 45%,
+    #2D1B69 100%
+    );
   z-index: 0;
 }
 
@@ -58,7 +62,12 @@
 @media (max-width: 768px) {
   .auth-page::after { display: none; }
   .auth-page::before {
-    background: linear-gradient(160deg, var(--clr-primary) 0%, #021f6b 60%, #0a3a8c 100%);
+    background: linear-gradient(
+    160deg,
+    #1A1B4B 0%,
+    #0E0F3D 45%,
+    #2D1B69 100%
+    );
   }
 }
 
@@ -287,7 +296,10 @@
 }
 .auth-label-link:hover { color: var(--clr-primary); }
 
-.auth-input-wrap { position: relative; }
+.auth-input-wrap {
+  position: relative;
+  box-sizing: border-box;
+}
 
 .auth-input-icon {
   position: absolute;
@@ -305,7 +317,8 @@
 
 .auth-input {
   display: block;
-  width: 100%;
+  width: calc(100% - 2px);
+  box-sizing: border-box;
   padding: 0.8rem 1rem 0.8rem 2.6rem;
   background: var(--auth-input-bg);
   border: 1.5px solid transparent;

@@ -128,7 +128,7 @@
     </div>
     {% else %}
     <div class="empty-state" style="margin-top:2rem;">
-      <a href="{% url 'login' %}?next={{ request.path }}" class="btn">Log in to reply</a>
+      <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn">Log in to reply</a>
     </div>
     {% endif %}
 
@@ -186,7 +186,7 @@
     </div>
     {% else %}
     <div class="empty-state">
-      <a href="{% url 'login' %}?next={{ request.path }}" class="btn">Log in to start a thread</a>
+      <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn">Log in to start a thread</a>
     </div>
     {% endif %}
 

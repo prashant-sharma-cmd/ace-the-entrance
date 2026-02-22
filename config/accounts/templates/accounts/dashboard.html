@@ -21,7 +21,7 @@
         <div class="dash-avatar">{{ user.username|first|upper }}</div>
         <span class="dash-username">{{ user.username }}</span>
       </div>
-      <a href="{% url 'logout' %}" class="dash-logout">
+      <a href="{% url 'accounts:logout' %}" class="dash-logout">
         <i class="fas fa-right-from-bracket"></i> Log out
       </a>
     </div>
@@ -108,7 +108,7 @@
             <a href="#" class="dash-action-btn primary">
               <i class="fas fa-pen"></i> Edit Profile
             </a>
-            <a href="{% url 'logout' %}" class="dash-action-btn danger">
+            <a href="{% url 'accounts:logout' %}" class="dash-action-btn danger">
               <i class="fas fa-right-from-bracket"></i> Log Out
             </a>
           </div>
@@ -166,7 +166,7 @@
             <div class="dash-empty">
               <i class="fas fa-circle-exclamation"></i>
               <p>You haven't completed your profile setup yet.</p>
-              <a href="{% url 'onboarding' %}" class="dash-action-btn primary">
+              <a href="{% url 'accounts:onboarding' %}" class="dash-action-btn primary">
                 <i class="fas fa-arrow-right"></i> Complete Setup
               </a>
             </div>

@@ -1,19 +1,21 @@
 {% extends "base_template.html" %}
 {% load static %}
 
-{% block title %}Create Account{% endblock %}
+{% block title %}Sign In{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'accounts/css/auth.css' %}">
-<link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
+<link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="auth-page">
 
-  <div class="signup-orb signup-orb-1"></div>
-  <div class="signup-orb signup-orb-2"></div>
+  <!-- Floating orbs -->
+  <div class="login-orb login-orb-1"></div>
+  <div class="login-orb login-orb-2"></div>
 
+  <!-- Top bar -->
   <div class="auth-topbar">
     <a href="/" class="auth-brand">
       MySite <span class="auth-brand-dot"></span>
@@ -23,159 +25,117 @@
     </a>
   </div>
 
-  <div class="auth-wrapper">
-    <div class="auth-card signup-card">
-      <div class="auth-card-stripe"></div>
-      <div class="auth-card-inner">
+  <!-- Split layout -->
+  <div class="login-layout">
 
-        <div class="auth-card-header">
-          <div class="auth-icon-wrap">
-            <i class="fas fa-user-plus"></i>
+    <!-- Left: decorative copy panel -->
+    <div class="login-split">
+      <div class="login-deco">
+        <h1 class="login-deco-tagline">
+          Welcome<br><em>back.</em>
+        </h1>
+        <p class="login-deco-sub">
+          Sign in to pick up where you left off. Your work, your progress,
+          and your preferences are all waiting for you.
+        </p>
+        <div class="trust-badges">
+          <div class="trust-badge">
+            <i class="fas fa-lock"></i>
+            <span>Secured with 256-bit encryption</span>
           </div>
-          <h2>Create Account</h2>
-          <p>Join us — it takes less than a minute</p>
+          <div class="trust-badge">
+            <i class="fas fa-user-shield"></i>
+            <span>Your data is never sold or shared</span>
+          </div>
+          <div class="trust-badge">
+            <i class="fas fa-bolt"></i>
+            <span>Instant access after sign in</span>
+          </div>
         </div>
+      </div>
+    </div>
 
-        {% if form.non_field_errors %}
-        <div class="auth-alert error">
-          <i class="fas fa-circle-exclamation"></i>
-          <span>{{ form.non_field_errors|join:", " }}</span>
-        </div>
-        {% endif %}
+    <!-- Right: auth card -->
+    <div class="login-card-panel">
+      <div class="auth-card">
+        <div class="auth-card-stripe"></div>
+        <div class="auth-card-inner">
 
-        <!-- Social signup -->
-        <div class="social-row cols-3">
-          <a href="{% url 'google_login' %}" class="social-btn google">
-            <i class="fab fa-google"></i> Google
-          </a>
-          <a href="{% url 'facebook_login' %}" class="social-btn facebook">
-            <i class="fab fa-facebook"></i> Facebook
-          </a>
-          <a href="{% url 'github_login' %}" class="social-btn github">
-            <i class="fab fa-github"></i> GitHub
-          </a>
-        </div>
-        <div class="social-row cols-2" style="margin-top:0.6rem;">
-          <a href="{% url 'twitter_oauth2_login' %}" class="social-btn twitter">
-            <i class="fab fa-twitter"></i> Twitter
-          </a>
-          <a href="{% url 'linkedin_oauth2_login' %}" class="social-btn linkedin">
-            <i class="fab fa-linkedin"></i> LinkedIn
-          </a>
-        </div>
-
-        <div class="auth-divider">or with email</div>
-
-        <form method="post" novalidate id="signup-form">
-          {% csrf_token %}
-
-          <!-- Username + Email row -->
-          <div class="auth-form-row">
-            <div class="auth-form-group">
-              <label class="auth-label" for="id_username">Username</label>
-              <div class="auth-input-wrap">
-                <i class="fas fa-at auth-input-icon"></i>
-                <input type="text" name="username" id="id_username"
-                  class="auth-input {% if form.username.errors %}is-error{% endif %}"
-                  placeholder="your_handle"
-                  value="{{ form.username.value|default:'' }}"
-                  autocomplete="username" />
-              </div>
-              {% if form.username.errors %}
-              <div class="auth-field-error">
-                <i class="fas fa-triangle-exclamation"></i>
-                {{ form.username.errors|join:", " }}
-              </div>
-              {% endif %}
+          <div class="auth-card-header">
+            <div class="auth-icon-wrap">
+              <i class="fa-solid fa-right-to-bracket"></i>
             </div>
+            <h2>Sign In</h2>
+            <p>Enter your credentials to continue</p>
+          </div>
+
+          {% if error %}
+          <div class="auth-alert error">
+            <i class="fas fa-circle-exclamation"></i>
+            <span>{{ error }}</span>
+          </div>
+          {% endif %}
+
+          <!-- Social buttons -->
+          {% load socialaccount %}
+          <div class="social-row cols-3">
+            <a href="{% provider_login_url 'google' %}" class="social-btn google">
+              <i class="fab fa-google"></i> Google
+            </a>
+          </div>
+
+          <div class="auth-divider">or with email</div>
+
+          <form method="post" novalidate id="login-form">
+            {% csrf_token %}
 
             <div class="auth-form-group">
-              <label class="auth-label" for="id_email">Email</label>
+              <label class="auth-label" for="id_email">Email Address</label>
               <div class="auth-input-wrap">
                 <i class="fas fa-envelope auth-input-icon"></i>
                 <input type="email" name="email" id="id_email"
-                  class="auth-input {% if form.email.errors %}is-error{% endif %}"
+                  class="auth-input"
                   placeholder="you@example.com"
-                  value="{{ form.email.value|default:'' }}"
-                  autocomplete="email" />
+                  autocomplete="email" autofocus />
               </div>
-              {% if form.email.errors %}
-              <div class="auth-field-error">
-                <i class="fas fa-triangle-exclamation"></i>
-                {{ form.email.errors|join:", " }}
+            </div>
+
+            <div class="auth-form-group">
+              <label class="auth-label" for="id_password">
+                Password
+                <a href="#" class="auth-label-link">Forgot password?</a>
+              </label>
+              <div class="auth-input-wrap">
+                <i class="fas fa-lock auth-input-icon"></i>
+                <input type="password" name="password" id="id_password"
+                  class="auth-input has-toggle"
+                  placeholder="Your password"
+                  autocomplete="current-password" />
+                <button type="button" class="auth-toggle-pw"
+                  data-pw-toggle="id_password" aria-label="Toggle password visibility">
+                  <i class="fas fa-eye"></i>
+                </button>
               </div>
-              {% endif %}
             </div>
-          </div>
 
-          <!-- Password -->
-          <div class="auth-form-group">
-            <label class="auth-label" for="id_password1">Password</label>
-            <div class="auth-input-wrap">
-              <i class="fas fa-lock auth-input-icon"></i>
-              <input type="password" name="password1" id="id_password1"
-                class="auth-input has-toggle {% if form.password1.errors %}is-error{% endif %}"
-                placeholder="Create a strong password"
-                autocomplete="new-password" />
-              <button type="button" class="auth-toggle-pw"
-                data-pw-toggle="id_password1" aria-label="Toggle password">
-                <i class="fas fa-eye"></i>
-              </button>
+            <div class="auth-check-row">
+              <input type="checkbox" name="remember_me" id="remember_me">
+              <label class="auth-check-label" for="remember_me">Keep me signed in for 30 days</label>
             </div>
-            <!-- Strength meter -->
-            <div class="pw-strength-track">
-              <div class="pw-strength-bar" id="pw-strength-bar"></div>
-            </div>
-            <div class="pw-strength-label" id="pw-strength-label"></div>
-            {% if form.password1.errors %}
-            <div class="auth-field-error">
-              <i class="fas fa-triangle-exclamation"></i>
-              {{ form.password1.errors|join:", " }}
-            </div>
-            {% endif %}
-          </div>
 
-          <!-- Confirm password -->
-          <div class="auth-form-group">
-            <label class="auth-label" for="id_password2">Confirm Password</label>
-            <div class="auth-input-wrap">
-              <i class="fas fa-lock auth-input-icon"></i>
-              <input type="password" name="password2" id="id_password2"
-                class="auth-input has-toggle {% if form.password2.errors %}is-error{% endif %}"
-                placeholder="Repeat your password"
-                autocomplete="new-password" />
-              <button type="button" class="auth-toggle-pw"
-                data-pw-toggle="id_password2" aria-label="Toggle confirm password">
-                <i class="fas fa-eye"></i>
-              </button>
-            </div>
-            <div class="auth-field-error" id="pw-match-error" style="display:none;">
-              <i class="fas fa-triangle-exclamation"></i> Passwords do not match
-            </div>
-            {% if form.password2.errors %}
-            <div class="auth-field-error">
-              <i class="fas fa-triangle-exclamation"></i>
-              {{ form.password2.errors|join:", " }}
-            </div>
-            {% endif %}
-          </div>
+            <button type="submit" class="auth-btn" id="login-btn">
+              <i class="fas fa-right-to-bracket"></i>&nbsp; Sign In
+            </button>
+          </form>
 
-          <button type="submit" class="auth-btn" id="signup-btn">
-            <i class="fas fa-user-plus"></i>&nbsp; Create My Account
-          </button>
+        </div>
 
-          <p class="auth-terms">
-            By signing up you agree to our
-            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-          </p>
-        </form>
-
-      </div>
-
-      <div class="auth-card-footer">
-        Already have an account? <a href="{% url 'login' %}">Sign in here</a>
+        <div class="auth-card-footer">
+          Don't have an account? <a href="{% url 'accounts:signup' %}">Create one free</a>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 {% endblock %}
@@ -184,9 +144,7 @@
 <script src="{% static 'accounts/js/auth.js' %}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    initStrengthMeter('id_password1', 'pw-strength-bar', 'pw-strength-label');
-    initPasswordMatch('id_password1', 'id_password2', 'pw-match-error', 'signup-btn');
-    initLoadingSubmit('signup-form', 'signup-btn', 'Creating account…');
+    initLoadingSubmit('login-form', 'login-btn', 'Signing in…');
   });
 </script>
 {% endblock %}

@@ -54,8 +54,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.linedin_oauth2',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.twitter',
 
     # My Apps
     'home.apps.HomeConfig',
@@ -76,6 +76,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -150,8 +151,14 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'firstname*' , 'lastname*' , 'dob*' ,'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-LOGIN_REDIRECT_URL = '/home/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/login/'
+ACCOUNT_LOGIN_URL          = '/accounts/login/'
+ACCOUNT_LOGOUT_URL         = '/accounts/logout/'
+ACCOUNT_SIGNUP_URL         = '/accounts/signup/'
+LOGIN_URL                  = '/accounts/login/'
+LOGIN_REDIRECT_URL         = '/accounts/onboarding/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
 # Social Providers
 SOCIALACCOUNT_PROVIDERS = {
@@ -159,26 +166,14 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
         'APP': {
-            'client_id': 'YOUR_GOOGLE_CLIENT_ID',
-            'secret': 'YOUR_GOOGLE_SECRET',
-        }
-    },
-    'facebook': {
-        'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile'],
-        'APP': {
-            'client_id': 'YOUR_FB_APP_ID',
-            'secret': 'YOUR_FB_SECRET',
-        }
-    },
-    'linkedin_oauth2': {
-        'SCOPE': ['openid', 'profile', 'email'],
-        'APP': {
-            'client_id': 'YOUR_LINKEDIN_CLIENT_ID',
-            'secret': 'YOUR_LINKEDIN_SECRET',
+            'client_id': os.getenv('OAUTH_GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('OAUTH_GOOGLE_CLIENT_SECRET'),
         }
     },
 }
+
+ACCOUNT_ADAPTER        = 'accounts.adapter.AccountAdapter'
+SOCIALACCOUNT_ADAPTER  = 'accounts.adapter.SocialAccountAdapter'
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
@@ -211,3 +206,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
+

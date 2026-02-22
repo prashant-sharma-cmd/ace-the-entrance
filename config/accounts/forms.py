@@ -1,17 +1,14 @@
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
-from models import User, UserOnboarding
+from .models import User, UserOnboarding
 
 class SignUpForm(forms.ModelForm):
-    first_name = forms.CharField(widget=forms.CharField, label="First Name")
-    last_name = forms.CharField(widget=forms.CharField, label="Last Name")
     password1 = forms.CharField(widget=forms.PasswordInput, label='Password')
     password2 = forms.CharField(widget=forms.PasswordInput, label='Confirm Password')
-    phone_number = PhoneNumberField(required=False, help_text="Optional — for phone-based login")
 
     class Meta:
         model = User
-        fields = ['firstname', 'lastname', 'username', 'email', 'phone_number']
+        fields = ['first_name', 'last_name', 'username', 'email', 'phone_number']
 
     def clean(self):
         cleaned_data = super().clean()

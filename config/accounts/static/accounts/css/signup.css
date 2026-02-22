@@ -3,7 +3,7 @@
    ============================================================ */
 
 /* Wider card for signup — more fields */
-.signup-card { max-width: 520px; }
+.signup-card { max-width: 560px; }
 
 /* Two-column name row */
 .auth-form-row {

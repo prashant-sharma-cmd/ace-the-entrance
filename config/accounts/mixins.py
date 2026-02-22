@@ -30,5 +30,5 @@ class OnboardingCompletedMixin(VerifiedEmailRequiredMixin):
             return result
         user = request.user
         if not hasattr(user, 'onboarding') or not user.onboarding.completed:
-            return redirect('accounts: onboarding')
+            return redirect('accounts:onboarding')
         return result

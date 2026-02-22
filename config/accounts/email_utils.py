@@ -10,7 +10,7 @@ def send_verification_email(request, user):
     token_obj = EmailVerificationToken.objects.create(user=user)
 
     verify_url = request.build_absolute_uri(
-        reverse('verify_email', args=[str(token_obj.token)])
+        reverse('accounts:verify_email', args=[str(token_obj.token)])
     )
 
     subject = "Verify your email address"

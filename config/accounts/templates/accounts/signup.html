@@ -44,23 +44,10 @@
         {% endif %}
 
         <!-- Social signup -->
+        {% load socialaccount %}
         <div class="social-row cols-3">
-          <a href="{% url 'google_login' %}" class="social-btn google">
+          <a href="{% provider_login_url 'google' %}" class="social-btn google">
             <i class="fab fa-google"></i> Google
-          </a>
-          <a href="{% url 'facebook_login' %}" class="social-btn facebook">
-            <i class="fab fa-facebook"></i> Facebook
-          </a>
-          <a href="{% url 'github_login' %}" class="social-btn github">
-            <i class="fab fa-github"></i> GitHub
-          </a>
-        </div>
-        <div class="social-row cols-2" style="margin-top:0.6rem;">
-          <a href="{% url 'twitter_oauth2_login' %}" class="social-btn twitter">
-            <i class="fab fa-twitter"></i> Twitter
-          </a>
-          <a href="{% url 'linkedin_oauth2_login' %}" class="social-btn linkedin">
-            <i class="fab fa-linkedin"></i> LinkedIn
           </a>
         </div>
 
@@ -69,43 +56,100 @@
         <form method="post" novalidate id="signup-form">
           {% csrf_token %}
 
-          <!-- Username + Email row -->
+          <!-- First name + Last name (2 col) -->
           <div class="auth-form-row">
             <div class="auth-form-group">
-              <label class="auth-label" for="id_username">Username</label>
+              <label class="auth-label" for="id_first_name">First Name</label>
               <div class="auth-input-wrap">
-                <i class="fas fa-at auth-input-icon"></i>
-                <input type="text" name="username" id="id_username"
-                  class="auth-input {% if form.username.errors %}is-error{% endif %}"
-                  placeholder="your_handle"
-                  value="{{ form.username.value|default:'' }}"
-                  autocomplete="username" />
+                <i class="fas fa-user auth-input-icon"></i>
+                <input type="text" name="first_name" id="id_first_name"
+                  class="auth-input {% if form.first_name.errors %}is-error{% endif %}"
+                  placeholder="John"
+                  value="{{ form.first_name.value|default:'' }}"
+                  autocomplete="given-name" />
               </div>
-              {% if form.username.errors %}
+              {% if form.first_name.errors %}
               <div class="auth-field-error">
                 <i class="fas fa-triangle-exclamation"></i>
-                {{ form.username.errors|join:", " }}
+                {{ form.first_name.errors|join:", " }}
               </div>
               {% endif %}
             </div>
 
             <div class="auth-form-group">
-              <label class="auth-label" for="id_email">Email</label>
+              <label class="auth-label" for="id_last_name">Last Name</label>
               <div class="auth-input-wrap">
-                <i class="fas fa-envelope auth-input-icon"></i>
-                <input type="email" name="email" id="id_email"
-                  class="auth-input {% if form.email.errors %}is-error{% endif %}"
-                  placeholder="you@example.com"
-                  value="{{ form.email.value|default:'' }}"
-                  autocomplete="email" />
+                <i class="fas fa-user auth-input-icon"></i>
+                <input type="text" name="last_name" id="id_last_name"
+                  class="auth-input {% if form.last_name.errors %}is-error{% endif %}"
+                  placeholder="Doe"
+                  value="{{ form.last_name.value|default:'' }}"
+                  autocomplete="family-name" />
               </div>
-              {% if form.email.errors %}
+              {% if form.last_name.errors %}
               <div class="auth-field-error">
                 <i class="fas fa-triangle-exclamation"></i>
-                {{ form.email.errors|join:", " }}
+                {{ form.last_name.errors|join:", " }}
               </div>
               {% endif %}
             </div>
+          </div>
+
+          <!-- Username — full width -->
+          <div class="auth-form-group">
+            <label class="auth-label" for="id_username">Username</label>
+            <div class="auth-input-wrap">
+              <i class="fas fa-at auth-input-icon"></i>
+              <input type="text" name="username" id="id_username"
+                class="auth-input {% if form.username.errors %}is-error{% endif %}"
+                placeholder="your_handle"
+                value="{{ form.username.value|default:'' }}"
+                autocomplete="username" />
+            </div>
+            {% if form.username.errors %}
+            <div class="auth-field-error">
+              <i class="fas fa-triangle-exclamation"></i>
+              {{ form.username.errors|join:", " }}
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Email — full width -->
+          <div class="auth-form-group">
+            <label class="auth-label" for="id_email">Email Address</label>
+            <div class="auth-input-wrap">
+              <i class="fas fa-envelope auth-input-icon"></i>
+              <input type="email" name="email" id="id_email"
+                class="auth-input {% if form.email.errors %}is-error{% endif %}"
+                placeholder="you@example.com"
+                value="{{ form.email.value|default:'' }}"
+                autocomplete="email" />
+            </div>
+            {% if form.email.errors %}
+            <div class="auth-field-error">
+              <i class="fas fa-triangle-exclamation"></i>
+              {{ form.email.errors|join:", " }}
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Phone number — full width -->
+          <div class="auth-form-group">
+            <label class="auth-label" for="id_phone_number">Phone Number <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--auth-muted);">(optional)</span></label>
+            <div class="auth-input-wrap">
+              <i class="fas fa-phone auth-input-icon"></i>
+              <input type="tel" name="phone_number" id="id_phone_number"
+                class="auth-input {% if form.phone_number.errors %}is-error{% endif %}"
+                placeholder="+1 555 000 0000"
+                value="{{ form.phone_number.value|default:'' }}"
+                autocomplete="tel" />
+            </div>
+            {% if form.phone_number.errors %}
+            <div class="auth-field-error">
+              <i class="fas fa-triangle-exclamation"></i>
+              {{ form.phone_number.errors|join:", " }}
+            </div>
+            {% endif %}
           </div>
 
           <!-- Password -->
@@ -173,7 +217,7 @@
       </div>
 
       <div class="auth-card-footer">
-        Already have an account? <a href="{% url 'login' %}">Sign in here</a>
+        Already have an account? <a href="{% url 'accounts:login' %}">Sign in here</a>
       </div>
     </div>
   </div>

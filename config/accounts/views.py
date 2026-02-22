@@ -25,7 +25,8 @@ class SignUpView(GuestOnlyMixin, FormView):
     def form_valid(self, form):
         user = form.save()
         send_verification_email(self.request, user)
-        messages.success(self.request, "Account created! Check your email to verify your account.")
+        messages.success(self.request, "Account created! Check your email to "
+                                       "verify your account.")
         return redirect('accounts:email_sent')
 
     def form_invalid(self, form):

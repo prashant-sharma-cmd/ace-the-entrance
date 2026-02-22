@@ -7,6 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
+    email_verified = models.BooleanField(default=False)
     phone_number = PhoneNumberField(blank=True, null=True, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
