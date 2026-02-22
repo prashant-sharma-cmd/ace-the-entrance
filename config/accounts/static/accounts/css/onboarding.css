@@ -45,8 +45,20 @@
   color: #fff;
   box-shadow: 0 0 0 4px rgba(1, 37, 125, 0.15);
 }
-.ob-step.done .ob-step-dot::after { content: '✓'; font-size: 0.75rem; }
-.ob-step.done .ob-step-dot span   { display: none; }
+
+.ob-step-dot.done::after { content: '✓'; font-size: 0.75rem; }
+.ob-step-dot.done span   { display: none; }
+.ob-step-dot.done {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff;
+}
+.ob-step-dot.active {
+  background: var(--clr-primary);
+  border-color: var(--clr-primary);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(1, 37, 125, 0.15);
+}
 
 .ob-step-line {
   flex: 1;

@@ -48,6 +48,7 @@ class UserOnboarding(models.Model):
     primary_purpose = models.CharField(max_length=100, choices=PURPOSE_CHOICES)
     visit_frequency = models.CharField(max_length=100, choices=FREQUENCY_CHOICES)
     how_discovered = models.CharField(max_length=100, choices=DISCOVERY_CHOICES)
+    updates_opt_in = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     complete_date = models.DateTimeField(auto_now_add=True)
 

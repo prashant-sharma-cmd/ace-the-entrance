@@ -148,15 +148,6 @@
               {% endfor %}
             </div>
 
-            <div class="auth-form-group">
-              <label class="auth-label" for="id_specific_interests">
-                What interests you most?
-              </label>
-              <textarea name="specific_interests" id="id_specific_interests"
-                class="ob-textarea"
-                placeholder="Tell us what you're looking for — topics you love, features you're excited about…">{{ form.specific_interests.value|default:'' }}</textarea>
-            </div>
-
             <div class="ob-nav">
               <button type="button" class="ob-btn-back" onclick="obGoTo(2)">
                 <i class="fas fa-arrow-left"></i> Back

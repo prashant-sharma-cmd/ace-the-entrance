@@ -22,20 +22,41 @@
   const summaryDisc    = document.getElementById('sum-disc');
 
   /* ── Navigation ───────────────────────────────────────── */
-  function goTo(n) {
-    // Hide current
-    panel(current)?.classList.remove('active');
+function goTo(n) {
+  // Hide current panel
+  panel(current)?.classList.remove('active');
+
+  // Mark dots as done/inactive
+  if (n > current) {
     dot(current)?.classList.remove('active');
+    dot(current)?.classList.add('done');
+    // Fill the line between current and next
+    dotLine(current)?.style.setProperty('background', 'var(--clr-primary)');
+  }
 
-    // Mark previous as done
-    if (n > current) dot(current)?.classList.add('done');
+  if (n < current) {
+    // Going back — remove done from current
+    dot(current)?.classList.remove('active', 'done');
+    dotLine(n)?.style.setProperty('background', '#dde4f5');
+  }
 
-    // Remove done if going back
-    if (n < current) {
-      for (let i = n; i <= current; i++) {
-        dot(i)?.classList.remove('done');
-      }
-    }
+  current = n;
+
+  // Activate new panel and dot
+  panel(current)?.classList.add('active');
+  dot(current)?.classList.remove('done');
+  dot(current)?.classList.add('active');
+
+  // Update all labels
+  for (let i = 1; i <= TOTAL; i++) {
+    label(i)?.classList.toggle('active', i === current);
+  }
+
+  if (progressText) progressText.textContent = `Step ${current} of ${TOTAL}`;
+  if (current === TOTAL) fillSummary();
+
+  document.querySelector('.auth-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
 
     current = n;
     panel(current)?.classList.add('active');
