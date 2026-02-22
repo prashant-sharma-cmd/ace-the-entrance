@@ -172,3 +172,15 @@ class DashboardView(OnboardingCompletedMixin, TemplateView):
         context['user'] = self.request.user
         context['onboarding'] = getattr(self.request.user, 'onboarding', None)
         return context
+
+# ── Account Deletion ─────────────────────────────────────────────────────────────────
+class DeleteAccountView(LoginRequiredMixin, View):
+    login_url = '/accounts/login/'
+
+    def post(self, request):
+        user = request.user
+        logout(request)
+        user.delete()
+        messages.success(request,
+                         "Your account has been permanently deleted.")
+        return redirect('home:index')

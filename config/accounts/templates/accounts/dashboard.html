@@ -105,7 +105,7 @@
           </div>
 
           <div class="dash-actions">
-            <form method="post" action="{% url 'delete_account' %}" id="delete-form">
+            <form method="post" action="{% url 'accounts:delete_account' %}" id="delete-form">
               {% csrf_token %}
               <button type="button" class="dash-action-btn danger" onclick="confirmDelete()">
                 <i class="fas fa-trash"></i> Delete Account
@@ -143,7 +143,7 @@
             <div class="pref-row">
               <div class="pref-icon"><i class="fas fa-magnifying-glass"></i></div>
               <div>
-                <div class="pref-key">How They Found Us</div>
+                <div class="pref-key">How You Found Us</div>
                 <div class="pref-val">{{ onboarding.get_how_discovered_display }}</div>
               </div>
             </div>
@@ -184,10 +184,12 @@
 {% endblock %}
 
 {% block extra_js %}
-  function confirmDelete() {
+<script type="text/javascript">
+    function confirmDelete() {
     if (confirm('Are you sure you want to permanently delete your account? This cannot be undone.')) {
       document.getElementById('delete-form').submit();
     }
   }
+</script>
 <script src="{% static 'accounts/js/auth.js' %}"></script>
 {% endblock %}

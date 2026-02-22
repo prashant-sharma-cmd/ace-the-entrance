@@ -12,6 +12,7 @@ urlpatterns = [
     path('resend-verification/', views.ResendVerificationView.as_view(), name='resend_verification'),
     path('onboarding/', views.OnboardingView.as_view(), name='onboarding'),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
+    path('delete-account/', views.DeleteAccountView.as_view(), name='delete_account'),
 
     # SSO via allauth
     path('social/', include('allauth.urls')),
