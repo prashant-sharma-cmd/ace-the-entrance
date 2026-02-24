@@ -45,3 +45,4 @@ class OnboardingForm(forms.ModelForm):
             'visit_frequency': forms.RadioSelect,
             'how_discovered': forms.Select,
         }
+

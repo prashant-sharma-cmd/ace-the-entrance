@@ -20,10 +20,11 @@ class User(AbstractUser):
 
 class UserOnboarding(models.Model):
     PURPOSE_CHOICES = [
-        ('daily_quiz', 'Solving Daily Questions'),
-        ('discussion', 'Engaging in Discussion Forums'),
-        ('sxc_model_set', 'Checking Out Model Set'),
-        ('all', 'Making Complete Use of the Website'),
+        ('daily_quiz', 'Daily Questions'),
+        ('discussion', 'Engaging in Discussion'),
+        ('sxc_model_set', 'Checking Model Set'),
+        ('book_info', 'Learn More About Book'),
+        ('all', 'Everything'),
         ('other', 'Other')
     ]
 
@@ -39,7 +40,7 @@ class UserOnboarding(models.Model):
         ('google', 'Google Search'),
         ('facebook', 'Facebook'),
         ('instagram', 'Instagram'),
-        ('friend', 'Friend'),
+        ('friend', 'Friend / Teacher'),
         ('other', 'Other'),
     ]
 

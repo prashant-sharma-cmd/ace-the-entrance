@@ -18,6 +18,8 @@
   align-items: center;
   gap: 0;
   margin-bottom: 0.75rem;
+  padding: 1.75rem 3rem 0;
+
 }
 .ob-step {
   display: flex;

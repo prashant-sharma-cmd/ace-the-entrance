@@ -5,9 +5,15 @@
     <span class="nav-btn" id="nav-btn">
       <i class="fas fa-bars"></i>
     </span>
-    <a href="#" class="login-btn-top">
+    {% if user.authenticated %}
+    <a href="{% url 'accounts:dashboard' %}" class="login-btn-top">
+      <i class="fas fa-user"></i> Dashboard
+    </a>
+    {% else %}
+    <a href="{% url 'accounts:login' %}" class="login-btn-top">
       <i class="fas fa-user"></i> Sign In
     </a>
+    {% endif %}
     <nav class="navbar" id="navbar">
       <div class="navbar-header">
         <span class="nav-close" id="nav-close">

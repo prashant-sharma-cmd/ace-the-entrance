@@ -60,6 +60,7 @@
 
             <div class="ob-choice-grid cols-2">
               {% for value, label in form.primary_purpose.field.choices %}
+              {% if value %}
               <div>
                 <input type="radio" name="primary_purpose"
                   id="purpose_{{ value }}" value="{{ value }}"
@@ -67,16 +68,18 @@
                   {% if form.primary_purpose.value == value %}checked{% endif %}>
                 <label class="ob-choice-label" for="purpose_{{ value }}">
                   <span class="ob-choice-icon">
-                    {% if value == 'personal' %}🙋
-                    {% elif value == 'business' %}💼
-                    {% elif value == 'research' %}🔬
-                    {% elif value == 'entertainment' %}🎬
-                    {% elif value == 'ecommerce' %}🛍️
+                    {% if value == 'daily_quiz' %}🧠
+                    {% elif value == 'discussion' %}💭
+                    {% elif value == 'sxc_model_set' %}🤓
+                    {% elif value == 'book_info' %}📖
+                    {% elif value == 'all' %}🎯
+                    {% elif value == 'other' %}🛍️
                     {% else %}✨{% endif %}
                   </span>
                   <span class="ob-choice-text">{{ label }}</span>
                 </label>
               </div>
+              {% endif %}
               {% endfor %}
             </div>
 
@@ -94,6 +97,7 @@
 
             <div class="ob-choice-grid cols-2">
               {% for value, label in form.visit_frequency.field.choices %}
+              {% if value %}
               <div>
                 <input type="radio" name="visit_frequency"
                   id="freq_{{ value }}" value="{{ value }}"
@@ -101,14 +105,15 @@
                   {% if form.visit_frequency.value == value %}checked{% endif %}>
                 <label class="ob-choice-label" for="freq_{{ value }}">
                   <span class="ob-choice-icon">
-                    {% if value == 'daily' %}📅
-                    {% elif value == 'weekly' %}🗓️
+                    {% if value == 'daily' %}☀️
+                    {% elif value == 'weekly' %}⌛
                     {% elif value == 'monthly' %}📆
                     {% else %}🌙{% endif %}
                   </span>
                   <span class="ob-choice-text">{{ label }}</span>
                 </label>
               </div>
+              {% endif %}
               {% endfor %}
             </div>
 
@@ -129,6 +134,7 @@
 
             <div class="ob-choice-grid cols-3" style="margin-bottom:1.5rem;">
               {% for value, label in form.how_discovered.field.choices %}
+              {% if value %}
               <div>
                 <input type="radio" name="how_discovered"
                   id="disc_{{ value }}" value="{{ value }}"
@@ -136,15 +142,17 @@
                   {% if form.how_discovered.value == value %}checked{% endif %}>
                 <label class="ob-choice-label" for="disc_{{ value }}">
                   <span class="ob-choice-icon">
-                    {% if value == 'google' %}🔍
-                    {% elif value == 'social_media' %}📱
-                    {% elif value == 'friend' %}🤝
-                    {% elif value == 'advertisement' %}📣
-                    {% else %}💫{% endif %}
+                    {% if value == 'official' %}📘
+                    {% elif value == 'google' %}🔍
+                    {% elif value == 'facebook' %}📱
+                    {% elif value == 'instagram' %}🖼️
+                    {% elif value == 'friend' %}👥
+                    {% else %}👽{% endif %}
                   </span>
                   <span class="ob-choice-text">{{ label }}</span>
                 </label>
               </div>
+              {% endif %}
               {% endfor %}
             </div>
 
