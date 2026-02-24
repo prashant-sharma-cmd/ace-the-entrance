@@ -327,6 +327,19 @@ NAVBAR
   color: var(--clr-white);
 }
 
+.logout-btn {
+  background: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.logout-btn:hover {
+  background: #dc3545;
+  color: var(--clr-white);
+}
+
+
+
 .signup-btn {
   background: var(--clr-primary);
   color: var(--clr-white);

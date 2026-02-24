@@ -5,10 +5,7 @@
     <span class="nav-btn" id="nav-btn">
       <i class="fas fa-bars"></i>
     </span>
-    {% if user.authenticated %}
-    <a href="{% url 'accounts:dashboard' %}" class="login-btn-top">
-      <i class="fas fa-user"></i> Dashboard
-    </a>
+    {% if user.is_authenticated %}
     {% else %}
     <a href="{% url 'accounts:login' %}" class="login-btn-top">
       <i class="fas fa-user"></i> Sign In
@@ -29,9 +26,17 @@
         <li><a href="#contact" class="nav-link">contact</a></li>
       </ul>
 
+        {% if user.is_authenticated %}
+        <div class="nav-auth-container">
+          <a href="{% url 'accounts:dashboard' %}" class="btn nav-auth-btn login-btn">Dashboard</a>
+          <a href="{% url 'accounts:logout' %}" class="btn nav-auth-btn logout-btn">Logout</a>
+        </div>
+        {% else %}
         <div class="nav-auth-container">
           <a href="#" class="btn nav-auth-btn login-btn">login</a>
           <a href="#" class="btn nav-auth-btn signup-btn">sign up</a>
         </div>
+        {% endif %}
+
     </nav>
 {% endblock %}
