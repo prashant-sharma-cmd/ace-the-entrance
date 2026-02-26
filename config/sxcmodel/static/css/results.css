@@ -1,0 +1,149 @@
+/* ============================================================
+   quiz/results.css  –  Post-exam results page
+   ============================================================ */
+
+.results-page {
+    width: 90vw;
+    max-width: 860px;
+    margin: 2.5rem auto 4rem;
+}
+
+/* ── Hero score ring ── */
+.results-hero {
+    text-align: center;
+    padding: 2rem 1rem 1.5rem;
+}
+.results-hero h2 {
+    text-transform: none;
+    letter-spacing: 0;
+    margin-bottom: 0.25rem;
+}
+.results-hero p { color: #666; margin-bottom: 0; }
+
+.results-score-ring {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    /* --pct is set inline from the template */
+    background: conic-gradient(var(--clr-primary) var(--pct), var(--clr-grey-10) 0);
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 20px rgba(1,37,125,0.15);
+}
+.results-score-inner {
+    width: 126px;
+    height: 126px;
+    border-radius: 50%;
+    background: var(--clr-white);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.results-score-number {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--clr-primary);
+    line-height: 1;
+}
+.results-score-denom {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.1rem;
+}
+
+/* ── Card ── */
+.results-card {
+    background: var(--clr-white);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+.results-card-body { padding: 1.5rem; }
+
+/* ── Tabs ── */
+.results-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--clr-grey-10);
+    margin-bottom: 1.5rem;
+}
+.results-tab-btn {
+    padding: 0.6rem 1.25rem;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #888;
+    cursor: pointer;
+    transition: var(--transition);
+    letter-spacing: var(--spacing);
+    text-transform: uppercase;
+    font-family: var(--ff-primary);
+}
+.results-tab-btn.active {
+    color: var(--clr-primary);
+    border-bottom-color: var(--clr-primary);
+}
+.results-tab-btn:hover { color: var(--clr-primary); }
+
+.results-tab-panel { display: none; }
+.results-tab-panel.active { display: block; }
+
+/* ── Stats grid ── */
+.results-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+.results-stat-card {
+    background: var(--clr-grey-10);
+    border-radius: var(--radius);
+    padding: 1.1rem 0.9rem;
+    text-align: center;
+}
+.results-stat-value {
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--clr-primary);
+    line-height: 1.1;
+}
+.results-stat-label {
+    font-size: 0.72rem;
+    color: #666;
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: var(--spacing);
+}
+
+/* ── Formula info box ── */
+.results-formula-box {
+    background: #eff6ff;
+    border-left: 4px solid var(--clr-primary);
+    border-radius: var(--radius);
+    padding: 0.9rem 1.1rem;
+    font-size: 0.85rem;
+    color: #1e3a8a;
+    line-height: 1.6;
+}
+.results-formula-box strong { color: var(--clr-primary); }
+
+/* ── Colour helpers ── */
+.clr-correct { color: #16a34a; font-weight: 700; }
+.clr-wrong   { color: #dc2626; font-weight: 700; }
+.clr-muted   { color: #888; }
+
+/* ── Actions row ── */
+.results-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}

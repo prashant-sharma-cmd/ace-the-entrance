@@ -1,0 +1,174 @@
+/* ============================================================
+   quiz/dashboard.css
+   Uses the home app's CSS variables:
+     --clr-primary, --clr-primary-light, --clr-grey-10, --clr-white
+     --ff-primary, --spacing, --radius, --transition
+   ============================================================ */
+
+/* ── Page wrapper ── */
+.quiz-page {
+    width: 90vw;
+    max-width: 1000px;
+    margin: 2.5rem auto 4rem;
+}
+
+/* ── Page heading row ── */
+.quiz-page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.quiz-page-header h2 {
+    margin-bottom: 0.25rem;
+    text-transform: none;
+    letter-spacing: 0;
+}
+.quiz-page-header p {
+    margin-bottom: 0;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+/* ── Resume banner ── */
+.quiz-resume-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: #fff8e1;
+    border-left: 4px solid #f59e0b;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.75rem;
+    font-size: 0.9rem;
+    color: #7c5900;
+}
+.quiz-resume-banner strong { color: #92400e; }
+.quiz-resume-banner .btn { white-space: nowrap; }
+
+/* ── Card ── */
+.quiz-card {
+    background: var(--clr-white);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 1.75rem;
+    overflow: hidden;
+}
+.quiz-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--clr-grey-10);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--clr-primary);
+    background: var(--clr-grey-10);
+}
+.quiz-card-body { padding: 1.25rem; }
+
+/* ── Stats grid ── */
+.quiz-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+}
+.quiz-stat-card {
+    background: var(--clr-grey-10);
+    border-radius: var(--radius);
+    padding: 1.1rem 1rem;
+    text-align: center;
+}
+.quiz-stat-value {
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--clr-primary);
+    line-height: 1.1;
+}
+.quiz-stat-label {
+    font-size: 0.75rem;
+    color: #555;
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: var(--spacing);
+}
+
+/* ── Attempt history table ── */
+.quiz-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+.quiz-table thead tr {
+    background: var(--clr-grey-10);
+    border-bottom: 2px solid #c5d8e8;
+}
+.quiz-table th {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    font-weight: 700;
+    color: var(--clr-primary);
+    text-transform: uppercase;
+    letter-spacing: var(--spacing);
+    font-size: 0.75rem;
+}
+.quiz-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--clr-grey-10);
+    color: #333;
+    vertical-align: middle;
+}
+.quiz-table tbody tr:last-child td { border-bottom: none; }
+.quiz-table tbody tr:hover td { background: var(--clr-grey-10); }
+
+/* ── Inline badge ── */
+.quiz-badge {
+    display: inline-block;
+    background: var(--clr-primary);
+    color: var(--clr-white);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    letter-spacing: var(--spacing);
+}
+
+/* ── Exam info grid ── */
+.quiz-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+}
+.quiz-info-item-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: var(--spacing);
+    color: var(--clr-primary);
+    margin-bottom: 0.3rem;
+}
+.quiz-info-item-value {
+    font-size: 0.95rem;
+    color: #333;
+    margin-bottom: 0;
+}
+
+/* ── CTA section ── */
+.quiz-cta {
+    text-align: center;
+    padding: 1.5rem 0 2rem;
+}
+.quiz-cta p {
+    margin-top: 0.75rem;
+    color: #777;
+    font-size: 0.875rem;
+}
+
+/* ── Colour helpers ── */
+.clr-correct { color: #16a34a; font-weight: 700; }
+.clr-wrong   { color: #dc2626; font-weight: 700; }
+.clr-muted   { color: #6b7280; }

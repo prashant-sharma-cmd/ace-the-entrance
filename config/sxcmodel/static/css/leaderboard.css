@@ -1,0 +1,168 @@
+/* ============================================================
+   quiz/leaderboard.css  –  Leaderboard page
+   ============================================================ */
+
+.lb-page {
+    width: 92vw;
+    max-width: 1080px;
+    margin: 2.5rem auto 4rem;
+}
+
+/* ── Hero header ── */
+.lb-hero {
+    text-align: center;
+    padding: 2rem 1rem 1.5rem;
+}
+.lb-hero h2 {
+    text-transform: none;
+    letter-spacing: 0;
+    margin-bottom: 0.3rem;
+}
+.lb-hero p {
+    color: #666;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+.lb-rank-badge {
+    display: inline-block;
+    background: var(--clr-primary);
+    color: var(--clr-white);
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0.35rem 1rem;
+    border-radius: 20px;
+    letter-spacing: var(--spacing);
+}
+
+/* ── Card wrapper ── */
+.lb-card {
+    background: var(--clr-white);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.09);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Table ── */
+.lb-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+.lb-table thead tr {
+    background: var(--clr-grey-10);
+    border-bottom: 2px solid #c5d8e8;
+}
+.lb-table th {
+    padding: 0.8rem 1.1rem;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: var(--spacing);
+    color: var(--clr-primary);
+}
+.lb-table td {
+    padding: 0.8rem 1.1rem;
+    border-bottom: 1px solid var(--clr-grey-10);
+    vertical-align: middle;
+    color: #333;
+}
+.lb-table tbody tr:last-child td { border-bottom: none; }
+.lb-table tbody tr:hover td { background: var(--clr-grey-10); transition: var(--transition); }
+.lb-table tbody tr.lb-my-row td {
+    background: #e8f0fe !important;
+}
+
+/* ── Rank cell ── */
+.lb-rank-cell {
+    font-weight: 800;
+    font-size: 1.05rem;
+    width: 56px;
+}
+.lb-medal { font-size: 1.3rem; }
+
+/* ── Avatar + name cell ── */
+.lb-user-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.lb-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--clr-primary);
+    color: var(--clr-white);
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+.lb-name { font-weight: 600; font-size: 0.9rem; }
+.lb-username { font-size: 0.75rem; color: #888; }
+.lb-you-badge {
+    display: inline-block;
+    background: var(--clr-primary-light);
+    color: var(--clr-primary);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.1rem 0.45rem;
+    border-radius: 10px;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+    letter-spacing: var(--spacing);
+    text-transform: uppercase;
+}
+
+/* ── Score bar ── */
+.lb-score-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 160px;
+}
+.lb-score-track {
+    flex: 1;
+    height: 7px;
+    background: var(--clr-grey-10);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.lb-score-fill {
+    height: 100%;
+    background: var(--clr-primary);
+    border-radius: 4px;
+}
+.lb-score-text {
+    font-weight: 700;
+    font-size: 0.9rem;
+    min-width: 38px;
+    text-align: right;
+    color: var(--clr-primary);
+}
+
+/* ── Colour helpers ── */
+.clr-correct { color: #16a34a; font-weight: 700; }
+.clr-wrong   { color: #dc2626; font-weight: 700; }
+.clr-muted   { color: #888; font-size: 0.8rem; }
+.mono        { font-family: monospace; }
+
+/* ── Empty state ── */
+.lb-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #888;
+}
+.lb-empty h3 {
+    margin-bottom: 0.5rem;
+    color: var(--clr-primary);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+/* ── Back link row ── */
+.lb-back { text-align: center; padding: 0.5rem 0 1rem; }

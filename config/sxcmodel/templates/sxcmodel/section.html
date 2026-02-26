@@ -1,0 +1,190 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% load quiz_extras %}
+{% block title %}{{ subject_label }} – Section {{ section_number }} of {{ total_sections }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'quiz/css/section.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Fixed timer bar -->
+<div class="exam-timer-bar">
+    <div class="exam-timer-display" id="examTimer">--:--</div>
+    <div class="exam-timer-track">
+        <div class="exam-timer-fill" id="examTimerFill" style="width:100%;"></div>
+    </div>
+    <div class="exam-section-pill">
+        Section {{ section_number }}/{{ total_sections }} &nbsp;|&nbsp; {{ subject_label }}
+    </div>
+    <div class="exam-save-status">
+        <div class="exam-save-dot" id="examSaveDot"></div>
+        <span id="examSaveText">Saving…</span>
+    </div>
+</div>
+
+<!-- Exam form -->
+<div class="exam-container">
+
+    <div class="exam-section-header">
+        <span class="exam-section-badge">{{ subject_label }}</span>
+        <span class="exam-section-count">{{ questions|length }} question{{ questions|length|pluralize }}</span>
+    </div>
+
+    <form method="post" id="examForm">
+        {% csrf_token %}
+        <input type="hidden" name="time_taken_seconds" id="examTimeTaken" value="0">
+
+        {% for question in questions %}
+        <div class="exam-q-card" id="qcard-{{ question.id }}">
+            <div class="exam-q-head">
+                <span class="exam-q-num">Q{{ forloop.counter }}</span>
+                <span class="exam-q-text">{{ question.text }}</span>
+            </div>
+            {% if question.image %}
+            <img src="{{ question.image.url }}" alt="Question diagram" class="exam-q-image">
+            {% endif %}
+            <div class="exam-q-options">
+                {% for i, opt in question.options_list %}
+                <label class="exam-option-label {% if existing_answers|get_item:question.id == i %}selected{% endif %}"
+                       for="q{{ question.id }}_opt{{ i }}">
+                    <input type="radio"
+                           name="answer_{{ question.id }}"
+                           id="q{{ question.id }}_opt{{ i }}"
+                           value="{{ i }}"
+                           {% if existing_answers|get_item:question.id == i %}checked{% endif %}>
+                    <span class="exam-option-circle">{{ i }}</span>
+                    <span>{{ opt }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Spacer so content clears the fixed footer -->
+        <div style="height:4rem;"></div>
+
+        <!-- Fixed bottom nav -->
+        <div class="exam-nav-footer">
+            <div class="exam-answered-info">
+                <strong id="examAnsweredCount">0</strong> / {{ questions|length }} answered
+            </div>
+            <div>
+                {% if is_last_section %}
+                <button type="submit" class="btn"
+                        onclick="return confirm('Submit exam? You cannot change answers after this.');">
+                    ✅ Submit Exam
+                </button>
+                {% else %}
+                <button type="submit" class="btn">Next Section →</button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    const SESSION_KEY = '{{ session_key }}';
+    const MAX_TIME    = {{ max_time }};
+    let timeRemaining = {{ time_remaining }};
+    let elapsed       = MAX_TIME - timeRemaining;
+
+    const timerEl    = document.getElementById('examTimer');
+    const fillEl     = document.getElementById('examTimerFill');
+    const timeTaken  = document.getElementById('examTimeTaken');
+    const saveDot    = document.getElementById('examSaveDot');
+    const saveText   = document.getElementById('examSaveText');
+    const answeredEl = document.getElementById('examAnsweredCount');
+
+    /* ── Helpers ── */
+    function fmt(s) {
+        const m = Math.floor(s / 60), sec = s % 60;
+        return String(m).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+    }
+
+    /* ── Countdown ── */
+    timerEl.textContent = fmt(timeRemaining);
+    const timerInterval = setInterval(function () {
+        if (timeRemaining <= 0) { clearInterval(timerInterval); autoSubmit(); return; }
+        timeRemaining--;
+        elapsed++;
+        timeTaken.value = elapsed;
+        timerEl.textContent = fmt(timeRemaining);
+        fillEl.style.width = (timeRemaining / MAX_TIME * 100) + '%';
+
+        if (timeRemaining <= 300) {
+            timerEl.className = 'exam-timer-display danger';
+            fillEl.style.background = '#dc2626';
+        } else if (timeRemaining <= 600) {
+            timerEl.className = 'exam-timer-display warning';
+            fillEl.style.background = '#d97706';
+        }
+    }, 1000);
+
+    /* ── Answered counter ── */
+    function countAnswered() {
+        const names = new Set([...document.querySelectorAll('input[type="radio"]:checked')].map(r => r.name));
+        answeredEl.textContent = names.size;
+    }
+
+    document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            document.querySelectorAll('input[name="' + this.name + '"]').forEach(function (r) {
+                r.closest('label').classList.remove('selected');
+            });
+            this.closest('label').classList.add('selected');
+            countAnswered();
+        });
+    });
+    countAnswered();
+
+    /* ── Auto-save ── */
+    function collectAnswers() {
+        const data = {};
+        document.querySelectorAll('input[type="radio"]:checked').forEach(function (r) {
+            data[r.name.replace('answer_', '')] = parseInt(r.value);
+        });
+        return data;
+    }
+
+    async function autoSave() {
+        saveDot.className = 'exam-save-dot saving';
+        saveText.textContent = 'Saving…';
+        try {
+            const res = await fetch('/quiz/exam/' + SESSION_KEY + '/save/', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
+                body:    JSON.stringify({ answers: collectAnswers(), elapsed }),
+            });
+            saveDot.className = 'exam-save-dot';
+            saveText.textContent = res.ok ? 'Saved' : 'Error';
+        } catch {
+            saveDot.className = 'exam-save-dot';
+            saveDot.style.background = '#dc2626';
+            saveText.textContent = 'Save failed';
+        }
+    }
+
+    setInterval(autoSave, 30000);
+    autoSave();
+
+    /* ── Auto-submit on time-up ── */
+    function autoSubmit() {
+        timeTaken.value = elapsed;
+        document.getElementById('examForm').submit();
+    }
+
+    /* ── Warn on accidental navigation ── */
+    function warnLeave(e) { e.preventDefault(); e.returnValue = ''; }
+    window.addEventListener('beforeunload', warnLeave);
+    document.getElementById('examForm').addEventListener('submit', function () {
+        window.removeEventListener('beforeunload', warnLeave);
+    });
+})();
+</script>
+{% endblock %}

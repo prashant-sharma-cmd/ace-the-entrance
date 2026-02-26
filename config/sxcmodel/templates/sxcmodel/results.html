@@ -1,0 +1,129 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% load quiz_extras %}
+{% block title %}Results – Entrance Exam{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'quiz/css/results.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="results-page">
+
+    <!-- Score ring -->
+    <div class="results-hero">
+        <div class="results-score-ring" style="--pct: {{ attempt.final_grade|mul:3.6 }}deg;">
+            <div class="results-score-inner">
+                <span class="results-score-number">{{ attempt.final_grade|floatformat:1 }}</span>
+                <span class="results-score-denom">/ 100</span>
+            </div>
+        </div>
+        <h2>Exam Complete! 🎉</h2>
+        <p>Here's how you did on this attempt.</p>
+    </div>
+
+    <!-- Tabbed breakdown -->
+    <div class="results-card">
+        <div class="results-card-body">
+
+            <div class="results-tabs">
+                <button class="results-tab-btn active" onclick="switchTab(event,'marks')">📊 Marks</button>
+                <button class="results-tab-btn"        onclick="switchTab(event,'time')">⏱ Time</button>
+            </div>
+
+            <!-- Marks tab -->
+            <div class="results-tab-panel active" id="rtab-marks">
+                <div class="results-stats-grid">
+                    <div class="results-stat-card">
+                        <div class="results-stat-value">{{ attempt.raw_score|floatformat:2 }}</div>
+                        <div class="results-stat-label">Raw Score</div>
+                    </div>
+                    <div class="results-stat-card">
+                        <div class="results-stat-value clr-correct">{{ attempt.correct_count }}</div>
+                        <div class="results-stat-label">Correct (+1)</div>
+                    </div>
+                    <div class="results-stat-card">
+                        <div class="results-stat-value clr-wrong">{{ attempt.incorrect_count }}</div>
+                        <div class="results-stat-label">Wrong (−¼)</div>
+                    </div>
+                    <div class="results-stat-card">
+                        <div class="results-stat-value clr-muted">{{ attempt.unattempted_count }}</div>
+                        <div class="results-stat-label">Skipped</div>
+                    </div>
+                    <div class="results-stat-card">
+                        <div class="results-stat-value">{{ total_questions }}</div>
+                        <div class="results-stat-label">Total Questions</div>
+                    </div>
+                    <div class="results-stat-card">
+                        <div class="results-stat-value">{{ attempt.final_grade|floatformat:1 }}</div>
+                        <div class="results-stat-label">Final Grade / 100</div>
+                    </div>
+                </div>
+
+                <div class="results-formula-box">
+                    <strong>Scoring formula:</strong>
+                    Raw = Correct − (0.25 × Wrong).
+                    Final Grade = (Raw / Total × 80) + (Speed Bonus × 20).
+                    Finishing faster earns up to 20 bonus points.
+                </div>
+            </div>
+
+            <!-- Time tab -->
+            <div class="results-tab-panel" id="rtab-time">
+                <div class="results-stats-grid">
+                    <div class="results-stat-card">
+                        <div class="results-stat-value" id="rTotalTime">--:--</div>
+                        <div class="results-stat-label">Total Time</div>
+                    </div>
+                    <div class="results-stat-card">
+                        <div class="results-stat-value" id="rAvgTime">--</div>
+                        <div class="results-stat-label">Avg / Question</div>
+                    </div>
+                    <div class="results-stat-card">
+                        <div class="results-stat-value" id="rRemaining">--:--</div>
+                        <div class="results-stat-label">Time Remaining</div>
+                    </div>
+                    <div class="results-stat-card">
+                        <div class="results-stat-value">{% widthratio attempt.total_time_seconds 5400 20 %}</div>
+                        <div class="results-stat-label">Speed Bonus (/ 20)</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="results-actions">
+        <a href="{% url 'quiz:dashboard' %}" class="btn">← Dashboard</a>
+        <a href="{% url 'quiz:leaderboard' %}" class="btn">🏆 Leaderboard</a>
+        <a href="{% url 'quiz:start' %}" class="btn"
+           onclick="return confirm('Start a fresh exam?');">🔄 Try Again</a>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const _totalSec = {{ attempt.total_time_seconds }};
+    const _avgSec   = {{ avg_time_seconds }};
+    const _maxTime  = 5400;
+
+    function fmt(s) {
+        const m = Math.floor(s / 60), sec = s % 60;
+        return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+    }
+
+    document.getElementById('rTotalTime').textContent   = fmt(_totalSec);
+    document.getElementById('rAvgTime').textContent     = _avgSec + 's';
+    document.getElementById('rRemaining').textContent   = fmt(Math.max(0, _maxTime - _totalSec));
+
+    function switchTab(e, name) {
+        document.querySelectorAll('.results-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+        document.querySelectorAll('.results-tab-panel').forEach(function(p){ p.classList.remove('active'); });
+        e.currentTarget.classList.add('active');
+        document.getElementById('rtab-' + name).classList.add('active');
+    }
+</script>
+{% endblock %}

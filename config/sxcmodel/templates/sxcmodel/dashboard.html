@@ -1,0 +1,147 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% load quiz_extras %}
+{% block title %}Dashboard – Entrance Exam{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'quiz/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="quiz-page">
+
+    <!-- Page header -->
+    <div class="quiz-page-header">
+        <div>
+            <h2>Welcome back, {{ user.get_full_name|default:user.username }} 👋</h2>
+            <p>Ready for your entrance exam? Good luck!</p>
+        </div>
+        <a href="{% url 'quiz:leaderboard' %}" class="btn">🏆 Leaderboard</a>
+    </div>
+
+    <!-- Resume banner -->
+    {% if incomplete_attempt %}
+    <div class="quiz-resume-banner">
+        <div>
+            <strong>⏸ You have an unfinished exam.</strong>
+            Started on {{ incomplete_attempt.start_time|date:"M j, Y" }} at {{ incomplete_attempt.start_time|time:"H:i" }}.
+            You can continue from where you left off.
+        </div>
+        <a href="{% url 'quiz:resume' session_key=incomplete_attempt.session_key %}" class="btn">▶ Resume Exam</a>
+    </div>
+    {% endif %}
+
+    <!-- Best score stats -->
+    {% if best_attempt %}
+    <div class="quiz-card">
+        <div class="quiz-card-header">
+            <span>⭐ Your Best Performance</span>
+            <span>{{ best_attempt.end_time|date:"M j, Y" }}</span>
+        </div>
+        <div class="quiz-card-body">
+            <div class="quiz-stats-grid">
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value">{{ best_attempt.final_grade|floatformat:1 }}</div>
+                    <div class="quiz-stat-label">Final Score / 100</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value clr-correct">{{ best_attempt.correct_count }}</div>
+                    <div class="quiz-stat-label">Correct</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value clr-wrong">{{ best_attempt.incorrect_count }}</div>
+                    <div class="quiz-stat-label">Wrong</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value clr-muted">{{ best_attempt.unattempted_count }}</div>
+                    <div class="quiz-stat-label">Skipped</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value" style="font-size:1.3rem;">{{ best_attempt.total_time_seconds|time_display }}</div>
+                    <div class="quiz-stat-label">Time Taken</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value" style="font-size:1.3rem;">{{ best_attempt.raw_score|floatformat:1 }}</div>
+                    <div class="quiz-stat-label">Raw Score</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Attempt history -->
+    {% if completed_attempts %}
+    <div class="quiz-card">
+        <div class="quiz-card-header">📋 All Attempts</div>
+        <div style="overflow-x:auto;">
+            <table class="quiz-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Final Score</th>
+                        <th>Correct</th>
+                        <th>Wrong</th>
+                        <th>Raw Score</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attempt in completed_attempts %}
+                    <tr>
+                        <td class="clr-muted">{{ forloop.counter }}</td>
+                        <td>{{ attempt.start_time|date:"M j, Y H:i" }}</td>
+                        <td><span class="quiz-badge">{{ attempt.final_grade|floatformat:1 }}</span></td>
+                        <td class="clr-correct">{{ attempt.correct_count }}</td>
+                        <td class="clr-wrong">{{ attempt.incorrect_count }}</td>
+                        <td>{{ attempt.raw_score|floatformat:1 }}</td>
+                        <td>
+                            <a href="{% url 'quiz:results' session_key=attempt.session_key %}" class="btn" style="font-size:0.75rem;padding:0.3rem 0.7rem;">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Exam info -->
+    <div class="quiz-card">
+        <div class="quiz-card-header">ℹ️ Exam Information</div>
+        <div class="quiz-card-body">
+            <div class="quiz-info-grid">
+                <div>
+                    <p class="quiz-info-item-label">Subjects</p>
+                    <p class="quiz-info-item-value">Physics · Chemistry · Biology · Maths · English · IQ/GK</p>
+                </div>
+                <div>
+                    <p class="quiz-info-item-label">Questions</p>
+                    <p class="quiz-info-item-value">20 per subject (120 total)</p>
+                </div>
+                <div>
+                    <p class="quiz-info-item-label">Duration</p>
+                    <p class="quiz-info-item-value">90 minutes</p>
+                </div>
+                <div>
+                    <p class="quiz-info-item-label">Marking</p>
+                    <p class="quiz-info-item-value">+1 correct &nbsp;·&nbsp; −¼ wrong &nbsp;·&nbsp; 0 skipped</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start CTA -->
+    <div class="quiz-cta">
+        <a href="{% url 'quiz:start' %}" class="btn"
+           onclick="return confirm('Starting a new exam will discard any unfinished attempt. Continue?');"
+           style="font-size:1rem;padding:0.75rem 2rem;">
+            🚀 Start New Exam
+        </a>
+        {% if not best_attempt and not incomplete_attempt %}
+        <p>This will be your first attempt!</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
