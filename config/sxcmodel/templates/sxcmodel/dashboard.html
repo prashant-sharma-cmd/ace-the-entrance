@@ -13,7 +13,7 @@
 </ol>
 
 <h2>Take Quiz</h2>
-<form action="{% url 'start_quiz' %}" method="POST">
+<form action="{% url 'sxcmodel:start_quiz' %}" method="POST">
     {% csrf_token %}
     {% if active_attempt %}
         <p>You have an unfinished quiz!</p>

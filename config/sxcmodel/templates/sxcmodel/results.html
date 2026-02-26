@@ -1,0 +1,420 @@
+{% extends 'quiz/base.html' %}
+{% block title %}Results — QuizForge{% endblock %}
+
+{% block extra_css %}
+.results-hero {
+  text-align: center;
+  padding: 2.5rem 0 2rem;
+  animation: fadeUp 0.5s ease both;
+}
+.grade-circle {
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--accent) 0deg,
+    var(--accent) calc({{ attempt.final_grade }} * 3.6deg),
+    var(--surface3) calc({{ attempt.final_grade }} * 3.6deg)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  position: relative;
+  box-shadow: 0 0 40px rgba(240,165,0,0.2);
+}
+.grade-circle::before {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  background: var(--bg);
+}
+.grade-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+.grade-value {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--accent);
+  line-height: 1;
+}
+.grade-label { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; }
+
+.rank-badge {
+  display: inline-block;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 0.4rem 1.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+.rank-badge strong { color: var(--accent); }
+
+/* ── Two-panel score layout ── */
+.score-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+@media(max-width: 640px) { .score-panels { grid-template-columns: 1fr; } }
+
+.score-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  position: relative;
+  overflow: hidden;
+}
+.score-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.score-panel.marks-panel::before { background: linear-gradient(90deg, var(--green), #34d399); }
+.score-panel.time-panel::before { background: linear-gradient(90deg, var(--blue), #818cf8); }
+
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--text);
+}
+.panel-icon { font-size: 1.3rem; }
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-row .label { color: var(--text-muted); }
+.stat-row .value { font-family: var(--font-mono); font-weight: 500; }
+.value-correct { color: var(--green); }
+.value-incorrect { color: var(--red); }
+.value-skipped { color: var(--text-dim); }
+.value-raw { color: var(--accent); font-size: 1.1rem; }
+
+/* ── Mini bar charts inside panel ── */
+.mini-chart { margin: 1rem 0 0.25rem; }
+.mini-bar-wrap { display: flex; gap: 4px; height: 32px; align-items: flex-end; }
+.mini-bar {
+  border-radius: 3px 3px 0 0;
+  min-width: 10px;
+  transition: height 0.8s ease;
+}
+.bar-correct { background: var(--green); }
+.bar-incorrect { background: var(--red); }
+.bar-skipped { background: var(--surface3); }
+.bar-labels { display: flex; gap: 4px; margin-top: 4px; font-size: 0.7rem; color: var(--text-dim); }
+
+/* ── Formula explanation ── */
+.formula-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  margin: 0.75rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+.formula-box em { color: var(--accent); font-style: normal; }
+
+/* ── Question review ── */
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.filter-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.filter-tab {
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.filter-tab.active, .filter-tab:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+.review-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 0.75rem;
+  border-left: 3px solid var(--border);
+  transition: var(--transition);
+}
+.review-card.correct { border-left-color: var(--green); background: rgba(34,201,138,0.03); }
+.review-card.incorrect { border-left-color: var(--red); background: rgba(240,85,85,0.03); }
+.review-card.skipped { border-left-color: var(--border2); opacity: 0.7; }
+
+.review-q-num { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; font-family: var(--font-mono); }
+.review-q-text { font-size: 0.9rem; margin-bottom: 0.75rem; line-height: 1.5; }
+.review-options { display: grid; gap: 0.35rem; }
+.review-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  background: var(--surface2);
+}
+.review-option.is-correct { background: var(--green-bg); color: var(--green); }
+.review-option.is-selected-wrong { background: var(--red-bg); color: var(--red); }
+.review-option .opt-key { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; min-width: 18px; }
+.result-icon { margin-left: auto; font-size: 0.9rem; }
+{% endblock %}
+
+{% block content %}
+<!-- Grade Hero -->
+<div class="results-hero fade-up">
+  <div class="grade-circle">
+    <div class="grade-inner">
+      <div class="grade-value">{{ attempt.final_grade }}</div>
+      <div class="grade-label">/ 100</div>
+    </div>
+  </div>
+  <div class="rank-badge">Rank <strong>#{{ rank }}</strong> of {{ total_completed }} attempts</div>
+  <h1 style="font-size: 1.6rem; margin-top: 0.5rem;">
+    {% if attempt.final_grade >= 85 %}🏆 Outstanding!
+    {% elif attempt.final_grade >= 70 %}🎯 Great Work!
+    {% elif attempt.final_grade >= 50 %}💪 Good Effort!
+    {% else %}📚 Keep Practising{% endif %}
+  </h1>
+  <p class="text-muted" style="margin-top: 0.5rem;">
+    Completed on {{ attempt.end_time|date:"F d, Y at H:i" }}
+  </p>
+</div>
+
+<!-- Score Panels -->
+<div class="score-panels">
+
+  <!-- Marks Panel -->
+  <div class="score-panel marks-panel">
+    <div class="panel-title">
+      <span class="panel-icon">📊</span> Marks Summary
+    </div>
+    <div class="stat-row">
+      <span class="label">✅ Correct</span>
+      <span class="value value-correct">{{ attempt.correct_count }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">❌ Incorrect</span>
+      <span class="value value-incorrect">{{ attempt.incorrect_count }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">⬜ Unattempted</span>
+      <span class="value value-skipped">{{ attempt.unattempted_count }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">Negative deducted</span>
+      <span class="value value-incorrect">−{{ attempt.incorrect_count|floatformat:0 }} × 0.25 = −{% widthratio attempt.incorrect_count 4 1 %}</span>
+    </div>
+    <hr class="divider" style="margin: 0.5rem 0;">
+    <div class="stat-row">
+      <span class="label" style="font-weight: 600;">Raw Score</span>
+      <span class="value value-raw">{{ attempt.raw_score }} / 100</span>
+    </div>
+
+    <!-- Visual bar -->
+    <div class="mini-chart">
+      <div class="mini-bar-wrap" id="marks-chart"></div>
+      <div class="bar-labels">
+        <span style="color: var(--green);">● Correct</span>
+        <span style="color: var(--red);">● Wrong</span>
+        <span style="color: var(--text-dim);">● Skipped</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Panel -->
+  <div class="score-panel time-panel">
+    <div class="panel-title">
+      <span class="panel-icon">⏱</span> Time Summary
+    </div>
+    <div class="stat-row">
+      <span class="label">Total time used</span>
+      <span class="value" style="color: var(--blue);">{{ attempt.get_time_display }}</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">Time per question</span>
+      <span class="value" style="color: var(--blue);">{{ attempt.get_time_per_question }}s avg</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">Time allowed</span>
+      <span class="value value-skipped">90 min 00 sec</span>
+    </div>
+    <div class="stat-row">
+      <span class="label">Time efficiency</span>
+      <span class="value" style="color: var(--purple);">{{ attempt.get_time_efficiency_pct }}%</span>
+    </div>
+    <hr class="divider" style="margin: 0.5rem 0;">
+    <div class="stat-row">
+      <span class="label" style="font-weight: 600;">Time Score contribution</span>
+      <span class="value" style="color: var(--blue);">
+        +{% widthratio attempt.get_time_efficiency_pct 100 15 %} pts (15% weight)
+      </span>
+    </div>
+
+    <!-- Time bar -->
+    <div style="margin-top: 1rem;">
+      <div style="height: 8px; background: var(--surface3); border-radius: 4px; overflow: hidden;">
+        <div style="height: 100%; width: {{ attempt.get_time_efficiency_pct }}%; background: linear-gradient(90deg, #5599ff, #a855f7); border-radius: 4px; transition: width 1s ease;"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-dim); margin-top: 4px;">
+        <span>0%</span>
+        <span>Time Efficiency</span>
+        <span>100%</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Grade Formula -->
+<div class="card" style="margin-bottom: 1.5rem; animation: fadeUp 0.5s 0.2s ease both;">
+  <h3 style="margin-bottom: 0.75rem;">How Your Grade Was Calculated</h3>
+  <div class="formula-box">
+    Grade = (0.85 × score_pct + 0.15 × time_efficiency) × 100<br>
+    Grade = (0.85 × <em>{{ attempt.raw_score }}/100</em> + 0.15 × <em>{{ attempt.get_time_efficiency_pct }}%</em>) × 100<br>
+    Grade = <em>{{ attempt.final_grade }}</em> / 100
+  </div>
+  <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 0.5rem;">
+    Score contributes 85% of your final grade. Time efficiency contributes 15%.
+    A higher score always beats a faster time at the same score level.
+  </p>
+</div>
+
+<!-- Actions -->
+<div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2.5rem; animation: fadeUp 0.4s 0.25s ease both;">
+  <a href="{% url 'leaderboard' %}" class="btn btn-primary btn-lg">View Leaderboard →</a>
+  <a href="{% url 'quiz_home' %}" class="btn btn-outline btn-lg">Back to Home</a>
+</div>
+
+<!-- Question Review -->
+<div style="animation: fadeUp 0.5s 0.3s ease both;">
+  <div class="review-header">
+    <h2 style="font-size: 1.3rem;">Question Review</h2>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterReview('all', this)">All (100)</button>
+      <button class="filter-tab" onclick="filterReview('correct', this)">✅ Correct ({{ attempt.correct_count }})</button>
+      <button class="filter-tab" onclick="filterReview('incorrect', this)">❌ Wrong ({{ attempt.incorrect_count }})</button>
+      <button class="filter-tab" onclick="filterReview('skipped', this)">⬜ Skipped ({{ attempt.unattempted_count }})</button>
+    </div>
+  </div>
+
+  <div id="review-list">
+    {% for r in question_results %}
+    <div class="review-card {% if r.is_skipped %}skipped{% elif r.is_correct %}correct{% else %}incorrect{% endif %}"
+         data-status="{% if r.is_skipped %}skipped{% elif r.is_correct %}correct{% else %}incorrect{% endif %}">
+      <div class="review-q-num">
+        Q{{ forloop.counter }} &nbsp;·&nbsp; {{ r.question.get_subject_display }}
+        &nbsp;·&nbsp;
+        {% if r.is_skipped %}
+          <span style="color: var(--text-dim);">Skipped</span>
+        {% elif r.is_correct %}
+          <span style="color: var(--green);">+1 mark</span>
+        {% else %}
+          <span style="color: var(--red);">−0.25 marks</span>
+        {% endif %}
+      </div>
+      <div class="review-q-text">{{ r.question.text }}</div>
+      {% if r.question.image %}
+      <img src="{{ r.question.image.url }}" alt="Diagram" style="max-width:100%; max-height:120px; object-fit:contain; border-radius:6px; margin-bottom:0.75rem; border: 1px solid var(--border);">
+      {% endif %}
+      <div class="review-options">
+        {% for opt_text in r.question.get_options %}
+        {% with opt_num=forloop.counter %}
+        <div class="review-option
+          {% if opt_num == r.correct %}is-correct
+          {% elif opt_num == r.selected and not r.is_correct %}is-selected-wrong{% endif %}">
+          <span class="opt-key">{{ opt_num }}</span>
+          {{ opt_text }}
+          {% if opt_num == r.correct %}
+            <span class="result-icon">✓</span>
+          {% elif opt_num == r.selected and not r.is_correct %}
+            <span class="result-icon">✗</span>
+          {% endif %}
+        </div>
+        {% endwith %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// ── Mini marks bar chart ──────────────────────────────────────────────────────
+const correct = {{ attempt.correct_count }};
+const incorrect = {{ attempt.incorrect_count }};
+const skipped = {{ attempt.unattempted_count }};
+const total = correct + incorrect + skipped;
+const chartEl = document.getElementById('marks-chart');
+
+const maxH = 32;
+[
+  [correct, 'bar-correct', 'bar-correct'],
+  [incorrect, 'bar-incorrect', 'bar-incorrect'],
+  [skipped, 'bar-skipped', 'bar-skipped'],
+].forEach(([val, cls]) => {
+  const bar = document.createElement('div');
+  bar.className = `mini-bar ${cls}`;
+  const h = Math.max(3, (val / total) * maxH);
+  bar.style.height = '0px';
+  bar.style.flex = val;
+  bar.style.minHeight = val > 0 ? '4px' : '0';
+  chartEl.appendChild(bar);
+  setTimeout(() => { bar.style.height = h + 'px'; }, 200);
+});
+
+// ── Filter review ─────────────────────────────────────────────────────────────
+function filterReview(status, btn) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.review-card').forEach(card => {
+    card.style.display = (status === 'all' || card.dataset.status === status) ? '' : 'none';
+  });
+}
+
+// ── Animate grade circle on load ──────────────────────────────────────────────
+const grade = {{ attempt.final_grade }};
+const circle = document.querySelector('.grade-circle');
+if (circle) {
+  circle.style.background = 'conic-gradient(var(--surface3) 0deg, var(--surface3) 360deg)';
+  setTimeout(() => {
+    circle.style.transition = 'background 1.2s ease';
+    circle.style.background = `conic-gradient(var(--accent) 0deg, var(--accent) ${grade * 3.6}deg, var(--surface3) ${grade * 3.6}deg)`;
+  }, 300);
+}
+</script>
+{% endblock %}

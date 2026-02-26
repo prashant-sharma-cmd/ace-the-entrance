@@ -1,0 +1,207 @@
+{% extends 'quiz/base.html' %}
+{% block title %}Leaderboard — QuizForge{% endblock %}
+
+{% block extra_css %}
+.lb-hero {
+  text-align: center;
+  padding: 2rem 0 1.5rem;
+  animation: fadeUp 0.4s ease both;
+}
+.lb-hero h1 span { color: var(--accent); }
+.lb-hero p { color: var(--text-muted); margin-top: 0.5rem; }
+
+/* User rank card */
+.my-rank-card {
+  background: linear-gradient(135deg, #1a2035, #1c2540);
+  border: 1px solid #2a3560;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.75rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  animation: fadeUp 0.4s 0.05s ease both;
+}
+.my-rank-card .my-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+.my-rank-card .my-grade { font-family: var(--font-mono); font-size: 2rem; color: var(--accent); font-weight: 500; }
+.my-rank-card .my-rank { font-family: var(--font-mono); font-size: 1.5rem; color: var(--text); }
+
+/* Leaderboard table */
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  animation: fadeUp 0.5s 0.1s ease both;
+}
+.lb-table thead th {
+  text-align: left;
+  padding: 0.6rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+}
+.lb-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+.lb-table tbody tr:hover { background: var(--surface2); }
+.lb-table tbody tr.is-me { background: rgba(240,165,0,0.04); border-left: 3px solid var(--accent); }
+
+.lb-table td { padding: 0.9rem 1rem; font-size: 0.9rem; vertical-align: middle; }
+
+.rank-num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-dim);
+}
+.rank-1 { color: #ffd700; font-size: 1.1rem; }
+.rank-2 { color: #c0c0c0; font-size: 1rem; }
+.rank-3 { color: #cd7f32; font-size: 1rem; }
+
+.user-cell { display: flex; align-items: center; gap: 0.75rem; }
+.user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--surface3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.user-name { font-weight: 500; }
+.user-tag { font-size: 0.75rem; color: var(--text-dim); }
+
+.grade-cell { font-family: var(--font-mono); font-size: 1.05rem; font-weight: 500; color: var(--accent); }
+.score-cell { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); }
+.time-cell { font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-dim); }
+.breakdown-cell { font-size: 0.78rem; color: var(--text-dim); }
+
+.grade-bar-wrap { display: flex; align-items: center; gap: 0.6rem; }
+.grade-bar { height: 4px; background: var(--surface3); border-radius: 2px; flex: 1; max-width: 80px; overflow: hidden; }
+.grade-bar-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--accent), #f97316); }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-muted);
+}
+.empty-state .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+
+/* Medal icons */
+.medal { font-size: 1.2rem; }
+{% endblock %}
+
+{% block content %}
+<div class="lb-hero fade-up">
+  <h1>Leader<span>board</span></h1>
+  <p>Top 50 scores across all attempts</p>
+</div>
+
+{% if user_best %}
+<div class="my-rank-card">
+  <div>
+    <div class="my-label">Your Best Grade</div>
+    <div class="my-grade">{{ user_best.final_grade }}</div>
+    <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.2rem;">
+      Raw: {{ user_best.raw_score }} &nbsp;·&nbsp; {{ user_best.get_time_display }}
+    </div>
+  </div>
+  <div style="text-align: right;">
+    <div class="my-label">Your Rank</div>
+    <div class="my-rank">#{{ user_rank }}</div>
+    <a href="{% url 'quiz_results' user_best.id %}" class="btn btn-sm btn-ghost" style="margin-top: 0.5rem;">View Results</a>
+  </div>
+</div>
+{% endif %}
+
+<div class="card" style="padding: 0; overflow: hidden;">
+  {% if top_attempts %}
+  <table class="lb-table">
+    <thead>
+      <tr>
+        <th style="width: 50px;">#</th>
+        <th>Student</th>
+        <th>Grade</th>
+        <th>Raw Score</th>
+        <th>Correct / Wrong / Skip</th>
+        <th>Time</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for attempt in top_attempts %}
+      <tr class="{% if attempt.user == request.user %}is-me{% endif %}">
+        <td>
+          {% if forloop.counter == 1 %}
+            <span class="medal rank-1">🥇</span>
+          {% elif forloop.counter == 2 %}
+            <span class="medal rank-2">🥈</span>
+          {% elif forloop.counter == 3 %}
+            <span class="medal rank-3">🥉</span>
+          {% else %}
+            <span class="rank-num">{{ forloop.counter }}</span>
+          {% endif %}
+        </td>
+        <td>
+          <div class="user-cell">
+            <div class="user-avatar">{{ attempt.user.username|first|upper }}</div>
+            <div>
+              <div class="user-name">
+                {{ attempt.user.username }}
+                {% if attempt.user == request.user %}
+                  <span style="font-size: 0.7rem; color: var(--accent); margin-left: 4px;">(you)</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="grade-bar-wrap">
+            <span class="grade-cell">{{ attempt.final_grade }}</span>
+            <div class="grade-bar">
+              <div class="grade-bar-fill" style="width: {{ attempt.final_grade }}%;"></div>
+            </div>
+          </div>
+        </td>
+        <td><span class="score-cell">{{ attempt.raw_score }}</span></td>
+        <td>
+          <span class="breakdown-cell">
+            <span style="color: var(--green);">{{ attempt.correct_count }}</span>
+            &nbsp;/&nbsp;
+            <span style="color: var(--red);">{{ attempt.incorrect_count }}</span>
+            &nbsp;/&nbsp;
+            {{ attempt.unattempted_count }}
+          </span>
+        </td>
+        <td><span class="time-cell">{{ attempt.get_time_display }}</span></td>
+        <td><span class="time-cell">{{ attempt.end_time|date:"M d" }}</span></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🏆</div>
+    <p>No completed attempts yet.<br>Be the first to take the quiz!</p>
+    <a href="{% url 'quiz_home' %}" class="btn btn-primary" style="margin-top: 1rem;">Take Quiz →</a>
+  </div>
+  {% endif %}
+</div>
+
+<div style="text-align:center; margin-top: 2rem;">
+  <a href="{% url 'quiz_home' %}" class="btn btn-outline">← Back to Home</a>
+</div>
+{% endblock %}

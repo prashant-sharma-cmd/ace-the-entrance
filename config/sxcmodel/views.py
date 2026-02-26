@@ -1,157 +1,346 @@
-import random
-from django.shortcuts import render, redirect, get_object_or_404
+import json
+
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views import View
-from django.views.generic import TemplateView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, TemplateView
 
-from .models import Question, QuizAttempt, UserAnswer
+from .constants import MAX_TIME_SECONDS
+from .models import Leaderboard, Question, QuizAttempt, UserAnswer
+from .utils import build_question_sequence, compute_final_grade, get_section_label
 
+
+# ---------------------------------------------------------------------------
+# Mixins
+# ---------------------------------------------------------------------------
+
+class AttemptMixin:
+    """
+    Shared helper that resolves a QuizAttempt from the URL's session_key,
+    enforcing that it belongs to the logged-in user.
+    require_incomplete=True  → 404 if already completed
+    require_completed=True   → 404 if not yet completed
+    """
+    require_incomplete: bool = False
+    require_completed: bool = False
+
+    def get_attempt(self, session_key):
+        qs = QuizAttempt.objects.filter(session_key=session_key, user=self.request.user)
+        if self.require_incomplete:
+            qs = qs.filter(is_completed=False)
+        if self.require_completed:
+            qs = qs.filter(is_completed=True)
+        return get_object_or_404(qs)
+
+
+def _elapsed_seconds(attempt) -> int:
+    """Wall-clock seconds since attempt started (server-side, cannot be spoofed)."""
+    return int((timezone.now() - attempt.start_time).total_seconds())
+
+
+# ---------------------------------------------------------------------------
+# Dashboard
+# ---------------------------------------------------------------------------
 
 class DashboardView(LoginRequiredMixin, TemplateView):
-    template_name = 'sxcmodel/dashboard.html'
+    """
+    Landing page. Shows best stats, any resumable attempt, full history,
+    and a Start button.
+    """
+    template_name = 'quiz/dashboard.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Check for unfinished quiz
-        context['active_attempt'] = QuizAttempt.objects.filter(
-            user=self.request.user, is_completed=False
-        ).first()
-        # Top 50 Leaderboard
-        context['leaderboard'] = QuizAttempt.objects.filter(
-            is_completed=True
-        ).order_by('-final_grade')[:50]
+        ctx = super().get_context_data(**kwargs)
+        user = self.request.user
 
-        return context
-
-
-class StartQuizView(LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-        action = request.POST.get('action')
-
-        if action == 'new':
-            # Delete old incomplete attempts
-            QuizAttempt.objects.filter(user=request.user,
-                                       is_completed=False).delete()
-
-            # Generate Sequence
-            subjects = ['PHY', 'CHE', 'BIO', 'MAT', 'ENG', 'IQ_GK']
-            random.shuffle(subjects)
-
-            sequence = []
-            for sub in subjects:
-                q_ids = list(
-                    Question.objects.filter(subject=sub).values_list('id',
-                                                                     flat=True))
-                random.shuffle(q_ids)
-                sequence.append(q_ids)  # E.g., Appends 20 shuffled Physics IDs
-
-            attempt = QuizAttempt.objects.create(user=request.user,
-                                                 question_sequence=sequence)
-            return redirect('take_quiz', attempt_id=attempt.id, page_index=0)
-
-        elif action == 'resume':
-            attempt = QuizAttempt.objects.filter(user=request.user,
-                                                 is_completed=False).first()
-            if attempt:
-                return redirect('take_quiz', attempt_id=attempt.id,
-                                page_index=0)
-
-        return redirect('dashboard')
-
-class TakeQuizView(LoginRequiredMixin, View):
-
-    def get_attempt_and_questions(self, attempt_id, page_index):
-        attempt = get_object_or_404(QuizAttempt, id=attempt_id, user=self.request.user, is_completed=False)
-        current_page_q_ids = attempt.question_sequence[page_index]
-
-        questions = list(Question.objects.filter(id__in=current_page_q_ids))
-        questions.sort(key=lambda x: current_page_q_ids.index(x.id))
-        return attempt, questions
-
-    def get(self, request, attempt_id, page_index, *args, **kwargs):
-        attempt, questions = self.get_attempt_and_questions(attempt_id, page_index)
-
-        # Calculate time remaining for the 1.5 Hour (5400 seconds) timer
-        elapsed_time = (timezone.now() - attempt.start_time).total_seconds()
-        time_remaining = max(0, 5400 - int(elapsed_time))
-
-        user_answers = dict(
-            UserAnswer.objects.filter(attempt=attempt).values_list('question_id', 'selected_option')
+        ctx['best_attempt'] = (
+            QuizAttempt.objects.filter(user=user, is_completed=True)
+            .order_by('-final_grade')
+            .first()
         )
-        for q in questions:
-            q.selected_option = user_answers.get(q.id, None)
+        ctx['incomplete_attempt'] = (
+            QuizAttempt.objects.filter(user=user, is_completed=False)
+            .order_by('-start_time')
+            .first()
+        )
+        ctx['completed_attempts'] = (
+            QuizAttempt.objects.filter(user=user, is_completed=True)
+            .order_by('-start_time')
+        )
+        return ctx
 
-        context = {
+
+# ---------------------------------------------------------------------------
+# Start / Resume
+# ---------------------------------------------------------------------------
+
+class StartExamView(LoginRequiredMixin, View):
+    """
+    Creates a fresh QuizAttempt (closing any incomplete ones) and redirects
+    to section 0.  Accepts both GET and POST so the dashboard confirm dialog works.
+    """
+
+    def get(self, request):
+        return self._start(request)
+
+    def post(self, request):
+        return self._start(request)
+
+    def _start(self, request):
+        QuizAttempt.objects.filter(user=request.user, is_completed=False).update(is_completed=True)
+
+        sequence = build_question_sequence()
+        attempt = QuizAttempt.objects.create(
+            user=request.user,
+            question_sequence=sequence,
+            current_section_index=0,
+        )
+        return redirect('quiz:section', session_key=attempt.session_key, section_index=0)
+
+
+class ResumeExamView(LoginRequiredMixin, AttemptMixin, View):
+    """Redirects to the user's saved section in an existing incomplete attempt."""
+    require_incomplete = True
+
+    def get(self, request, session_key):
+        attempt = self.get_attempt(session_key)
+        return redirect(
+            'quiz:section',
+            session_key=attempt.session_key,
+            section_index=attempt.current_section_index,
+        )
+
+
+# ---------------------------------------------------------------------------
+# Section (exam page)
+# ---------------------------------------------------------------------------
+
+class SectionView(LoginRequiredMixin, AttemptMixin, View):
+    """
+    GET  — render the question form for one section.
+    POST — save answers, advance to next section (or trigger submit).
+    """
+    require_incomplete = True
+    template_name = 'quiz/section.html'
+
+    # ---- private helpers -------------------------------------------------
+
+    def _ordered_questions(self, attempt, section_index):
+        """Return questions in the exact order stored in question_sequence."""
+        ids = attempt.question_sequence[section_index]
+        lookup = {q.id: q for q in Question.objects.filter(id__in=ids)}
+        return [lookup[qid] for qid in ids if qid in lookup]
+
+    def _existing_answers(self, attempt, questions):
+        return {
+            ua.question_id: ua.selected_option
+            for ua in UserAnswer.objects.filter(attempt=attempt, question__in=questions)
+        }
+
+    # ---- GET -------------------------------------------------------------
+
+    def get(self, request, session_key, section_index):
+        attempt = self.get_attempt(session_key)
+        sequence = attempt.question_sequence
+
+        if section_index >= len(sequence):
+            return redirect('quiz:submit', session_key=session_key)
+
+        if attempt.current_section_index != section_index:
+            attempt.current_section_index = section_index
+            attempt.save(update_fields=['current_section_index'])
+
+        questions = self._ordered_questions(attempt, section_index)
+        elapsed = _elapsed_seconds(attempt)
+
+        return render(request, self.template_name, {
             'attempt': attempt,
             'questions': questions,
-            'page_index': page_index,
-            'total_pages': len(attempt.question_sequence),
-            'time_remaining': time_remaining, # Pass to template
-        }
-        return render(request, 'quiz/take_quiz.html', context)
-
-    def post(self, request, attempt_id, page_index, *args, **kwargs):
-        attempt, questions = self.get_attempt_and_questions(attempt_id, page_index)
-
-        for q in questions:
-            selected = request.POST.get(f'question_{q.id}')
-            if selected:
-                UserAnswer.objects.update_or_create(
-                    attempt=attempt, question=q,
-                    defaults={'selected_option': int(selected)}
-                )
-
-        # If JS timer forced a submit, redirect straight to submission
-        if request.POST.get('force_submit') == '1':
-            return redirect('submit_quiz', attempt_id=attempt.id)
-
-        if page_index < len(attempt.question_sequence) - 1:
-            return redirect('take_quiz', attempt_id=attempt.id, page_index=page_index + 1)
-        else:
-            return redirect('submit_quiz', attempt_id=attempt.id)
-
-class SubmitQuizView(LoginRequiredMixin, View):
-    def get(self, request, attempt_id, *args, **kwargs):
-        # We allow fetching completed attempts so users can refresh their results page
-        attempt = get_object_or_404(QuizAttempt, id=attempt_id, user=request.user)
-
-        if not attempt.is_completed:
-            attempt.end_time = timezone.now()
-            time_taken = (attempt.end_time - attempt.start_time).total_seconds()
-
-            # Enforce the 1.5 hour max limit on the backend (plus 5 seconds buffer)
-            if time_taken > 5405:
-                time_taken = 5400
-
-            correct = 0
-            incorrect = 0
-
-            answers = attempt.answers.all()
-            for ans in answers:
-                if ans.selected_option is not None:
-                    if ans.selected_option == ans.question.correct_option:
-                        correct += 1
-                    else:
-                        incorrect += 1
-
-            unattempted = 100 - (correct + incorrect)
-            score = correct - (incorrect * 0.25)
-
-            final_grade = score + (100.0 / (time_taken + 100.0))
-
-            attempt.correct_answers = correct
-            attempt.incorrect_answers = incorrect
-            attempt.unattempted_answers = unattempted
-            attempt.score = score
-            attempt.final_grade = round(final_grade, 5)
-            attempt.time_taken_seconds = int(time_taken)
-            attempt.is_completed = True
-            attempt.save()
-
-        time_per_question = attempt.time_taken_seconds / 100.0
-
-        return render(request, 'quiz/result.html', {
-            'attempt': attempt,
-            'time_per_question': round(time_per_question, 2)
+            'section_index': section_index,
+            'total_sections': len(sequence),
+            'section_number': section_index + 1,
+            'subject_label': get_section_label(questions[0].subject) if questions else '',
+            'is_last_section': section_index == len(sequence) - 1,
+            'existing_answers': self._existing_answers(attempt, questions),
+            'time_remaining': max(0, MAX_TIME_SECONDS - elapsed),
+            'max_time': MAX_TIME_SECONDS,
+            'session_key': str(session_key),
         })
+
+    # ---- POST ------------------------------------------------------------
+
+    def post(self, request, session_key, section_index):
+        attempt = self.get_attempt(session_key)
+        sequence = attempt.question_sequence
+
+        if section_index >= len(sequence):
+            return redirect('quiz:submit', session_key=session_key)
+
+        questions = self._ordered_questions(attempt, section_index)
+        time_taken = int(request.POST.get('time_taken_seconds', 0))
+        per_q_time = time_taken // max(len(questions), 1)
+
+        for question in questions:
+            raw = request.POST.get(f'answer_{question.id}')
+            selected = int(raw) if raw and raw.isdigit() else None
+            UserAnswer.objects.update_or_create(
+                attempt=attempt,
+                question=question,
+                defaults={'selected_option': selected, 'time_taken_seconds': per_q_time},
+            )
+
+        next_index = section_index + 1
+        if next_index >= len(sequence):
+            return redirect('quiz:submit', session_key=attempt.session_key)
+
+        attempt.current_section_index = next_index
+        attempt.save(update_fields=['current_section_index'])
+        return redirect('quiz:section', session_key=attempt.session_key, section_index=next_index)
+
+
+# ---------------------------------------------------------------------------
+# Submit
+# ---------------------------------------------------------------------------
+
+class SubmitExamView(LoginRequiredMixin, AttemptMixin, View):
+    """
+    Finalises the attempt: computes all scores, marks it complete, redirects
+    to results.  Accepts GET so the JS auto-submit (form POST) and direct URL
+    navigation both work gracefully.
+    """
+    require_incomplete = True
+
+    def get(self, request, session_key):
+        return self._finalise(request, session_key)
+
+    def post(self, request, session_key):
+        return self._finalise(request, session_key)
+
+    def _finalise(self, request, session_key):
+        attempt = self.get_attempt(session_key)
+        answers = UserAnswer.objects.filter(attempt=attempt).select_related('question')
+        total_questions = sum(len(s) for s in attempt.question_sequence)
+
+        correct = sum(1 for a in answers if a.selected_option == a.question.correct_option)
+        incorrect = sum(
+            1 for a in answers
+            if a.selected_option is not None and a.selected_option != a.question.correct_option
+        )
+        elapsed = _elapsed_seconds(attempt)
+
+        attempt.end_time = timezone.now()
+        attempt.correct_count = correct
+        attempt.incorrect_count = incorrect
+        attempt.unattempted_count = total_questions - correct - incorrect
+        attempt.raw_score = correct - 0.25 * incorrect
+        attempt.total_time_seconds = elapsed
+        attempt.final_grade = compute_final_grade(correct, incorrect, total_questions, elapsed)
+        attempt.is_completed = True
+        attempt.save()
+
+        # --- Update the Leaderboard table (upsert best score) ---
+        # Only write if there is no existing entry, or this attempt beats it.
+        existing = Leaderboard.objects.filter(user=request.user).first()
+        if existing is None or attempt.final_grade > existing.final_grade:
+            Leaderboard.objects.update_or_create(
+                user=request.user,
+                defaults={
+                    'attempt': attempt,
+                    'final_grade': attempt.final_grade,
+                    'raw_score': attempt.raw_score,
+                    'correct_count': attempt.correct_count,
+                    'incorrect_count': attempt.incorrect_count,
+                    'total_time_seconds': attempt.total_time_seconds,
+                    'achieved_at': attempt.end_time,
+                },
+            )
+
+        return redirect('quiz:results', session_key=session_key)
+
+
+# ---------------------------------------------------------------------------
+# Results
+# ---------------------------------------------------------------------------
+
+class ResultsView(LoginRequiredMixin, AttemptMixin, TemplateView):
+    """Marks + time breakdown after a completed attempt."""
+    require_completed = True
+    template_name = 'quiz/results.html'
+
+    def get(self, request, session_key, **kwargs):
+        attempt = self.get_attempt(session_key)
+        total_questions = sum(len(s) for s in attempt.question_sequence)
+        avg_time = attempt.total_time_seconds / total_questions if total_questions else 0
+
+        context = self.get_context_data(
+            attempt=attempt,
+            total_questions=total_questions,
+            avg_time_seconds=int(avg_time),
+        )
+        return self.render_to_response(context)
+
+
+# ---------------------------------------------------------------------------
+# Leaderboard
+# ---------------------------------------------------------------------------
+
+class LeaderboardView(ListView):
+    """
+    Reads directly from the Leaderboard table — one pre-computed row per user,
+    already ordered by final_grade DESC.  No aggregation, no sorting in Python.
+    No login required.
+    """
+    template_name = 'quiz/leaderboard.html'
+    context_object_name = 'entries'
+
+    def get_queryset(self):
+        return Leaderboard.objects.select_related('user', 'attempt').order_by('-final_grade')
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        current_user_rank = None
+        if self.request.user.is_authenticated:
+            for rank, entry in enumerate(ctx['entries'], 1):
+                if entry.user_id == self.request.user.id:
+                    current_user_rank = rank
+                    break
+        ctx['current_user_rank'] = current_user_rank
+        return ctx
+
+
+# ---------------------------------------------------------------------------
+# AJAX: auto-save progress
+# ---------------------------------------------------------------------------
+
+class SaveProgressView(LoginRequiredMixin, AttemptMixin, View):
+    """
+    Called every 30 s by the exam JS to persist current answers without
+    navigating away.
+    Body: JSON { "answers": { "<question_id>": <int|null>, … } }
+    """
+    require_incomplete = True
+    http_method_names = ['post']
+
+    def post(self, request, session_key):
+        attempt = self.get_attempt(session_key)
+
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+        for q_id_str, selected in data.get('answers', {}).items():
+            try:
+                question = Question.objects.get(pk=int(q_id_str))
+            except (ValueError, Question.DoesNotExist):
+                continue
+
+            UserAnswer.objects.update_or_create(
+                attempt=attempt,
+                question=question,
+                defaults={'selected_option': selected},
+            )
+
+        return JsonResponse({'status': 'ok'})
