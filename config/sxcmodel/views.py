@@ -49,7 +49,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
     Landing page. Shows best stats, any resumable attempt, full history,
     and a Start button.
     """
-    template_name = 'quiz/dashboard.html'
+    template_name = 'sxcmodel/dashboard.html'
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -97,7 +97,7 @@ class StartExamView(LoginRequiredMixin, View):
             question_sequence=sequence,
             current_section_index=0,
         )
-        return redirect('quiz:section', session_key=attempt.session_key, section_index=0)
+        return redirect('sxcmodel:section', session_key=attempt.session_key, section_index=0)
 
 
 class ResumeExamView(LoginRequiredMixin, AttemptMixin, View):
@@ -107,7 +107,7 @@ class ResumeExamView(LoginRequiredMixin, AttemptMixin, View):
     def get(self, request, session_key):
         attempt = self.get_attempt(session_key)
         return redirect(
-            'quiz:section',
+            'sxcmodel:section',
             session_key=attempt.session_key,
             section_index=attempt.current_section_index,
         )
@@ -123,7 +123,7 @@ class SectionView(LoginRequiredMixin, AttemptMixin, View):
     POST — save answers, advance to next section (or trigger submit).
     """
     require_incomplete = True
-    template_name = 'quiz/section.html'
+    template_name = 'sxcmodel/section.html'
 
     # ---- private helpers -------------------------------------------------
 
@@ -146,7 +146,7 @@ class SectionView(LoginRequiredMixin, AttemptMixin, View):
         sequence = attempt.question_sequence
 
         if section_index >= len(sequence):
-            return redirect('quiz:submit', session_key=session_key)
+            return redirect('sxcmodel:submit', session_key=session_key)
 
         if attempt.current_section_index != section_index:
             attempt.current_section_index = section_index
@@ -176,7 +176,7 @@ class SectionView(LoginRequiredMixin, AttemptMixin, View):
         sequence = attempt.question_sequence
 
         if section_index >= len(sequence):
-            return redirect('quiz:submit', session_key=session_key)
+            return redirect('sxcmodel:submit', session_key=session_key)
 
         questions = self._ordered_questions(attempt, section_index)
         time_taken = int(request.POST.get('time_taken_seconds', 0))
@@ -193,11 +193,11 @@ class SectionView(LoginRequiredMixin, AttemptMixin, View):
 
         next_index = section_index + 1
         if next_index >= len(sequence):
-            return redirect('quiz:submit', session_key=attempt.session_key)
+            return redirect('sxcmodel:submit', session_key=attempt.session_key)
 
         attempt.current_section_index = next_index
         attempt.save(update_fields=['current_section_index'])
-        return redirect('quiz:section', session_key=attempt.session_key, section_index=next_index)
+        return redirect('sxcmodel:section', session_key=attempt.session_key, section_index=next_index)
 
 
 # ---------------------------------------------------------------------------
@@ -257,7 +257,7 @@ class SubmitExamView(LoginRequiredMixin, AttemptMixin, View):
                 },
             )
 
-        return redirect('quiz:results', session_key=session_key)
+        return redirect('sxcmodel:results', session_key=session_key)
 
 
 # ---------------------------------------------------------------------------
@@ -267,7 +267,7 @@ class SubmitExamView(LoginRequiredMixin, AttemptMixin, View):
 class ResultsView(LoginRequiredMixin, AttemptMixin, TemplateView):
     """Marks + time breakdown after a completed attempt."""
     require_completed = True
-    template_name = 'quiz/results.html'
+    template_name = 'sxcmodel/results.html'
 
     def get(self, request, session_key, **kwargs):
         attempt = self.get_attempt(session_key)
@@ -292,7 +292,7 @@ class LeaderboardView(ListView):
     already ordered by final_grade DESC.  No aggregation, no sorting in Python.
     No login required.
     """
-    template_name = 'quiz/leaderboard.html'
+    template_name = 'sxcmodel/leaderboard.html'
     context_object_name = 'entries'
 
     def get_queryset(self):
