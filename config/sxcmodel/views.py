@@ -1,13 +1,13 @@
 import json
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView, TemplateView
 
-from .constants import MAX_TIME_SECONDS, TIME_WEIGHT
+from .mixins import MyLoginRequiredMixin
+from .constants import MAX_TIME_SECONDS
 from .models import Leaderboard, Question, QuizAttempt, UserAnswer
 from .utils import build_question_sequence, compute_final_grade, get_section_label
 
@@ -44,7 +44,7 @@ def _elapsed_seconds(attempt) -> int:
 # Dashboard
 # ---------------------------------------------------------------------------
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class DashboardView(MyLoginRequiredMixin, TemplateView):
     """
     Landing page. Shows best stats, any resumable attempt, full history,
     and a Start button.
@@ -76,7 +76,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 # Start / Resume
 # ---------------------------------------------------------------------------
 
-class StartExamView(LoginRequiredMixin, View):
+class StartExamView(MyLoginRequiredMixin, View):
     """
     Creates a fresh QuizAttempt (closing any incomplete ones) and redirects
     to section 0.  Accepts both GET and POST so the dashboard confirm dialog works.
@@ -100,7 +100,7 @@ class StartExamView(LoginRequiredMixin, View):
         return redirect('sxcmodel:section', session_key=attempt.session_key, section_index=0)
 
 
-class ResumeExamView(LoginRequiredMixin, AttemptMixin, View):
+class ResumeExamView(MyLoginRequiredMixin, AttemptMixin, View):
     """Redirects to the user's saved section in an existing incomplete attempt."""
     require_incomplete = True
 
@@ -117,7 +117,7 @@ class ResumeExamView(LoginRequiredMixin, AttemptMixin, View):
 # Section (exam page)
 # ---------------------------------------------------------------------------
 
-class SectionView(LoginRequiredMixin, AttemptMixin, View):
+class SectionView(MyLoginRequiredMixin, AttemptMixin, View):
     """
     GET  — render the question form for one section.
     POST — save answers, advance to next section (or trigger submit).
@@ -204,7 +204,7 @@ class SectionView(LoginRequiredMixin, AttemptMixin, View):
 # Submit
 # ---------------------------------------------------------------------------
 
-class SubmitExamView(LoginRequiredMixin, AttemptMixin, View):
+class SubmitExamView(MyLoginRequiredMixin, AttemptMixin, View):
     """
     Finalises the attempt: computes all scores, marks it complete, redirects
     to results.  Accepts GET so the JS auto-submit (form POST) and direct URL
@@ -264,7 +264,7 @@ class SubmitExamView(LoginRequiredMixin, AttemptMixin, View):
 # Results
 # ---------------------------------------------------------------------------
 
-class ResultsView(LoginRequiredMixin, AttemptMixin, TemplateView):
+class ResultsView(MyLoginRequiredMixin, AttemptMixin, TemplateView):
     """Marks + time breakdown after a completed attempt."""
     require_completed = True
     template_name = 'sxcmodel/results.html'
@@ -316,7 +316,7 @@ class LeaderboardView(ListView):
 # AJAX: auto-save progress
 # ---------------------------------------------------------------------------
 
-class SaveProgressView(LoginRequiredMixin, AttemptMixin, View):
+class SaveProgressView(MyLoginRequiredMixin, AttemptMixin, View):
     """
     Called every 30 s by the exam JS to persist current answers without
     navigating away.
