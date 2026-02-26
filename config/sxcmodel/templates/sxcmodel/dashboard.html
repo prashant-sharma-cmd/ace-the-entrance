@@ -16,7 +16,7 @@
             <h2>Welcome back, {{ user.get_full_name|default:user.username }} 👋</h2>
             <p>Ready for your entrance exam? Good luck!</p>
         </div>
-        <a href="{% url 'quiz:leaderboard' %}" class="btn">🏆 Leaderboard</a>
+        <a href="{% url 'sxcmodel:leaderboard' %}" class="btn">🏆 Leaderboard</a>
     </div>
 
     <!-- Resume banner -->
@@ -27,7 +27,7 @@
             Started on {{ incomplete_attempt.start_time|date:"M j, Y" }} at {{ incomplete_attempt.start_time|time:"H:i" }}.
             You can continue from where you left off.
         </div>
-        <a href="{% url 'quiz:resume' session_key=incomplete_attempt.session_key %}" class="btn">▶ Resume Exam</a>
+        <a href="{% url 'sxcmodel:resume' session_key=incomplete_attempt.session_key %}" class="btn">▶ Resume Exam</a>
     </div>
     {% endif %}
 
@@ -96,7 +96,7 @@
                         <td class="clr-wrong">{{ attempt.incorrect_count }}</td>
                         <td>{{ attempt.raw_score|floatformat:1 }}</td>
                         <td>
-                            <a href="{% url 'quiz:results' session_key=attempt.session_key %}" class="btn" style="font-size:0.75rem;padding:0.3rem 0.7rem;">View</a>
+                            <a href="{% url 'sxcmodel:results' session_key=attempt.session_key %}" class="btn" style="font-size:0.75rem;padding:0.3rem 0.7rem;">View</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -133,7 +133,7 @@
 
     <!-- Start CTA -->
     <div class="quiz-cta">
-        <a href="{% url 'quiz:start' %}" class="btn"
+        <a href="{% url 'sxcmodel:start' %}" class="btn"
            onclick="return confirm('Starting a new exam will discard any unfinished attempt. Continue?');"
            style="font-size:1rem;padding:0.75rem 2rem;">
             🚀 Start New Exam
