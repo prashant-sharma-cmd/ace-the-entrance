@@ -1,13 +1,37 @@
 {% extends "base_template.html" %}
 {% load static %}
-{% load quiz_extras %}
+{% load sxcmodel_extras %}
 {% block title %}Dashboard – Entrance Exam{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'quiz/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'sxcmodel/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'sxcmodel/css/modal.css' %}">
 {% endblock %}
 
 {% block content %}
+
+<!-- ── Start exam confirm modal ── -->
+<div class="qmodal-backdrop" id="startModal" role="dialog" aria-modal="true">
+    <div class="qmodal">
+        <span class="qmodal-icon">🚀</span>
+        <div class="qmodal-title">Start a new exam?</div>
+        <div class="qmodal-body">
+            {% if incomplete_attempt %}
+                Your current unfinished exam will be <strong>discarded</strong>.<br>This cannot be undone.
+            {% else %}
+                This will begin a fresh 90-minute attempt.<br>Make sure you're ready!
+            {% endif %}
+        </div>
+        <div class="qmodal-actions">
+            <button class="qmodal-btn qmodal-btn-cancel" id="startModalCancel">Not yet</button>
+            <button class="qmodal-btn {% if incomplete_attempt %}qmodal-btn-danger{% else %}qmodal-btn-confirm{% endif %}"
+                    id="startModalConfirm">
+                Let's go →
+            </button>
+        </div>
+    </div>
+</div>
+
 <div class="quiz-page">
 
     <!-- Page header -->
@@ -96,7 +120,8 @@
                         <td class="clr-wrong">{{ attempt.incorrect_count }}</td>
                         <td>{{ attempt.raw_score|floatformat:1 }}</td>
                         <td>
-                            <a href="{% url 'sxcmodel:results' session_key=attempt.session_key %}" class="btn" style="font-size:0.75rem;padding:0.3rem 0.7rem;">View</a>
+                            <a href="{% url 'sxcmodel:results' session_key=attempt.session_key %}"
+                               class="btn" style="font-size:0.75rem;padding:0.3rem 0.7rem;">View</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -133,15 +158,32 @@
 
     <!-- Start CTA -->
     <div class="quiz-cta">
-        <a href="{% url 'sxcmodel:start' %}" class="btn"
-           onclick="return confirm('Starting a new exam will discard any unfinished attempt. Continue?');"
-           style="font-size:1rem;padding:0.75rem 2rem;">
+        <button type="button" id="startExamBtn" class="btn" style="font-size:1rem;padding:0.75rem 2rem;">
             🚀 Start New Exam
-        </a>
+        </button>
         {% if not best_attempt and not incomplete_attempt %}
         <p>This will be your first attempt!</p>
         {% endif %}
     </div>
 
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'sxcmodel/js/modal.js' %}"></script>
+<script>
+    var startUrl = '{% url "sxcmodel:start" %}';
+
+    document.getElementById('startExamBtn').addEventListener('click', function () {
+        QuizModal.open('startModal');
+    });
+
+    document.getElementById('startModalCancel').addEventListener('click', function () {
+        QuizModal.close('startModal');
+    });
+
+    document.getElementById('startModalConfirm').addEventListener('click', function () {
+        window.location.href = startUrl;
+    });
+</script>
 {% endblock %}

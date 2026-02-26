@@ -1,0 +1,113 @@
+/* ============================================================
+   quiz/modal.css  –  Shared custom confirm/alert modal
+   Used by: dashboard, section, results
+   ============================================================ */
+
+.qmodal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+.qmodal-backdrop.open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.qmodal {
+    background: var(--clr-white);
+    border-radius: 16px;
+    padding: 2rem 2rem 1.6rem;
+    width: min(400px, 92vw);
+    box-shadow: 0 32px 72px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.08);
+    transform: translateY(20px) scale(0.96);
+    transition: transform 0.22s cubic-bezier(.34,1.56,.64,1), opacity 0.18s ease;
+    opacity: 0;
+    text-align: center;
+}
+.qmodal-backdrop.open .qmodal {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+.qmodal-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+    display: block;
+}
+
+.qmodal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--clr-primary);
+    margin-bottom: 0.45rem;
+    /* override home styles that uppercase/letter-space headings */
+    text-transform: none;
+    letter-spacing: 0;
+    line-height: 1.3;
+}
+
+.qmodal-body {
+    font-size: 0.875rem;
+    color: #555;
+    line-height: 1.65;
+    margin-bottom: 1.6rem;
+}
+.qmodal-body strong {
+    color: var(--clr-grey-1);
+    font-weight: 700;
+}
+
+.qmodal-actions {
+    display: flex;
+    gap: 0.7rem;
+    justify-content: center;
+}
+
+.qmodal-btn {
+    flex: 1;
+    max-width: 160px;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    font-family: var(--ff-primary);
+    letter-spacing: var(--spacing);
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition);
+    line-height: 1.4;
+}
+
+.qmodal-btn-cancel {
+    background: var(--clr-grey-10);
+    color: var(--clr-primary);
+}
+.qmodal-btn-cancel:hover {
+    background: #bdd5e3;
+}
+
+.qmodal-btn-confirm {
+    background: var(--clr-primary);
+    color: var(--clr-white);
+}
+.qmodal-btn-confirm:hover {
+    background: #001d6e;
+}
+
+/* Danger variant — used for destructive actions like "discard attempt" */
+.qmodal-btn-danger {
+    background: #dc2626;
+    color: #fff;
+}
+.qmodal-btn-danger:hover {
+    background: #b91c1c;
+}

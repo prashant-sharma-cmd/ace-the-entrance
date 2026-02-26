@@ -1,13 +1,31 @@
 {% extends "base_template.html" %}
 {% load static %}
-{% load quiz_extras %}
+{% load sxcmodel_extras %}
 {% block title %}Results – Entrance Exam{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'quiz/css/results.css' %}">
+<link rel="stylesheet" href="{% static 'sxcmodel/css/results.css' %}">
+<link rel="stylesheet" href="{% static 'sxcmodel/css/modal.css' %}">
 {% endblock %}
 
 {% block content %}
+
+<!-- ── Try again confirm modal ── -->
+<div class="qmodal-backdrop" id="tryAgainModal" role="dialog" aria-modal="true">
+    <div class="qmodal">
+        <span class="qmodal-icon">🔄</span>
+        <div class="qmodal-title">Start a fresh exam?</div>
+        <div class="qmodal-body">
+            A brand-new 90-minute attempt will begin.<br>
+            <strong>Your current results are already saved.</strong>
+        </div>
+        <div class="qmodal-actions">
+            <button class="qmodal-btn qmodal-btn-cancel"  id="tryAgainCancel">Not yet</button>
+            <button class="qmodal-btn qmodal-btn-confirm" id="tryAgainConfirm">Start now →</button>
+        </div>
+    </div>
+</div>
+
 <div class="results-page">
 
     <!-- Score ring -->
@@ -97,33 +115,48 @@
     <div class="results-actions">
         <a href="{% url 'sxcmodel:dashboard' %}" class="btn">← Dashboard</a>
         <a href="{% url 'sxcmodel:leaderboard' %}" class="btn">🏆 Leaderboard</a>
-        <a href="{% url 'sxcmodel:start' %}" class="btn"
-           onclick="return confirm('Start a fresh exam?');">🔄 Try Again</a>
+        <button type="button" class="btn" id="tryAgainBtn">🔄 Try Again</button>
     </div>
 
 </div>
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'sxcmodel/js/modal.js' %}"></script>
 <script>
-    const _totalSec = {{ attempt.total_time_seconds }};
-    const _avgSec   = {{ avg_time_seconds }};
-    const _maxTime  = 5400;
+    /* ── Time display ── */
+    var _totalSec = {{ attempt.total_time_seconds }};
+    var _avgSec   = {{ avg_time_seconds }};
+    var _maxTime  = 5400;
 
     function fmt(s) {
-        const m = Math.floor(s / 60), sec = s % 60;
+        var m = Math.floor(s / 60), sec = s % 60;
         return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
     }
 
-    document.getElementById('rTotalTime').textContent   = fmt(_totalSec);
-    document.getElementById('rAvgTime').textContent     = _avgSec + 's';
-    document.getElementById('rRemaining').textContent   = fmt(Math.max(0, _maxTime - _totalSec));
+    document.getElementById('rTotalTime').textContent  = fmt(_totalSec);
+    document.getElementById('rAvgTime').textContent    = _avgSec + 's';
+    document.getElementById('rRemaining').textContent  = fmt(Math.max(0, _maxTime - _totalSec));
 
+    /* ── Tab switching ── */
     function switchTab(e, name) {
         document.querySelectorAll('.results-tab-btn').forEach(function(b){ b.classList.remove('active'); });
         document.querySelectorAll('.results-tab-panel').forEach(function(p){ p.classList.remove('active'); });
         e.currentTarget.classList.add('active');
         document.getElementById('rtab-' + name).classList.add('active');
     }
+
+    /* ── Try again modal ── */
+    var startUrl = '{% url "sxcmodel:start" %}';
+
+    document.getElementById('tryAgainBtn').addEventListener('click', function () {
+        QuizModal.open('tryAgainModal');
+    });
+    document.getElementById('tryAgainCancel').addEventListener('click', function () {
+        QuizModal.close('tryAgainModal');
+    });
+    document.getElementById('tryAgainConfirm').addEventListener('click', function () {
+        window.location.href = startUrl;
+    });
 </script>
 {% endblock %}
