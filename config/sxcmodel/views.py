@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView, TemplateView
 
-from .constants import MAX_TIME_SECONDS
+from .constants import MAX_TIME_SECONDS, TIME_WEIGHT
 from .models import Leaderboard, Question, QuizAttempt, UserAnswer
 from .utils import build_question_sequence, compute_final_grade, get_section_label
 
@@ -273,11 +273,13 @@ class ResultsView(LoginRequiredMixin, AttemptMixin, TemplateView):
         attempt = self.get_attempt(session_key)
         total_questions = sum(len(s) for s in attempt.question_sequence)
         avg_time = attempt.total_time_seconds / total_questions if total_questions else 0
+        time_bonus = max(0.0, 1 - attempt.total_time_seconds / MAX_TIME_SECONDS) * 20
 
         context = self.get_context_data(
             attempt=attempt,
             total_questions=total_questions,
             avg_time_seconds=int(avg_time),
+            speed_bonus=round(time_bonus, 0),
         )
         return self.render_to_response(context)
 

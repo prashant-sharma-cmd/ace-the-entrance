@@ -69,10 +69,6 @@
                         <div class="results-stat-label">Skipped</div>
                     </div>
                     <div class="results-stat-card">
-                        <div class="results-stat-value">{{ total_questions }}</div>
-                        <div class="results-stat-label">Total Questions</div>
-                    </div>
-                    <div class="results-stat-card">
                         <div class="results-stat-value">{{ attempt.final_grade|floatformat:1 }}</div>
                         <div class="results-stat-label">Final Grade / 100</div>
                     </div>
@@ -81,7 +77,7 @@
                 <div class="results-formula-box">
                     <strong>Scoring formula:</strong>
                     Raw = Correct − (0.25 × Wrong).
-                    Final Grade = (Raw / Total × 80) + (Speed Bonus × 20).
+                    Final Grade ~ (Raw / Total Questions × 80) + Speed Bonus.
                     Finishing faster earns up to 20 bonus points.
                 </div>
             </div>
@@ -102,8 +98,10 @@
                         <div class="results-stat-label">Time Remaining</div>
                     </div>
                     <div class="results-stat-card">
-                        <div class="results-stat-value">{% widthratio attempt.total_time_seconds 5400 20 %}</div>
-                        <div class="results-stat-label">Speed Bonus (/ 20)</div>
+                        <div class="results-stat-value">
+                            {{ speed_bonus }}
+                        </div>
+                        <div class="results-stat-label">Speed Bonus</div>
                     </div>
                 </div>
             </div>
