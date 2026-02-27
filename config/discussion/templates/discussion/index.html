@@ -1,7 +1,7 @@
 {% extends "navbar.html" %}
 {% load static %}
 
-{% block title %}The Open Forum{% endblock %}
+{% block title %}Discussion – {% endblock %}
 
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'discussion/css/styles.css' %}">
@@ -48,7 +48,7 @@
 
     <!-- Thread Cards -->
     <div id="thread-list">
-      <div class="loading">Loading threads…</div>
+      <div class="loading">Loading Questions…</div>
     </div>
 
   </div><!-- /#view-list -->
@@ -56,7 +56,7 @@
   <!-- ===================== THREAD DETAIL VIEW ===================== -->
   <div id="view-thread" style="display:none;">
 
-    <button class="back-btn" id="btn-back">&#8592; Back to threads</button>
+    <button class="back-btn" id="btn-back">&#8592; Back to Questions</button>
 
     <!-- Thread Full -->
     <div class="thread-full" id="thread-detail-box">
@@ -137,11 +137,11 @@
   <!-- ===================== NEW THREAD VIEW ===================== -->
   <div id="view-new" style="display:none;">
 
-    <button class="back-btn" id="btn-back-new">&#8592; Back to threads</button>
+    <button class="back-btn" id="btn-back-new">&#8592; Back to Questions</button>
 
     {% if user.is_authenticated %}
     <div class="new-thread-view">
-      <h2>Start a New Thread</h2>
+      <h2>Ask a New Question</h2>
 
       <div class="field">
         <label for="new-category">Category</label>
@@ -182,11 +182,11 @@
         <input type="file" id="new-image" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;">
       </div>
 
-      <button class="submit-btn" id="btn-publish">Publish Thread</button>
+      <button class="submit-btn" id="btn-publish">Publish Question</button>
     </div>
     {% else %}
     <div class="empty-state">
-      <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn">Log in to start a thread</a>
+      <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn">Log in to ask a Question</a>
     </div>
     {% endif %}
 
