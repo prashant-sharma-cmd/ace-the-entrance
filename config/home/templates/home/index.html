@@ -14,14 +14,9 @@
         <a href="{% url 'daily:quiz'%}" class="btn banner-btn">Explore Daily Questions</a>
       </div>
     </header>
+    <div class="content-divider"></div>
 {% endblock %}
 <!-- end of header -->
-
-<!-- content divider -->
-{% block content-divider %}
-<div class="content-divider"></div>
-{% endblock %}
-<!-- end of content divider -->
 
 <!-- Features section -->
 {% block feature %}
@@ -71,7 +66,7 @@
         <!-- about img -->
         <article class="about-img">
           <div class="about-picture-container">
-            <img src="{% static 'home/images/about-bcg.png' %}" alt="ace the entrance book" class="about-picture">
+            <img src="{% static 'home/images/about-bcg.jpg' %}" alt="ace the entrance book" class="about-picture">
           </div>
         </article>
         <!-- about info -->
@@ -81,17 +76,16 @@
               <h3>about our</h3>
               <h2>Book</h2>
             </div>
+
             <!-- end of section title -->
               <p class="about-text">
-                Stay ahead in your +2 entrance journey with our dedicated learning community and resources.
+                Ace the Entrance is the ultimate preparation manual for students aiming to secure a seat at St. Xavier’s College, Maitighar, and other premier +2 institutions in Nepal. This book  is authored by St. Xavier’s alumni and top-ranking medical students to provide an authentic, high-yield study experience.
               </p>
               <p class="about-text">
-                Get daily practice questions curated from past papers and high-yield topics for St. Xavier’s, KMC, SOS, Budhanilkantha, and other top colleges—perfect for sharpening your skills every day.
               </p>
               <p class="about-text">
-                Access your personalized learning dashboard to track progress, review weak areas, monitor mock test scores, and get tailored recommendations based on your performance.
+                It features over 2,500 practice MCQs, real past entrance papers, and exclusive "Quick Tricks" designed to help you master Science, Mathematics, and English concepts with speed and precision. Whether you are targeting a scholarship or entrance into a competitive stream, this guide is your essential roadmap to cracking the St. Xavier's entrance exam and starting your journey at Nepal's most prestigious college.
               </p>
-
               <a href="#about.html" class="btn">Learn More</a>
         </article>
       </div>
@@ -107,12 +101,12 @@
         <article class="products-info">
           <!-- section title -->
           <div class="section-title">
-            <h3>Explore</h3>
-            <h2>Our Website</h2>
+            <h3>Know Our</h3>
+            <h2>Authors</h2>
           </div>
           <!-- end of section title -->
           <p class="products-text">
-            Stay ahead in your +2 entrance journey with our dedicated learning community and resources.
+            Learn from the success of St. Xavier's alumni who have mastered the journey and are dedicated to guiding yours.
           </p>
           <a href="#products.html" class="btn">inventory</a>
         </article>
@@ -120,8 +114,8 @@
         <article class="products-inventory clearfix">
           <!-- single product -->
           <div class="product">
-            <img src="{% static 'home/images/daily-quiz.jpg' %}" alt="single product" class="product-img">
-            <h4 class="product-title">ginger peach tea</h4>
+            <img src="{% static 'home/images/author-picture-1.png' %}" alt="single product" class="product-img">
+            <h4 class="product-title">Prashant Sharma</h4>
             <h4 class="product-price">$6.99</h4>
           </div>
           <!-- end of single product -->
@@ -324,7 +318,7 @@
 
         <h4 class="footer-text">
           &copy; <span id="date"></span>
-          <span class="company">Ace the Entrance</span>
+          <span class="company">{{ PROJECT_NAME }}</span>
           all rights reserved
         </h4>
       </div>

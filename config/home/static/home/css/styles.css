@@ -11,12 +11,12 @@ VARIABLES
 */
 :root {
   --clr-primary: #01257D;
-  --clr-primary-light: #00FFFF;
+  --clr-primary-light: #56e8dc;
   --clr-grey-1: #01257D;
   --clr-grey-5: #01257D;
   --clr-grey-10: #ADD8E6;
   --clr-white: #fff;
-  --ff-primary: "Catamaran", sans-serif;
+  --ff-primary: 'Plus Jakarta Sans', sans-serif;
   --ff-secondary: "Grand Hotel", cursive;
   --transition: all 0.3s linear;
   --spacing: 0.25rem;
@@ -111,6 +111,7 @@ p {
   border: none;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 0.25rem;
 }
 .btn:hover {
   color: var(--clr-primary);
@@ -513,12 +514,20 @@ ABOUT
 
 .about-picture-container {
   background: var(--clr-primary);
-  border: 0.5rem solid var(--clr-primary);
+  border: 0.1rem solid var(--clr-primary);
   max-width: 30rem;
   /* extra stuff */
   overflow: hidden;
 }
+.about-picture-container {
+  border-radius: 15px;
+  overflow: hidden;
+}
+
 .about-picture {
+  display: block;      /* Removes the default bottom gap in images */
+  width: 100%;
+  height: auto;
   transition: var(--transition);
 }
 
@@ -527,8 +536,9 @@ ABOUT
   transform: scale(1.2);
 }
 
+
 .about-text {
-  max-width: 26rem;
+  max-width: 50rem;
   color: var(--clr-grey-5);
 }
 
