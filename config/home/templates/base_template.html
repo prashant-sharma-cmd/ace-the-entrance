@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>{% block title %} {% endblock %}</title>
+    <title>{{ PROJECT_NAME }}{% block title %} {% endblock %}</title>
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -47,6 +47,8 @@
     </style>
   {% endfor %}
 </div>
+<div class="page-blur-overlay" id="page-blur-overlay">
+
 
     <!-- navbar -->
     <!-- nav button -->
@@ -94,6 +96,7 @@
     <!-- footer -->
     {% block footer %}
     {% endblock %}
+</div>
 
     {% block extra_js %} {% endblock %}
     <script type="text/javascript" src="{% static 'home/js/app.js' %}" ></script>

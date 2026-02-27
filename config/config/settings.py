@@ -39,6 +39,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+# Project Name
+PROJECT_NAME = "Ace The Entrance"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -92,6 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'home.context_processors.project_settings',
             ],
         },
     },
