@@ -1,0 +1,320 @@
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block title %}Sign In – {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'tos/css/styles.css' %}">
+{% endblock %}
+
+{% block header %}
+  <header class="hero">
+    <div class="hero-badge">Legal Documents</div>
+    <h1>Terms &amp; Privacy</h1>
+    <p class="hero-sub">Effective Date: February 28, 2026</p>
+  </header>
+
+  <div class="content-divider"></div>
+{% endblock %}
+
+{% block navbar %}
+  <nav class="tab-nav" role="tablist">
+    <button class="tab-btn active" onclick="switchTab('tos', this)" aria-selected="true" role="tab">
+      <i class="fa-solid fa-file-contract"></i> Terms of Service
+    </button>
+    <button class="tab-btn" onclick="switchTab('privacy', this)" aria-selected="false" role="tab">
+      <i class="fa-solid fa-shield-halved"></i> Privacy Policy
+    </button>
+  </nav>
+{% endblock %}
+
+{% block content %}
+  <div class="page-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <p class="sidebar-title">On This Page</p>
+      <ul class="sidebar-nav" id="sidebar-nav">
+        <!-- Populated by JS -->
+      </ul>
+      <div class="last-updated">
+        <strong><i class="fa-regular fa-calendar"></i> Last Updated</strong>
+        February 28, 2026
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main>
+
+      <!-- ── TERMS OF SERVICE ── -->
+      <div class="tab-panel active" id="tos" role="tabpanel">
+
+        <div class="highlight-box">
+          <p><i class="fa-solid fa-circle-info"></i> &nbsp;Please read these Terms of Service carefully before using our website. By accessing or using our services, you agree to be bound by these terms.</p>
+        </div>
+
+        <div class="legal-section" id="tos-acceptance">
+          <div class="section-header">
+            <div class="section-num">1</div>
+            <h2>Acceptance of Terms</h2>
+          </div>
+          <p>By accessing and using this website, you accept and agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree to these terms, please do not use our services.</p>
+          <p>We reserve the right to update or modify these Terms at any time without prior notice. Your continued use of the service after any such changes constitutes your acceptance of the new Terms.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="tos-use">
+          <div class="section-header">
+            <div class="section-num">2</div>
+            <h2>Use of Our Services</h2>
+          </div>
+          <p>You agree to use our services only for lawful purposes and in a manner consistent with all applicable laws and regulations. Specifically, you agree not to:</p>
+          <ul>
+            <li>Use the service for any unlawful, harmful, or fraudulent purpose</li>
+            <li>Transmit any unsolicited or unauthorized advertising or promotional material</li>
+            <li>Interfere with or disrupt the integrity or performance of the service</li>
+            <li>Attempt to gain unauthorized access to any part of the service or its systems</li>
+            <li>Harvest or collect personal information from other users without consent</li>
+            <li>Impersonate any person or entity, or falsely state your affiliation</li>
+          </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="tos-accounts">
+          <div class="section-header">
+            <div class="section-num">3</div>
+            <h2>User Accounts</h2>
+          </div>
+          <p>When you create an account with us, you must provide accurate, complete, and current information. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
+          <p>You agree to immediately notify us of any unauthorized use of your account or any other breach of security. We cannot and will not be liable for any loss or damage arising from your failure to comply with this obligation.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="tos-ip">
+          <div class="section-header">
+            <div class="section-num">4</div>
+            <h2>Intellectual Property</h2>
+          </div>
+          <p>All content on this website — including but not limited to text, graphics, logos, images, and software — is the property of our company and is protected by applicable intellectual property laws.</p>
+          <p>You may not reproduce, distribute, modify, create derivative works of, publicly display, or exploit any content without our express written permission.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="tos-disclaimer">
+          <div class="section-header">
+            <div class="section-num">5</div>
+            <h2>Disclaimer of Warranties</h2>
+          </div>
+          <p>Our services are provided on an "AS IS" and "AS AVAILABLE" basis without any warranty of any kind, express or implied. We do not warrant that:</p>
+          <ul>
+            <li>The service will be uninterrupted, timely, secure, or error-free</li>
+            <li>The results obtained from the use of the service will be accurate or reliable</li>
+            <li>Any errors in the service will be corrected</li>
+          </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="tos-liability">
+          <div class="section-header">
+            <div class="section-num">6</div>
+            <h2>Limitation of Liability</h2>
+          </div>
+          <p>To the fullest extent permitted by law, we shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or goodwill, arising from your use or inability to use our services.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="tos-termination">
+          <div class="section-header">
+            <div class="section-num">7</div>
+            <h2>Termination</h2>
+          </div>
+          <p>We reserve the right to suspend or terminate your access to our services at our sole discretion, without notice, for conduct that we believe violates these Terms or is harmful to other users, us, third parties, or for any other reason.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="tos-governing">
+          <div class="section-header">
+            <div class="section-num">8</div>
+            <h2>Governing Law</h2>
+          </div>
+          <p>These Terms shall be governed by and construed in accordance with applicable laws. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the competent courts.</p>
+        </div>
+
+        <div class="contact-card">
+          <h3>Questions About Our Terms?</h3>
+          <p>Our team is happy to clarify anything about our Terms of Service. Don't hesitate to reach out.</p>
+          <a href="mailto:legal@yourcompany.com" class="btn"><i class="fa-solid fa-envelope"></i> &nbsp;Contact Us</a>
+        </div>
+
+      </div><!-- /tos -->
+
+      <!-- ── PRIVACY POLICY ── -->
+      <div class="tab-panel" id="privacy" role="tabpanel">
+
+        <div class="highlight-box">
+          <p><i class="fa-solid fa-lock"></i> &nbsp;Your privacy matters to us. This policy explains what data we collect, how we use it, and the choices you have regarding your information.</p>
+        </div>
+
+        <div class="legal-section" id="prv-intro">
+          <div class="section-header">
+            <div class="section-num">1</div>
+            <h2>Introduction</h2>
+          </div>
+          <p>This Privacy Policy describes how we collect, use, disclose, and safeguard your information when you visit our website or use our services. Please read this policy carefully. If you disagree with its terms, please discontinue use of our site.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="prv-collect">
+          <div class="section-header">
+            <div class="section-num">2</div>
+            <h2>Information We Collect</h2>
+          </div>
+          <p>We may collect the following types of information:</p>
+          <ul>
+            <li><strong>Personal Information:</strong> Name, email address, phone number, and billing details you voluntarily provide</li>
+            <li><strong>Usage Data:</strong> Pages visited, time spent, links clicked, referring URLs, and browser type</li>
+            <li><strong>Device Information:</strong> IP address, operating system, and device identifiers</li>
+            <li><strong>Cookies &amp; Tracking:</strong> Cookies, web beacons, and similar tracking technologies</li>
+            <li><strong>Communications:</strong> Messages you send us through contact forms or email</li>
+          </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="prv-use">
+          <div class="section-header">
+            <div class="section-num">3</div>
+            <h2>How We Use Your Information</h2>
+          </div>
+          <p>We use the information we collect to:</p>
+          <ul>
+            <li>Provide, operate, and maintain our services</li>
+            <li>Process transactions and send related information</li>
+            <li>Send administrative and promotional communications</li>
+            <li>Respond to inquiries and offer customer support</li>
+            <li>Monitor and analyze usage trends to improve user experience</li>
+            <li>Detect, prevent, and address technical or security issues</li>
+            <li>Comply with legal obligations</li>
+          </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="prv-sharing">
+          <div class="section-header">
+            <div class="section-num">4</div>
+            <h2>Sharing Your Information</h2>
+          </div>
+          <p>We do not sell, trade, or rent your personal information to third parties. We may share your information in the following limited circumstances:</p>
+          <ul>
+            <li><strong>Service Providers:</strong> Trusted vendors who assist in operating our website and services</li>
+            <li><strong>Legal Requirements:</strong> When required by law or to protect our rights and safety</li>
+            <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
+            <li><strong>With Your Consent:</strong> For any other purpose with your explicit consent</li>
+          </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="prv-cookies">
+          <div class="section-header">
+            <div class="section-num">5</div>
+            <h2>Cookies &amp; Tracking Technologies</h2>
+          </div>
+          <p>We use cookies and similar tracking technologies to enhance your experience on our site. You can control cookies through your browser settings; however, disabling cookies may affect certain features of the service.</p>
+          <p>We use the following types of cookies:</p>
+          <ul>
+            <li><strong>Essential Cookies:</strong> Necessary for the website to function properly</li>
+            <li><strong>Analytics Cookies:</strong> Help us understand how visitors interact with our site</li>
+            <li><strong>Preference Cookies:</strong> Remember your settings and preferences</li>
+          </ul>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="prv-rights">
+          <div class="section-header">
+            <div class="section-num">6</div>
+            <h2>Your Rights &amp; Choices</h2>
+          </div>
+          <p>Depending on your location, you may have certain rights regarding your personal information, including the right to:</p>
+          <ul>
+            <li>Access the personal data we hold about you</li>
+            <li>Request correction of inaccurate or incomplete data</li>
+            <li>Request deletion of your personal data</li>
+            <li>Opt-out of marketing communications at any time</li>
+            <li>Request restriction or objection to processing of your data</li>
+            <li>Data portability — receive your data in a machine-readable format</li>
+          </ul>
+          <p>To exercise any of these rights, please contact us using the information below.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="prv-security">
+          <div class="section-header">
+            <div class="section-num">7</div>
+            <h2>Data Security</h2>
+          </div>
+          <p>We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet is 100% secure, and we cannot guarantee absolute security.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="prv-retention">
+          <div class="section-header">
+            <div class="section-num">8</div>
+            <h2>Data Retention</h2>
+          </div>
+          <p>We retain your personal information for as long as necessary to fulfill the purposes outlined in this policy, unless a longer retention period is required by law. When data is no longer needed, we securely delete or anonymize it.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="prv-children">
+          <div class="section-header">
+            <div class="section-num">9</div>
+            <h2>Children's Privacy</h2>
+          </div>
+          <p>Our services are not directed to children under the age of 13. We do not knowingly collect personal information from children. If you believe we have inadvertently collected information from a child, please contact us immediately so we can take appropriate action.</p>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="legal-section" id="prv-changes">
+          <div class="section-header">
+            <div class="section-num">10</div>
+            <h2>Changes to This Policy</h2>
+          </div>
+          <p>We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new policy on this page and updating the effective date. We encourage you to review this policy periodically.</p>
+        </div>
+
+        <div class="contact-card">
+          <h3>Privacy Concerns?</h3>
+          <p>If you have any questions about our Privacy Policy or how we handle your data, we'd love to hear from you.</p>
+          <a href="mailto:privacy@yourcompany.com" class="btn"><i class="fa-solid fa-envelope"></i> &nbsp;Contact Privacy Team</a>
+        </div>
+
+      </div><!-- /privacy -->
+
+    </main>
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <footer>
+    <p>&copy; 2026 <span>YourCompany</span>. All rights reserved. &nbsp;|&nbsp; Terms &amp; Privacy</p>
+  </footer>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'tos/js/app.js' %}"></script>
+{% endblock %}
