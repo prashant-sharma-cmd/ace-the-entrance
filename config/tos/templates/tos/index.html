@@ -1,7 +1,7 @@
 {% extends "base_template.html" %}
 {% load static %}
 
-{% block title %}Sign In – {% endblock %}
+{% block title %}Terms & Privacy – {% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'tos/css/styles.css' %}">
@@ -150,7 +150,7 @@
         <div class="contact-card">
           <h3>Questions About Our Terms?</h3>
           <p>Our team is happy to clarify anything about our Terms of Service. Don't hesitate to reach out.</p>
-          <a href="mailto:legal@yourcompany.com" class="btn"><i class="fa-solid fa-envelope"></i> &nbsp;Contact Us</a>
+          <a href="{% url 'tos:contact' %}" class="btn" target="_blank"><i class="fa-solid fa-envelope"></i> &nbsp;Contact Us</a>
         </div>
 
       </div><!-- /tos -->
@@ -300,7 +300,7 @@
         <div class="contact-card">
           <h3>Privacy Concerns?</h3>
           <p>If you have any questions about our Privacy Policy or how we handle your data, we'd love to hear from you.</p>
-          <a href="mailto:privacy@yourcompany.com" class="btn"><i class="fa-solid fa-envelope"></i> &nbsp;Contact Privacy Team</a>
+          <a href="{% url 'tos:contact' %}" class="btn" target="_blank"><i class="fa-solid fa-envelope"></i> &nbsp;Contact Us</a>
         </div>
 
       </div><!-- /privacy -->
