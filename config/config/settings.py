@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'sxcmodel.apps.SxcmodelConfig',
     'discussion.apps.DiscussionConfig',
     'accounts.apps.AccountsConfig',
+    'tos.apps.TosConfig',
 
     # Third Party Apps
     'django_crontab'
