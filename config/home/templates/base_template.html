@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,11 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>{% block title %} {% endblock %}{{ PROJECT_NAME }}</title>
+
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'home/images/favicons/favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'home/images/favicons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'home/images/favicons/favicon-16x16.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'home/images/favicons/apple-touch-icon.png' %}">
+    <link rel="manifest" href="{% static 'home/images/favicons/site.webmanifest' %}">
+
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
     <!-- custom css -->
-    {% load static %}
     <link rel="stylesheet" href="{% static 'home/css/styles.css' %}" />
     {% block extra_css%} {% endblock %}
 

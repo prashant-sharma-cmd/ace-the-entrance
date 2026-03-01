@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
 from pathlib import Path
+import mimetypes
 
 from dotenv import find_dotenv, load_dotenv
 
@@ -212,3 +213,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
+# Mimetypes for Favicon
+
+mimetypes.add_type("application/manifest+json", ".webmanifest")
