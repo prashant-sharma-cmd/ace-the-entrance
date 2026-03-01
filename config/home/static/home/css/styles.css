@@ -562,62 +562,101 @@ PRODUCTS
   background: var(--clr-grey-10);
 }
 
-.products article {
-  padding: 2rem 0;
-}
-
 .products-text {
   color: var(--clr-grey-5);
   max-width: 26rem;
 }
 
-.product {
-  margin-bottom: 2rem;
-}
-
 .product-img {
   border-radius: var(--radius);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   height: 17rem;
   object-fit: cover;
+  width: 100%;
 }
 
 .product-price {
   color: var(--clr-primary);
 }
 
-@media screen and (min-width: 768px) {
-  .product {
-    float: left;
-    width: 45%; /* width: 50%; in video; this gave error  */
-    padding-right: 2rem;
-  }
-}
-@media screen and (min-width: 992px) {
-  .product {
-    /* width: 33.33%; in video; this gave error -- not leaving space for gaps causes issues  */
-    width: 30%;
-  }
+/* ── Main layout: info + carousel side by side ── */
+.products .section-center {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 4rem 1rem;
 }
 
-@media screen and (min-width: 1200px) {
+.products-info {
+  flex: 0 0 28%;
+  max-width: 28%;
+}
+
+/* ── Carousel wrapper ── */
+.products-inventory-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0; /* prevents flex overflow */
+}
+
+/* ── The scrollable track ── */
+.products-inventory {
+  display: flex;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  gap: 1rem;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Individual cards ── */
+.products-inventory .product {
+  flex: 0 0 calc(33.333% - 0.67rem);
+  min-width: calc(33.333% - 0.67rem);
+  margin-bottom: 0;
+}
+
+/* ── Scroll Buttons ── */
+.scroll-btn {
+  background: var(--clr-primary);
+  color: var(--clr-white);
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 2rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+  transition: var(--transition);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.scroll-btn:hover {
+  background: var(--clr-primary-light);
+  color: var(--clr-primary);
+}
+
+/* ── Responsive: stack on small screens ── */
+@media screen and (max-width: 991px) {
+  .products .section-center {
+    flex-direction: column;
+  }
   .products-info {
-    float: left;
-    width: 30%;
+    flex: none;
+    max-width: 100%;
+    width: 100%;
   }
-  .products-inventory {
-    float: left;
-    width: 70%;
+  .products-inventory .product {
+    flex: 0 0 calc(50% - 0.5rem);
+    min-width: calc(50% - 0.5rem);
   }
-  .product {
-    margin-bottom: 0;
-    padding: 0 1rem;
-  }
+}
 
-  /* extra to remove issue */
-  .product {
-    /* width: 33.33%; in video; this gave error -- not leaving space for gaps causes issues  */
-    width: 25%;
+@media screen and (max-width: 575px) {
+  .products-inventory .product {
+    flex: 0 0 100%;
+    min-width: 100%;
   }
 }
 

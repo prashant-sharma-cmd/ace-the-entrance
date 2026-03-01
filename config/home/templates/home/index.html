@@ -95,47 +95,58 @@
 
 <!-- about section -->
 {% block about_book %}
-   <section class="products" id="products">
-      <div class="section-center clearfix">
-        <!-- products info -->
-        <article class="products-info">
-          <!-- section title -->
-          <div class="section-title">
-            <h3>Know Our</h3>
-            <h2>Authors</h2>
-          </div>
-          <!-- end of section title -->
-          <p class="products-text">
-            Learn from the success of St. Xavier's alumni who have mastered the journey and are dedicated to guiding yours.
-          </p>
-          <a href="#products.html" class="btn">inventory</a>
-        </article>
-        <!-- products inventory -->
-        <article class="products-inventory clearfix">
-          <!-- single product -->
-          <div class="product">
-            <img src="{% static 'home/images/author-picture-1.png' %}" alt="single product" class="product-img">
-            <h4 class="product-title">Prashant Sharma</h4>
-            <h4 class="product-price">$6.99</h4>
-          </div>
-          <!-- end of single product -->
-          <!-- single product -->
-          <div class="product">
-            <img src="./images/product-2.jpeg" alt="single product" class="product-img">
-            <h4 class="product-title">fruit sangria</h4>
-            <h4 class="product-price">$6.99</h4>
-          </div>
-          <!-- end of single product -->
-          <!-- single product -->
-          <div class="product">
-            <img src="./images/product-3.jpeg" alt="single product" class="product-img">
-            <h4 class="product-title">white tea</h4>
-            <h4 class="product-price">$6.99</h4>
-          </div>
-          <!-- end of single product -->
-        </article>
+  <section class="products" id="products">
+  <div class="section-center clearfix">
+
+    <!-- products info (left 30%) -->
+    <article class="products-info">
+      <div class="section-title">
+        <h3>Know Our</h3>
+        <h2>Authors</h2>
       </div>
-    </section>
+      <p class="products-text">
+        Learn from the success of St. Xavier's alumni who have mastered the journey and are dedicated to guiding yours.
+      </p>
+      <a href="#products.html" class="btn">inventory</a>
+    </article>
+
+    <!-- carousel wrapper MUST be the products-inventory itself (right 70%) -->
+    <div class="products-inventory-wrapper">
+      <button class="scroll-btn left-btn" onclick="scrollProducts(-1)">&#8249;</button>
+
+      <article class="products-inventory">
+        <div class="product">
+          <img src="{% static 'home/images/author-picture-1.png' %}" alt="single product" class="product-img">
+          <h4 class="product-title">Prashant Sharma</h4>
+          <h4 class="product-price">Nerd🤓</h4>
+        </div>
+        <div class="product">
+          <img src="{% static 'home/images/author-picture-2.jpeg' %}" alt="single product" class="product-img">
+          <h4 class="product-title">Prabesh Shahi</h4>
+          <h4 class="product-price">Podcast Addict🎤</h4>
+        </div>
+        <div class="product">
+          <img src="{% static 'home/images/author-picture-3.jpeg' %}" alt="single product" class="product-img">
+          <h4 class="product-title">Prajwol Tamang</h4>
+          <h4 class="product-price">Body Builder🏋️</h4>
+        </div>
+        <div class="product">
+          <img src="{% static 'home/images/author-picture-4.jpg' %}" alt="single product" class="product-img">
+          <h4 class="product-title">Prashant Bashyal</h4>
+          <h4 class="product-price">Dactar Sahab🧑‍⚕️️</h4>
+        </div>
+        <div class="product">
+          <img src="{% static 'home/images/author-picture-5.png' %}" alt="single product" class="product-img">
+          <h4 class="product-title">Kishor Kafle</h4>
+          <h4 class="product-price">Mogger🧏</h4>
+        </div>
+      </article>
+
+      <button class="scroll-btn right-btn" onclick="scrollProducts(1)">&#8250;</button>
+    </div>
+
+  </div>
+</section>
 {% endblock %}
 <!-- end of about section -->
 
@@ -163,12 +174,12 @@
           </div>
           <!-- service info -->
           <div class="service-info">
-            <h4>custom recipes</h4>
+            <h4>Daily Questions</h4>
             <p>Lorem ipsum dolor sit amet consectetur,
                adipisicing elit. Nemo illo, reprehenderit magni
                placeat dolores delectus!
             </p>
-            <a href="#products.html" class="btn service-btn">read more</a>
+            <a href="{% url 'daily:quiz' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
         <!-- end of single card -->
@@ -186,12 +197,12 @@
           </div>
           <!-- service info -->
           <div class="service-info">
-            <h4>Home delivery</h4>
+            <h4>SXC Model Set</h4>
             <p>Lorem ipsum dolor sit amet consectetur,
               adipisicing elit. Nemo illo, reprehenderit magni
               placeat dolores delectus!
             </p>
-            <a href="#products.html" class="btn service-btn">read more</a>
+            <a href="{% url 'sxcmodel:dashboard' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
         <!-- end of single card -->
@@ -209,12 +220,12 @@
           </div>
           <!-- service info -->
           <div class="service-info">
-            <h4>tea aging</h4>
+            <h4>Discussion Forum</h4>
             <p>Lorem ipsum dolor sit amet consectetur,
               adipisicing elit. Nemo illo, reprehenderit magni
               placeat dolores delectus!
             </p>
-            <a href="#products.html" class="btn service-btn">read more</a>
+            <a href="{% url 'forum:index' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
         <!-- end of single card -->
@@ -323,4 +334,15 @@
         </h4>
       </div>
     </footer>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function scrollProducts(direction) {
+    const inventory = document.querySelector('.products-inventory');
+    const card = inventory.querySelector('.product');
+    const scrollAmount = card.offsetWidth + 16; /* 16px = 1rem gap */
+    inventory.scrollLeft += direction * scrollAmount;
+  }
+</script>
 {% endblock %}
