@@ -1,0 +1,300 @@
+{% extends 'base_template.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'about/css/styles.css' %}">
+{% endblock %}
+
+{% block navbar %}
+    <span class="nav-btn" id="nav-btn">
+      <i class="fas fa-bars"></i>
+    </span>
+    {% block signin_button %}
+    {% endblock %}
+    <nav class="navbar" id="navbar">
+      <div class="navbar-header">
+        <span class="nav-close" id="nav-close">
+          <i class="fas fa-times"></i>
+        </span>
+      </div>
+      <ul class="nav-items">
+        <li><a href="/" class="nav-link">home</a></li>
+        <li><a href="#about" class="nav-link">updates</a></li>
+        <li><a href="{% url 'forum:index' %}" class="nav-link">Discussion</a></li>
+        <li><a href="{% url 'daily:quiz' %}" class="nav-link">daily question</a></li>
+        <li><a href="{% url 'sxcmodel:dashboard' %}" class="nav-link">SXC Model Set</a></li>
+        <li><a href="#contact" class="nav-link">contact</a></li>
+      </ul>
+      {% if user.is_authenticated %}
+      <div class="nav-auth-container">
+        <a href="{% url 'accounts:dashboard' %}" class="btn nav-auth-btn login-btn">Dashboard</a>
+        <a href="{% url 'accounts:logout' %}" class="btn nav-auth-btn logout-btn">Logout</a>
+      </div>
+      {% else %}
+      <div class="nav-auth-container">
+        <a href="#" class="btn nav-auth-btn login-btn">login</a>
+        <a href="#" class="btn nav-auth-btn signup-btn">sign up</a>
+      </div>
+      {% endif %}
+    </nav>
+{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO ══ -->
+<header class="about-hero">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Discover More</span>
+    <h1>About This Project</h1>
+    <p class="hero-desc">
+      A comprehensive academic resource designed to guide students through rigorous study,
+      built with care by an educator passionate about making learning accessible and effective.
+    </p>
+    <div class="hero-cta-group">
+      <a href="#about-book" class="btn">About the Book</a>
+      <a href="#about-author" class="btn-outline">Meet the Author</a>
+    </div>
+  </div>
+</header>
+
+<div class="content-divider"></div>
+
+<!-- ══ MISSION STRIP ══ -->
+<section class="mission-strip">
+  <div class="mission-grid">
+    <div class="mission-item reveal">
+      <i class="fa-solid fa-bullseye"></i>
+      <h4>Our Mission</h4>
+      <p>To equip every student with the knowledge and confidence to excel in their academic journey.</p>
+    </div>
+    <div class="mission-item reveal" style="transition-delay:.1s">
+      <i class="fa-solid fa-eye"></i>
+      <h4>Our Vision</h4>
+      <p>A world where quality academic resources are accessible to every learner, regardless of background.</p>
+    </div>
+    <div class="mission-item reveal" style="transition-delay:.2s">
+      <i class="fa-solid fa-heart"></i>
+      <h4>Our Values</h4>
+      <p>Clarity, rigor, and inclusivity drive every decision we make in curating this resource.</p>
+    </div>
+    <div class="mission-item reveal" style="transition-delay:.3s">
+      <i class="fa-solid fa-users"></i>
+      <h4>Our Community</h4>
+      <p>A growing network of students, educators, and lifelong learners pushing each other forward.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT THE BOOK ══ -->
+<section class="about-book-section" id="about-book">
+  <div class="about-book-inner">
+    <div class="book-mockup reveal">
+      <div class="book-card">
+        <div class="book-spine"></div>
+        <div class="book-badge">New<br>Edition</div>
+        <span class="book-card-label">Academic Series</span>
+        <div class="book-card-title">Study<br>Resource<br>Title</div>
+        <div class="book-card-author">By [Author Name]</div>
+      </div>
+    </div>
+    <div class="book-info reveal" style="transition-delay:.15s">
+      <div class="section-title">
+        <h3>About the Book</h3>
+        <h2>A Resource Built for Results</h2>
+      </div>
+      <p>
+        This book is a meticulously crafted academic resource designed to serve as the definitive
+        companion for students preparing for exams, strengthening core concepts, and building
+        a lasting foundation of knowledge.
+      </p>
+      <p>
+        From fundamental principles to advanced problem-solving strategies, each chapter is
+        structured to progressively deepen understanding — making complex topics approachable
+        without sacrificing depth or rigor.
+      </p>
+      <p>
+        Whether you're a first-time reader or revisiting the material, you'll find clear
+        explanations, worked examples, and practice problems that reflect real examination standards.
+      </p>
+      <div class="book-tags">
+        <span class="tag">Academic</span>
+        <span class="tag">Exam Prep</span>
+        <span class="tag">Concept Building</span>
+        <span class="tag">Practice Questions</span>
+        <span class="tag">Model Sets</span>
+      </div>
+      <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Explore Model Sets &nbsp;<i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<div class="content-divider"></div>
+
+<!-- ══ FEATURES ══ -->
+<section class="features-section">
+  <div style="width:85vw;max-width:1170px;margin:0 auto;">
+    <div class="section-title-center reveal">
+      <h3>What's Inside</h3>
+      <h2>Everything You Need to Succeed</h2>
+      <p>Carefully designed features that address every stage of a student's preparation journey.</p>
+    </div>
+    <div class="features-grid">
+
+      <div class="feature-card reveal">
+        <div class="feature-icon-wrap"><i class="fa-solid fa-book-open"></i></div>
+        <h4>Chapter-by-Chapter Breakdown</h4>
+        <p>Each chapter isolates a distinct concept area with clear learning objectives, ensuring structured progression through the material.</p>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:.08s">
+        <div class="feature-icon-wrap"><i class="fa-solid fa-pen-to-square"></i></div>
+        <h4>Worked Examples</h4>
+        <p>Step-by-step solutions illustrate the thinking process behind every problem type, not just the final answer.</p>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:.16s">
+        <div class="feature-icon-wrap"><i class="fa-solid fa-clipboard-question"></i></div>
+        <h4>Practice Questions</h4>
+        <p>Hundreds of exam-style questions spanning difficulty levels — from warm-up exercises to challenging extension problems.</p>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:.24s">
+        <div class="feature-icon-wrap"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+        <h4>Model Set Papers</h4>
+        <p>Full-length model examination papers mirroring real exam structure, helping students build timing and test-taking discipline.</p>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:.32s">
+        <div class="feature-icon-wrap"><i class="fa-solid fa-lightbulb"></i></div>
+        <h4>Key Concept Summaries</h4>
+        <p>Concise revision cards and summary boxes highlight the most critical formulas, definitions, and principles at a glance.</p>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:.4s">
+        <div class="feature-icon-wrap"><i class="fa-solid fa-comments"></i></div>
+        <h4>Discussion Forum</h4>
+        <p>An integrated community space where students can ask questions, share insights, and learn collaboratively with peers.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT THE AUTHOR ══ -->
+<section class="author-section" id="about-author">
+  <div class="author-inner">
+    <div class="author-portrait reveal">
+      <div class="author-img-frame">
+        <i class="fa-solid fa-user placeholder-avatar"></i>
+      </div>
+      <div class="author-accent-box"></div>
+      <div class="author-stat-bubble">
+        <strong>10+</strong>
+        <span>Years<br>Teaching</span>
+      </div>
+    </div>
+    <div class="author-info reveal" style="transition-delay:.15s">
+      <div class="section-title">
+        <h3>About the Author</h3>
+      </div>
+      <div class="author-name">[Author Full Name]</div>
+      <span class="author-title-label">Educator, Academic Author & Mentor</span>
+      <p>
+        [Author Name] is a dedicated educator with over a decade of experience teaching at the
+        secondary and higher secondary levels. Driven by a belief that every student deserves
+        access to high-quality study material, they set out to create a resource that bridges
+        the gap between classroom instruction and examination performance.
+      </p>
+      <p>
+        Their teaching philosophy centers on building genuine understanding — not rote memorization.
+        This book is a direct reflection of that philosophy: every explanation, example, and
+        exercise has been crafted to promote deep, lasting comprehension.
+      </p>
+      <p>
+        Beyond writing, [Author Name] actively engages with students through the platform's
+        discussion forum, mentoring learners and refining the resource based on real feedback.
+      </p>
+      <div class="author-credentials">
+        <span class="credential"><i class="fa-solid fa-star"></i> M.Sc. [Subject]</span>
+        <span class="credential"><i class="fa-solid fa-star"></i> B.Ed. Education</span>
+        <span class="credential"><i class="fa-solid fa-star"></i> 10+ Years Experience</span>
+        <span class="credential"><i class="fa-solid fa-star"></i> 5,000+ Students</span>
+      </div>
+      <a href="{% url 'forum:index' %}" class="btn" style="margin-top:0.75rem;">
+        Ask a Question &nbsp;<i class="fa-solid fa-comments"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="content-divider"></div>
+
+<!-- ══ TESTIMONIALS ══ -->
+<section class="testimonials-section">
+  <div style="width:85vw;max-width:1170px;margin:0 auto;">
+    <div class="section-title-center reveal">
+      <h3>Student Stories</h3>
+      <h2 style="color:#fff;">What Learners Are Saying</h2>
+      <p>Real words from students who used this resource in their preparation.</p>
+    </div>
+    <div class="testimonials-grid">
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-quote">"</div>
+        <p>The worked examples in this book completely changed how I approach problems. I went from struggling to scoring in the top percentile of my class.</p>
+        <div class="testimonial-footer">
+          <div class="testimonial-avatar">A</div>
+          <div class="testimonial-meta">
+            <div class="stars">★★★★★</div>
+            <strong>Ayesha R.</strong>
+            <span>Grade 12 Student</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal" style="transition-delay:.1s">
+        <div class="testimonial-quote">"</div>
+        <p>I used the model set papers every weekend before my exams. The format is so close to the real thing — it made the actual exam feel familiar and manageable.</p>
+        <div class="testimonial-footer">
+          <div class="testimonial-avatar">R</div>
+          <div class="testimonial-meta">
+            <div class="stars">★★★★★</div>
+            <strong>Rahul M.</strong>
+            <span>Exam Candidate</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal" style="transition-delay:.2s">
+        <div class="testimonial-quote">"</div>
+        <p>The daily question feature kept me consistent. Even on busy days, five minutes with a practice question kept the material fresh in my mind.</p>
+        <div class="testimonial-footer">
+          <div class="testimonial-avatar">S</div>
+          <div class="testimonial-meta">
+            <div class="stars">★★★★★</div>
+            <strong>Sana K.</strong>
+            <span>Science Stream Student</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CTA BAND ══ -->
+<section class="cta-band">
+  <div style="width:85vw;max-width:1170px;margin:0 auto;">
+    <h2>Ready to Start Learning?</h2>
+    <p>Join thousands of students already using this platform to prepare smarter, study deeper, and perform better.</p>
+    <div class="cta-btn-group">
+      <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Browse Model Sets</a>
+      <a href="{% url 'daily:quiz' %}" class="btn" style="background:var(--clr-primary-light);color:var(--clr-primary);">Try Daily Question</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'about/js/app.js' %}"></script>
+{% endblock %}
