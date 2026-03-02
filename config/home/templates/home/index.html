@@ -5,6 +5,16 @@
 {% block title %}
 {% endblock %}
 
+
+{% block signin_button %}
+{% if user.is_authenticated %}
+{% else %}
+<a href="{% url 'accounts:login' %}" class="login-btn-top">
+  <i class="fas fa-user"></i> Sign In
+</a>
+{% endif %}
+{% endblock %}
+
 <!-- header -->
 {% block header %}
     <header class="header">

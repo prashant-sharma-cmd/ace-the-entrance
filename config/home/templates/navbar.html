@@ -5,12 +5,8 @@
     <span class="nav-btn" id="nav-btn">
       <i class="fas fa-bars"></i>
     </span>
-    {% if user.is_authenticated %}
-    {% else %}
-    <a href="{% url 'accounts:login' %}" class="login-btn-top">
-      <i class="fas fa-user"></i> Sign In
-    </a>
-    {% endif %}
+    {% block signin_button %}
+    {% endblock %}
     <nav class="navbar" id="navbar">
       <div class="navbar-header">
         <span class="nav-close" id="nav-close">
@@ -21,7 +17,7 @@
         <li><a href="/" class="nav-link">home</a></li>
         <li><a href="#about" class="nav-link">updates</a></li>
         <li><a href="{% url 'forum:index' %}" class="nav-link">Discussion</a></li>
-        <li><a href="{% url 'daily:quiz' %}" class="nav-link">daily questions</a></li>
+        <li><a href="{% url 'daily:quiz' %}" class="nav-link">daily question</a></li>
         <li><a href="{% url 'sxcmodel:dashboard' %}" class="nav-link">SXC Model Set</a></li>
         <li><a href="#contact" class="nav-link">contact</a></li>
       </ul>
