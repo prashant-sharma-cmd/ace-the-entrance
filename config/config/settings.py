@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'discussion.apps.DiscussionConfig',
     'accounts.apps.AccountsConfig',
     'tos.apps.TosConfig',
+    'about.apps.AboutConfig',
 
     # Third Party Apps
     'django_crontab'

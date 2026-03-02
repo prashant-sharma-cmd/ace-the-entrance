@@ -28,6 +28,7 @@ urlpatterns = [
     path('forum/', include('discussion.urls'), name='forum'),
     path('sxcmodel/', include('sxcmodel.urls'), name='sxcmodel'),
     path('terms-and-privacy/', include('tos.urls'), name='tos'),
+    path('about-s/', include('about.urls'), name='about'),
 ]
 
 # Development Only. In production, serve /media/ via Nginx or an S3 bucket instead.
