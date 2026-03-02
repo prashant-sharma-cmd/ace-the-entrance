@@ -1,4 +1,4 @@
-{% extends 'navbar.html' %}
+{% extends 'footer.html' %}
 {% load static %}
 
 {% block extra_css %}
@@ -11,8 +11,8 @@
 <!-- ══ HERO ══ -->
 <header class="about-hero">
   <div class="hero-inner">
-    <span class="hero-eyebrow">Discover More</span>
-    <h1>About This Project</h1>
+    <span class="hero-eyebrow">Discover More About</span>
+    <h1>Ace The Entrance</h1>
     <p class="hero-desc">
       A comprehensive academic resource designed to guide students through rigorous study,
       built with care by an educator passionate about making learning accessible and effective.
@@ -90,7 +90,7 @@
         <span class="tag">Practice Questions</span>
         <span class="tag">Model Sets</span>
       </div>
-      <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Explore Model Sets &nbsp;<i class="fa-solid fa-arrow-right"></i></a>
+      <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Explore SXC Set &nbsp;<i class="fa-solid fa-arrow-right"></i></a>
     </div>
   </div>
 </section>
@@ -101,7 +101,7 @@
 <section class="features-section">
   <div style="width:85vw;max-width:1170px;margin:0 auto;">
     <div class="section-title-center reveal">
-      <h3>What's Inside</h3>
+      <h3>What We Provide</h3>
       <h2>Everything You Need to Succeed</h2>
       <p>Carefully designed features that address every stage of a student's preparation journey.</p>
     </div>
@@ -143,6 +143,18 @@
         <p>An integrated community space where students can ask questions, share insights, and learn collaboratively with peers.</p>
       </div>
 
+      <div class="feature-card reveal" style="transition-delay:.48s">
+        <div class="feature-icon-wrap"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <h4>Tips & Tricks</h4>
+        <p>Proven exam strategies, memory mnemonics, and time-saving shortcuts designed to give you a competitive edge under pressure.</p>
+      </div>
+
+      <div class="feature-card reveal" style="transition-delay:.56s">
+        <div class="feature-icon-wrap"><i class="fa-solid fa-calendar-check"></i></div>
+        <h4>Daily Online Questions</h4>
+        <p>Keep your mind sharp with fresh, interactive practice questions posted daily on our platform to build consistent study habits.</p>
+      </div>
+
     </div>
   </div>
 </section>
@@ -154,7 +166,7 @@
     <div class="author-inner active">
       <div class="author-portrait">
         <div class="author-img-frame">
-          <i class="fa-solid fa-user placeholder-avatar"></i>
+          <img src="{% static 'about/images/author-picture-1.png' %}" alt="Prashant Sharma" class="author-img">
         </div>
         <div class="author-accent-box"></div>
         <div class="author-stat-bubble">
@@ -177,7 +189,76 @@
     <div class="author-inner">
       <div class="author-portrait">
         <div class="author-img-frame">
-          <i class="fa-solid fa-user-tie placeholder-avatar"></i>
+          <img src="{% static 'about/images/author-picture-2.jpeg' %}" alt="Prabesh Shahi" class="author-img">
+        </div>
+        <div class="author-accent-box" style="background:#2ecc71"></div>
+        <div class="author-stat-bubble">
+          <strong>15+</strong>
+          <span>Years<br>Teaching</span>
+        </div>
+      </div>
+      <div class="author-info">
+        <div class="section-title"><h3>About the Author</h3></div>
+        <div class="author-name">Author Two Name</div>
+        <span class="author-title-label">Curriculum Expert</span>
+        <p>Author two bio text goes here...</p>
+        <div class="author-credentials">
+          <span class="credential"><i class="fa-solid fa-star"></i> Ph.D. Math</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTHOR 3 -->
+    <div class="author-inner">
+      <div class="author-portrait">
+        <div class="author-img-frame">
+          <img src="{% static 'about/images/author-picture-3.jpeg' %}" alt="Prajwol Tamang" class="author-img">
+        </div>
+        <div class="author-accent-box" style="background:#2ecc71"></div>
+        <div class="author-stat-bubble">
+          <strong>15+</strong>
+          <span>Years<br>Teaching</span>
+        </div>
+      </div>
+      <div class="author-info">
+        <div class="section-title"><h3>About the Author</h3></div>
+        <div class="author-name">Author Two Name</div>
+        <span class="author-title-label">Curriculum Expert</span>
+        <p>Author two bio text goes here...</p>
+        <div class="author-credentials">
+          <span class="credential"><i class="fa-solid fa-star"></i> Ph.D. Math</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTHOR 4 -->
+    <div class="author-inner">
+      <div class="author-portrait">
+        <div class="author-img-frame">
+          <img src="{% static 'about/images/author-picture-4.jpg' %}" alt="Prashant Bashyal" class="author-img">
+        </div>
+        <div class="author-accent-box" style="background:#2ecc71"></div>
+        <div class="author-stat-bubble">
+          <strong>15+</strong>
+          <span>Years<br>Teaching</span>
+        </div>
+      </div>
+      <div class="author-info">
+        <div class="section-title"><h3>About the Author</h3></div>
+        <div class="author-name">Author Two Name</div>
+        <span class="author-title-label">Curriculum Expert</span>
+        <p>Author two bio text goes here...</p>
+        <div class="author-credentials">
+          <span class="credential"><i class="fa-solid fa-star"></i> Ph.D. Math</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTHOR 5 -->
+    <div class="author-inner">
+      <div class="author-portrait">
+        <div class="author-img-frame">
+          <img src="{% static 'about/images/author-picture-5.png' %}" alt="Kishor Kafle" class="author-img">
         </div>
         <div class="author-accent-box" style="background:#2ecc71"></div>
         <div class="author-stat-bubble">
@@ -258,7 +339,7 @@
 <section class="cta-band">
   <div style="width:85vw;max-width:1170px;margin:0 auto;">
     <h2>Ready to Start Learning?</h2>
-    <p>Join thousands of students already using this platform to prepare smarter, study deeper, and perform better.</p>
+    <p>Join hundreds of students already using our book to prepare smarter, study deeper, and perform better.</p>
     <div class="cta-btn-group">
       <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Browse Model Sets</a>
       <a href="{% url 'daily:quiz' %}" class="btn" style="background:var(--clr-primary-light);color:var(--clr-primary);">Try Daily Question</a>

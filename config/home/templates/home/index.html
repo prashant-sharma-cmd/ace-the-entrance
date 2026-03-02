@@ -1,4 +1,4 @@
-{% extends 'navbar.html' %}
+{% extends 'footer.html' %}
 
 {% load static %}
 
@@ -315,36 +315,7 @@
 {% endblock %}
 <!-- end of contact -->
 
-<!-- footer -->
-{% block footer %}
-<footer class="footer">
-      <div class="section-center">
-        <div class="social-icons">
-          <!-- social icon -->
-          <a href="{% url 'home:facebook' %}" class="social-icon" target="_blank">
-            <i class="fab fa-facebook"></i>
-          </a>
-          <!-- end of social icon -->
-          <!-- social icon -->
-          <a href="{% url 'home:daraz' %}" class="social-icon" target="_blank">
-            <i class="fas fa-shopping-cart"></i>
-          </a>
-          <!-- end of social icon -->
-          <!-- social icon -->
-          <a href="{% url 'home:instagram' %}" class="social-icon" target="_blank">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <!-- end of social icon -->
-        </div>
 
-        <h4 class="footer-text">
-          &copy; <span id="date"></span>
-          <span class="company">{{ PROJECT_NAME }}</span>
-          all rights reserved
-        </h4>
-      </div>
-    </footer>
-{% endblock %}
 
 {% block extra_js %}
 <script>
