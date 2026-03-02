@@ -292,6 +292,43 @@
     letter-spacing: var(--spacing);
   }
 
+/* 1. The wrapper becomes a stacker */
+.author-slider-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+}
+
+/* 2. Force every author-inner to stay in the same grid cell (stacking them) */
+.author-slider-wrapper .author-inner {
+  grid-area: 1 / 1 / 2 / 2; /* This is the magic: Row 1, Col 1 */
+
+  /* Reset Visibility */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease, visibility 0.6s;
+
+  /* IMPORTANT: Keep your original grid layout inside */
+  display: grid !important;
+}
+
+/* 3. Show the active author */
+.author-slider-wrapper .author-inner.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  z-index: 10;
+}
+
+/* 4. Fix for the 'reveal' class conflict */
+/* Your original CSS has .reveal { opacity: 0 }. We need to override that for the active author. */
+.author-slider-wrapper .author-inner.active .reveal,
+.author-slider-wrapper .author-inner.active.reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
   /* ── FEATURES ── */
   .features-section {
     background: var(--clr-grey-10);

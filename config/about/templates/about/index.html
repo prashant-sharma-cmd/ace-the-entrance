@@ -1,43 +1,10 @@
-{% extends 'base_template.html' %}
+{% extends 'navbar.html' %}
 {% load static %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'about/css/styles.css' %}">
 {% endblock %}
 
-{% block navbar %}
-    <span class="nav-btn" id="nav-btn">
-      <i class="fas fa-bars"></i>
-    </span>
-    {% block signin_button %}
-    {% endblock %}
-    <nav class="navbar" id="navbar">
-      <div class="navbar-header">
-        <span class="nav-close" id="nav-close">
-          <i class="fas fa-times"></i>
-        </span>
-      </div>
-      <ul class="nav-items">
-        <li><a href="/" class="nav-link">home</a></li>
-        <li><a href="#about" class="nav-link">updates</a></li>
-        <li><a href="{% url 'forum:index' %}" class="nav-link">Discussion</a></li>
-        <li><a href="{% url 'daily:quiz' %}" class="nav-link">daily question</a></li>
-        <li><a href="{% url 'sxcmodel:dashboard' %}" class="nav-link">SXC Model Set</a></li>
-        <li><a href="#contact" class="nav-link">contact</a></li>
-      </ul>
-      {% if user.is_authenticated %}
-      <div class="nav-auth-container">
-        <a href="{% url 'accounts:dashboard' %}" class="btn nav-auth-btn login-btn">Dashboard</a>
-        <a href="{% url 'accounts:logout' %}" class="btn nav-auth-btn logout-btn">Logout</a>
-      </div>
-      {% else %}
-      <div class="nav-auth-container">
-        <a href="#" class="btn nav-auth-btn login-btn">login</a>
-        <a href="#" class="btn nav-auth-btn signup-btn">sign up</a>
-      </div>
-      {% endif %}
-    </nav>
-{% endblock %}
 
 {% block content %}
 
@@ -180,51 +147,56 @@
   </div>
 </section>
 
-<!-- ══ ABOUT THE AUTHOR ══ -->
 <section class="author-section" id="about-author">
-  <div class="author-inner">
-    <div class="author-portrait reveal">
-      <div class="author-img-frame">
-        <i class="fa-solid fa-user placeholder-avatar"></i>
+  <div class="author-slider-wrapper"> <!-- Add this wrapper -->
+
+    <!-- AUTHOR 1 -->
+    <div class="author-inner active">
+      <div class="author-portrait">
+        <div class="author-img-frame">
+          <i class="fa-solid fa-user placeholder-avatar"></i>
+        </div>
+        <div class="author-accent-box"></div>
+        <div class="author-stat-bubble">
+          <strong>10+</strong>
+          <span>Years<br>Teaching</span>
+        </div>
       </div>
-      <div class="author-accent-box"></div>
-      <div class="author-stat-bubble">
-        <strong>10+</strong>
-        <span>Years<br>Teaching</span>
+      <div class="author-info">
+        <div class="section-title"><h3>About the Author</h3></div>
+        <div class="author-name">Author One Name</div>
+        <span class="author-title-label">Educator, Academic Author & Mentor</span>
+        <p>Author one bio text goes here...</p>
+        <div class="author-credentials">
+          <span class="credential"><i class="fa-solid fa-star"></i> M.Sc. Physics</span>
+        </div>
       </div>
     </div>
-    <div class="author-info reveal" style="transition-delay:.15s">
-      <div class="section-title">
-        <h3>About the Author</h3>
+
+    <!-- AUTHOR 2 -->
+    <div class="author-inner">
+      <div class="author-portrait">
+        <div class="author-img-frame">
+          <i class="fa-solid fa-user-tie placeholder-avatar"></i>
+        </div>
+        <div class="author-accent-box" style="background:#2ecc71"></div>
+        <div class="author-stat-bubble">
+          <strong>15+</strong>
+          <span>Years<br>Teaching</span>
+        </div>
       </div>
-      <div class="author-name">[Author Full Name]</div>
-      <span class="author-title-label">Educator, Academic Author & Mentor</span>
-      <p>
-        [Author Name] is a dedicated educator with over a decade of experience teaching at the
-        secondary and higher secondary levels. Driven by a belief that every student deserves
-        access to high-quality study material, they set out to create a resource that bridges
-        the gap between classroom instruction and examination performance.
-      </p>
-      <p>
-        Their teaching philosophy centers on building genuine understanding — not rote memorization.
-        This book is a direct reflection of that philosophy: every explanation, example, and
-        exercise has been crafted to promote deep, lasting comprehension.
-      </p>
-      <p>
-        Beyond writing, [Author Name] actively engages with students through the platform's
-        discussion forum, mentoring learners and refining the resource based on real feedback.
-      </p>
-      <div class="author-credentials">
-        <span class="credential"><i class="fa-solid fa-star"></i> M.Sc. [Subject]</span>
-        <span class="credential"><i class="fa-solid fa-star"></i> B.Ed. Education</span>
-        <span class="credential"><i class="fa-solid fa-star"></i> 10+ Years Experience</span>
-        <span class="credential"><i class="fa-solid fa-star"></i> 5,000+ Students</span>
+      <div class="author-info">
+        <div class="section-title"><h3>About the Author</h3></div>
+        <div class="author-name">Author Two Name</div>
+        <span class="author-title-label">Curriculum Expert</span>
+        <p>Author two bio text goes here...</p>
+        <div class="author-credentials">
+          <span class="credential"><i class="fa-solid fa-star"></i> Ph.D. Math</span>
+        </div>
       </div>
-      <a href="{% url 'forum:index' %}" class="btn" style="margin-top:0.75rem;">
-        Ask a Question &nbsp;<i class="fa-solid fa-comments"></i>
-      </a>
     </div>
-  </div>
+
+  </div> <!-- End wrapper -->
 </section>
 
 <div class="content-divider"></div>
