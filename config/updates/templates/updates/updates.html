@@ -1,0 +1,205 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'updates/css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ══ HERO ══ -->
+<header class="updates-hero">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Stay Informed</span>
+    <h1>Updates & Changelogs</h1>
+    <p class="hero-desc">
+      All important notices about entrance examinations and the latest changes
+      to this platform — in one place, always up to date.
+    </p>
+  </div>
+</header>
+
+<div class="content-divider"></div>
+
+<!-- ══ STATS STRIP ══ -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <i class="fa-solid fa-bullhorn"></i>
+      <div>
+        <strong>{{ entrance_count }}</strong>
+        <span>Entrance Updates</span>
+      </div>
+    </div>
+    <div class="stat-item">
+      <i class="fa-solid fa-code-branch"></i>
+      <div>
+        <strong>{{ changelog_count }}</strong>
+        <span>Changelogs</span>
+      </div>
+    </div>
+    <div class="stat-item">
+      <i class="fa-regular fa-clock"></i>
+      <div>
+        <strong>Live</strong>
+        <span>Always Current</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="updates-body">
+
+  <!-- TAB SWITCHER -->
+  <div class="tab-switcher" role="tablist">
+    <button
+      class="tab-btn {% if active_tab == 'entrance' %}active{% endif %}"
+      onclick="switchTab('entrance', this)"
+      role="tab"
+    >
+      <i class="fa-solid fa-bullhorn"></i>
+      Entrance Updates
+      <span class="tab-count">{{ entrance_count }}</span>
+    </button>
+    <button
+      class="tab-btn {% if active_tab == 'changelog' %}active{% endif %}"
+      onclick="switchTab('changelog', this)"
+      role="tab"
+    >
+      <i class="fa-solid fa-code-branch"></i>
+      Website Changelog
+      <span class="tab-count">{{ changelog_count }}</span>
+    </button>
+  </div>
+
+  <!-- ── ENTRANCE UPDATES ── -->
+  <div class="tab-panel {% if active_tab == 'entrance' %}active{% endif %}" id="entrance" role="tabpanel">
+    <div class="panel-header">
+      <div class="panel-icon entrance-icon">
+        <i class="fa-solid fa-bullhorn"></i>
+      </div>
+      <div class="panel-title-group">
+        <h2>Entrance Updates</h2>
+        <p>Notices, dates &amp; information on entrance examinations</p>
+      </div>
+    </div>
+
+    {% if entrance_updates %}
+    <div class="updates-list">
+      {% for update in entrance_updates %}
+      <article class="update-card priority-{{ update.priority }} {% if update.image %}has-image{% endif %} reveal">
+
+        {% if update.image %}
+          <img
+            src="{{ update.image.url }}"
+            alt="{{ update.title }}"
+            class="update-card-img"
+            loading="lazy"
+          >
+        {% endif %}
+
+        <div class="update-card-body">
+          <div class="update-card-top">
+            <h3 class="update-card-title">{{ update.title }}</h3>
+            {% if update.priority == 'urgent' %}
+              <span class="badge badge-urgent"><i class="fa-solid fa-triangle-exclamation"></i> Urgent</span>
+            {% elif update.priority == 'important' %}
+              <span class="badge badge-important"><i class="fa-solid fa-star"></i> Important</span>
+            {% else %}
+              <span class="badge badge-normal"><i class="fa-solid fa-circle-info"></i> Notice</span>
+            {% endif %}
+          </div>
+
+          <p>{{ update.body }}</p>
+
+          <div class="update-card-footer">
+            <i class="fa-regular fa-calendar"></i>
+            {{ update.created_at|date:"F j, Y" }}
+            <span style="margin-left:auto;color:#add8e6;">
+              <i class="fa-regular fa-clock"></i>
+              {{ update.created_at|timesince }} ago
+            </span>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="empty-state reveal">
+      <i class="fa-solid fa-inbox"></i>
+      <h3>No Entrance Updates Yet</h3>
+      <p>Check back soon — entrance notices will appear here as soon as they're published.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- ── CHANGELOG ── -->
+  <div class="tab-panel {% if active_tab == 'changelog' %}active{% endif %}" id="changelog" role="tabpanel">
+    <div class="panel-header">
+      <div class="panel-icon changelog-icon">
+        <i class="fa-solid fa-code-branch"></i>
+      </div>
+      <div class="panel-title-group">
+        <h2>Website Changelog</h2>
+        <p>New features, fixes &amp; improvements to this platform</p>
+      </div>
+    </div>
+
+    {% if changelog_updates %}
+    <div class="updates-list">
+      {% for update in changelog_updates %}
+      <article class="update-card priority-{{ update.priority }} {% if update.image %}has-image{% endif %} reveal">
+
+        {% if update.image %}
+          <img
+            src="{{ update.image.url }}"
+            alt="{{ update.title }}"
+            class="update-card-img"
+            loading="lazy"
+          >
+        {% endif %}
+
+        <div class="update-card-body">
+          <div class="update-card-top">
+            <h3 class="update-card-title">{{ update.title }}</h3>
+            {% if update.priority == 'urgent' %}
+              <span class="badge badge-urgent"><i class="fa-solid fa-triangle-exclamation"></i> Urgent</span>
+            {% elif update.priority == 'important' %}
+              <span class="badge badge-important"><i class="fa-solid fa-star"></i> Important</span>
+            {% else %}
+              <span class="badge badge-normal"><i class="fa-solid fa-wrench"></i> Update</span>
+            {% endif %}
+          </div>
+
+          <p>{{ update.body }}</p>
+
+          <div class="update-card-footer">
+            <i class="fa-regular fa-calendar"></i>
+            {{ update.created_at|date:"F j, Y" }}
+            <span style="margin-left:auto;color:#7fffd4;">
+              <i class="fa-regular fa-clock"></i>
+              {{ update.created_at|timesince }} ago
+            </span>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="empty-state reveal">
+      <i class="fa-solid fa-code-branch"></i>
+      <h3>No Changelogs Yet</h3>
+      <p>Platform updates and new feature announcements will show up here.</p>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% extra_js %}
+<script src="{% static 'updates/js/app.js' %}" ></script>
+{% endblock %}
