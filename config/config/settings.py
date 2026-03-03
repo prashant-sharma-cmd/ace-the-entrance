@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'tos.apps.TosConfig',
     'about.apps.AboutConfig',
+    'updates.apps.UpdatesConfig',
 
     # Third Party Apps
     'django_crontab'
