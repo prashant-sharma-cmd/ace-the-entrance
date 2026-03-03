@@ -57,11 +57,14 @@
   <div class="about-book-inner">
     <div class="book-mockup reveal">
       <div class="book-card">
+        <!-- The Spine and Badge stay outside the image wrapper -->
         <div class="book-spine"></div>
         <div class="book-badge">New<br>Edition</div>
-        <span class="book-card-label">Academic Series</span>
-        <div class="book-card-title">Study<br>Resource<br>Title</div>
-        <div class="book-card-author">By [Author Name]</div>
+
+        <!-- This wrapper forces the crop -->
+        <div class="book-img-container">
+          <img src="{% static 'about/images/about-book.png' %}" alt="Book Title" class="book-cover-img">
+        </div>
       </div>
     </div>
     <div class="book-info reveal" style="transition-delay:.15s">
@@ -70,27 +73,29 @@
         <h2>A Resource Built for Results</h2>
       </div>
       <p>
-        This book is a meticulously crafted academic resource designed to serve as the definitive
-        companion for students preparing for exams, strengthening core concepts, and building
-        a lasting foundation of knowledge.
+        This guide is a high-impact preparation tool specifically engineered to
+        be the ultimate roadmap for students aiming for top-tier colleges. It
+        cuts through the noise to strengthen the core concepts you actually
+        need to ace the exam and build a competitive edge.
       </p>
       <p>
-        From fundamental principles to advanced problem-solving strategies, each chapter is
-        structured to progressively deepen understanding — making complex topics approachable
-        without sacrificing depth or rigor.
+        From mastering SEE-level fundamentals to cracking advanced MCQ
+        problem-solving strategies, every chapter is designed to boost
+        your speed and accuracy.
       </p>
       <p>
-        Whether you're a first-time reader or revisiting the material, you'll find clear
-        explanations, worked examples, and practice problems that reflect real examination standards.
+        Whether you’re starting your prep or doing a final marathon review,
+        you’ll find crystal-clear shortcuts, solved model questions, and practice
+        sets that mirror the actual difficulty of exams at St. Xavier’s,
+        Budhanilkantha, and SOS.
       </p>
       <div class="book-tags">
-        <span class="tag">Academic</span>
-        <span class="tag">Exam Prep</span>
-        <span class="tag">Concept Building</span>
-        <span class="tag">Practice Questions</span>
-        <span class="tag">Model Sets</span>
+        <span class="tag">+2 Entrance</span>
+        <span class="tag">Tips & Tricks</span>
+        <span class="tag">Detailed Concepts</span>
+        <span class="tag">3000+ Questions</span>
       </div>
-      <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Explore SXC Set &nbsp;<i class="fa-solid fa-arrow-right"></i></a>
+      <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Explore Model SXC Set &nbsp;<i class="fa-solid fa-arrow-right"></i></a>
     </div>
   </div>
 </section>
@@ -131,29 +136,6 @@
         <p>Full-length model examination papers mirroring real exam structure, helping students build timing and test-taking discipline.</p>
       </div>
 
-      <div class="feature-card reveal" style="transition-delay:.32s">
-        <div class="feature-icon-wrap"><i class="fa-solid fa-lightbulb"></i></div>
-        <h4>Key Concept Summaries</h4>
-        <p>Concise revision cards and summary boxes highlight the most critical formulas, definitions, and principles at a glance.</p>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:.4s">
-        <div class="feature-icon-wrap"><i class="fa-solid fa-comments"></i></div>
-        <h4>Discussion Forum</h4>
-        <p>An integrated community space where students can ask questions, share insights, and learn collaboratively with peers.</p>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:.48s">
-        <div class="feature-icon-wrap"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-        <h4>Tips & Tricks</h4>
-        <p>Proven exam strategies, memory mnemonics, and time-saving shortcuts designed to give you a competitive edge under pressure.</p>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:.56s">
-        <div class="feature-icon-wrap"><i class="fa-solid fa-calendar-check"></i></div>
-        <h4>Daily Online Questions</h4>
-        <p>Keep your mind sharp with fresh, interactive practice questions posted daily on our platform to build consistent study habits.</p>
-      </div>
 
     </div>
   </div>
@@ -168,115 +150,139 @@
         <div class="author-img-frame">
           <img src="{% static 'about/images/author-picture-1.png' %}" alt="Prashant Sharma" class="author-img">
         </div>
-        <div class="author-accent-box"></div>
         <div class="author-stat-bubble">
-          <strong>10+</strong>
-          <span>Years<br>Teaching</span>
+          <strong>
+            <a href="https://www.linkedin.com/in/prashant--sharma/" target="_blank">
+              <i class="fa-brands fa-linkedin-in" style="font-size: 30px;"></i>
+            </a>
+          </strong>
         </div>
       </div>
       <div class="author-info">
         <div class="section-title"><h3>About the Author</h3></div>
-        <div class="author-name">Author One Name</div>
-        <span class="author-title-label">Educator, Academic Author & Mentor</span>
-        <p>Author one bio text goes here...</p>
+        <div class="author-name">Prashant Sharma</div>
+        <span class="author-title-label">Website Developer & Maths Author</span>
+        <p>
+          As the author of this book, I’ve been in your shoes and have spent
+          years helping students navigate the jump from SEE to Grade 11. I wrote
+          this guide to be the mentor I wish I had—stripping away the fluff and
+          focusing on the exact concepts that top colleges actually test. My goal
+          isn’t just to help you pass; it’s to help you rank high enough to claim
+          the scholarships you deserve.
+        </p>
         <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> M.Sc. Physics</span>
+          <span class="credential"><i class="fa-solid fa-star"></i> Currently Studying Computer Science </span>
         </div>
       </div>
     </div>
 
-    <!-- AUTHOR 2 -->
     <div class="author-inner">
       <div class="author-portrait">
         <div class="author-img-frame">
-          <img src="{% static 'about/images/author-picture-2.jpeg' %}" alt="Prabesh Shahi" class="author-img">
+          <img src="{% static 'about/images/author-picture-2.png' %}" alt="Prabesh Shahi" class="author-img">
         </div>
-        <div class="author-accent-box" style="background:#2ecc71"></div>
         <div class="author-stat-bubble">
-          <strong>15+</strong>
-          <span>Years<br>Teaching</span>
+          <strong><i class="fa-brands fa-linkedin-in" style="font-size: 30px;"></i></strong>
         </div>
       </div>
       <div class="author-info">
         <div class="section-title"><h3>About the Author</h3></div>
-        <div class="author-name">Author Two Name</div>
-        <span class="author-title-label">Curriculum Expert</span>
-        <p>Author two bio text goes here...</p>
+        <div class="author-name">Prabesh Shahi</div>
+        <span class="author-title-label">Science Author</span>
+        <p>
+          As the author of this book, I’ve been in your shoes and have spent
+          years helping students navigate the jump from SEE to Grade 11. I wrote
+          this guide to be the mentor I wish I had—stripping away the fluff and
+          focusing on the exact concepts that top colleges actually test. My goal
+          isn’t just to help you pass; it’s to help you rank high enough to claim
+          the scholarships you deserve.
+        </p>
         <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> Ph.D. Math</span>
+          <span class="credential"><i class="fa-solid fa-star"></i> Studying Computer Science </span>
         </div>
       </div>
     </div>
 
-    <!-- AUTHOR 3 -->
     <div class="author-inner">
       <div class="author-portrait">
         <div class="author-img-frame">
-          <img src="{% static 'about/images/author-picture-3.jpeg' %}" alt="Prajwol Tamang" class="author-img">
+          <img src="{% static 'about/images/author-picture-3.png' %}" alt="Prajwal Tamang" class="author-img">
         </div>
-        <div class="author-accent-box" style="background:#2ecc71"></div>
         <div class="author-stat-bubble">
-          <strong>15+</strong>
-          <span>Years<br>Teaching</span>
+          <strong><i class="fa-brands fa-linkedin-in" style="font-size: 30px;"></i></strong>
         </div>
       </div>
       <div class="author-info">
         <div class="section-title"><h3>About the Author</h3></div>
-        <div class="author-name">Author Two Name</div>
-        <span class="author-title-label">Curriculum Expert</span>
-        <p>Author two bio text goes here...</p>
+        <div class="author-name">Prajwal Tamang</div>
+        <span class="author-title-label">Chief Editor & English Author</span>
+        <p>
+          As the author of this book, I’ve been in your shoes and have spent
+          years helping students navigate the jump from SEE to Grade 11. I wrote
+          this guide to be the mentor I wish I had—stripping away the fluff and
+          focusing on the exact concepts that top colleges actually test. My goal
+          isn’t just to help you pass; it’s to help you rank high enough to claim
+          the scholarships you deserve.
+        </p>
         <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> Ph.D. Math</span>
+          <span class="credential"><i class="fa-solid fa-star"></i> Studying Computer Science </span>
         </div>
       </div>
     </div>
 
-    <!-- AUTHOR 4 -->
     <div class="author-inner">
       <div class="author-portrait">
         <div class="author-img-frame">
-          <img src="{% static 'about/images/author-picture-4.jpg' %}" alt="Prashant Bashyal" class="author-img">
+          <img src="{% static 'about/images/author-picture-4.png' %}" alt="Prashant Bashyal" class="author-img">
         </div>
-        <div class="author-accent-box" style="background:#2ecc71"></div>
         <div class="author-stat-bubble">
-          <strong>15+</strong>
-          <span>Years<br>Teaching</span>
+          <strong><i class="fa-brands fa-linkedin-in" style="font-size: 30px;"></i></strong>
         </div>
       </div>
       <div class="author-info">
         <div class="section-title"><h3>About the Author</h3></div>
-        <div class="author-name">Author Two Name</div>
-        <span class="author-title-label">Curriculum Expert</span>
-        <p>Author two bio text goes here...</p>
+        <div class="author-name">Prashant Bashyal</div>
+        <span class="author-title-label">Biology & Chemistry Author</span>
+        <p>
+          As the author of this book, I’ve been in your shoes and have spent
+          years helping students navigate the jump from SEE to Grade 11. I wrote
+          this guide to be the mentor I wish I had—stripping away the fluff and
+          focusing on the exact concepts that top colleges actually test. My goal
+          isn’t just to help you pass; it’s to help you rank high enough to claim
+          the scholarships you deserve.
+        </p>
         <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> Ph.D. Math</span>
+          <span class="credential"><i class="fa-solid fa-star"></i> Studying Computer Science </span>
         </div>
       </div>
     </div>
 
-    <!-- AUTHOR 5 -->
     <div class="author-inner">
       <div class="author-portrait">
         <div class="author-img-frame">
-          <img src="{% static 'about/images/author-picture-5.png' %}" alt="Kishor Kafle" class="author-img">
+          <img src="{% static 'about/images/author-picture-5.png' %}" alt="Prashant Sharma" class="author-img">
         </div>
-        <div class="author-accent-box" style="background:#2ecc71"></div>
         <div class="author-stat-bubble">
-          <strong>15+</strong>
-          <span>Years<br>Teaching</span>
+          <strong><i class="fa-brands fa-linkedin-in" style="font-size: 30px;"></i></strong>
         </div>
       </div>
       <div class="author-info">
         <div class="section-title"><h3>About the Author</h3></div>
-        <div class="author-name">Author Two Name</div>
-        <span class="author-title-label">Curriculum Expert</span>
-        <p>Author two bio text goes here...</p>
+        <div class="author-name">Kishor Kafle</div>
+        <span class="author-title-label">Maths Author & Cover Designer</span>
+        <p>
+          As the author of this book, I’ve been in your shoes and have spent
+          years helping students navigate the jump from SEE to Grade 11. I wrote
+          this guide to be the mentor I wish I had—stripping away the fluff and
+          focusing on the exact concepts that top colleges actually test. My goal
+          isn’t just to help you pass; it’s to help you rank high enough to claim
+          the scholarships you deserve.
+        </p>
         <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> Ph.D. Math</span>
+          <span class="credential"><i class="fa-solid fa-star"></i> Studying Computer Science </span>
         </div>
       </div>
     </div>
-
   </div> <!-- End wrapper -->
 </section>
 
@@ -290,48 +296,87 @@
       <h2 style="color:#fff;">What Learners Are Saying</h2>
       <p>Real words from students who used this resource in their preparation.</p>
     </div>
-    <div class="testimonials-grid">
 
-      <div class="testimonial-card reveal">
-        <div class="testimonial-quote">"</div>
-        <p>The worked examples in this book completely changed how I approach problems. I went from struggling to scoring in the top percentile of my class.</p>
-        <div class="testimonial-footer">
-          <div class="testimonial-avatar">A</div>
-          <div class="testimonial-meta">
-            <div class="stars">★★★★★</div>
-            <strong>Ayesha R.</strong>
-            <span>Grade 12 Student</span>
+    <!-- START SLIDER WRAPPER -->
+    <div class="testimonials-slider-viewport">
+      <div class="testimonials-slider-track" id="testimonialTrack">
+
+        <!-- Card 1 -->
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"</div>
+          <p>
+            The book was truly outstanding. It covers all the essential topics
+            required for entrance examinations and presents them clearly and
+            well-structured. The inclusion of key points for quick revision
+            makes it especially useful for MCQ-based entrance tests.
+          </p>
+          <div class="testimonial-footer">
+            <div class="testimonial-avatar">R</div>
+            <div class="testimonial-meta">
+              <div class="stars">★★★★⯨</div>
+              <strong>Raunak Yadav</strong>
+              <span>Prasadi Academy</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="testimonial-card reveal" style="transition-delay:.1s">
-        <div class="testimonial-quote">"</div>
-        <p>I used the model set papers every weekend before my exams. The format is so close to the real thing — it made the actual exam feel familiar and manageable.</p>
-        <div class="testimonial-footer">
-          <div class="testimonial-avatar">R</div>
-          <div class="testimonial-meta">
-            <div class="stars">★★★★★</div>
-            <strong>Rahul M.</strong>
-            <span>Exam Candidate</span>
+        <!-- Card 2 -->
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"</div>
+          <p>
+            According to me, this book provides you the path but you have to walk through that path by yourself,also the MCQs provided in the book were very much helpful.
+          </p>
+          <div class="testimonial-footer">
+            <div class="testimonial-avatar">B</div>
+            <div class="testimonial-meta">
+              <div class="stars">★★★★</div>
+              <strong>Bibash Bhandari</strong>
+              <span>St. Xavier's College</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="testimonial-card reveal" style="transition-delay:.2s">
-        <div class="testimonial-quote">"</div>
-        <p>The daily question feature kept me consistent. Even on busy days, five minutes with a practice question kept the material fresh in my mind.</p>
-        <div class="testimonial-footer">
-          <div class="testimonial-avatar">S</div>
-          <div class="testimonial-meta">
-            <div class="stars">★★★★★</div>
-            <strong>Sana K.</strong>
-            <span>Science Stream Student</span>
+        <!-- Card 3 -->
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"</div>
+          <p>
+            The daily question feature kept me consistent.
+            Even on busy days, five minutes with a practice question kept the material fresh in my mind.
+          </p>
+          <div class="testimonial-footer">
+            <div class="testimonial-avatar">S</div>
+            <div class="testimonial-meta">
+              <div class="stars">★★★★★</div>
+              <strong>Sana K.</strong>
+              <span>Science Stream Student</span>
+            </div>
           </div>
         </div>
-      </div>
 
+        <!-- Card 4 (New) -->
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"</div>
+          <p>
+            This book literally changed my life. Before this book, I was just
+            studying now I’m preparing to win. The questions, strategies, and
+            techniques completely transformed my mindset and confidence. Honestly,
+            this book is the reason I believe in my success now. Absolute life-changer.
+          </p>
+          <div class="testimonial-footer">
+            <div class="testimonial-avatar">S</div>
+            <div class="testimonial-meta">
+              <div class="stars">★★★★★</div>
+              <strong>Sujan Khadka</strong>
+              <span>Kalika Manavgyan Secondary School </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
+
+    <!-- NAVIGATION DOTS -->
+    <div class="slider-dots" id="sliderDots"></div>
   </div>
 </section>
 

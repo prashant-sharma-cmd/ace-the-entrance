@@ -146,6 +146,7 @@
   }
 
   /* ── ABOUT BOOK ── */
+   /* ── ABOUT BOOK ── */
   .about-book-section {
     padding: 5rem 0;
     background: var(--clr-white);
@@ -171,25 +172,42 @@
     justify-content: center;
   }
 
+  /* MODIFIED: Removed padding and flex centering to accommodate image */
   .book-card {
-    width: 220px;
-    height: 300px;
-    background: linear-gradient(145deg, var(--clr-primary) 0%, #0a3fa8 100%);
+    width: 320px;
+    height: 475px;
+    background: transparent;
+    position: relative;
+    /* Allow badge to stick out */
+    overflow: visible;
+    transition: var(--transition);
     border-radius: 4px 12px 12px 4px;
     box-shadow:
       -6px 6px 0 #add8e6,
       -10px 10px 0 rgba(1,37,125,0.2),
       0 25px 50px rgba(1,37,125,0.35);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1.5rem;
-    text-align: center;
-    transition: var(--transition);
-    cursor: default;
-    position: relative;
-    overflow: hidden;
+  }
+
+  .book-img-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* This is what does the cropping */
+    border-radius: 4px 12px 12px 4px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+
+  /* NEW: Style for the book cover image */
+  .book-cover-img {
+    width: 100%;
+    height: 100%;
+    /* 1. Force image to cover entire area */
+    object-fit: cover;
+    /* 2. Safety Zoom: hides small internal borders in the image file */
+    transform: scale(1.05);
+    display: block;
   }
 
   .book-card::before {
@@ -197,70 +215,45 @@
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse at top left, rgba(86,232,220,0.18) 0%, transparent 60%);
+    z-index: 1; /* Sits slightly over image for lighting effect */
+    pointer-events: none;
   }
 
   .book-card:hover {
     transform: translateY(-6px) rotate(1deg);
-    box-shadow:
-      -6px 6px 0 #add8e6,
-      -14px 14px 0 rgba(1,37,125,0.2),
-      0 35px 60px rgba(1,37,125,0.4);
   }
 
-  .book-card-label {
-    font-family: var(--ff-secondary);
-    font-size: 1.1rem;
-    color: var(--clr-primary-light);
-    letter-spacing: 1px;
-    margin-bottom: 0.5rem;
-    position: relative;
-  }
-
-  .book-card-title {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--clr-white);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    line-height: 1.2;
-    position: relative;
-  }
-
-  .book-card-author {
-    margin-top: 1.2rem;
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.55);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    position: relative;
-  }
-
+  /* MODIFIED: Added z-index to stay on top of image */
   .book-spine {
     position: absolute;
     left: 0; top: 0; bottom: 0;
     width: 18px;
-    background: rgba(0,0,0,0.25);
+    background: rgba(0,0,0,0.3);
     border-radius: 4px 0 0 4px;
+    z-index: 2; /* Sits on top of image */
+    pointer-events: none;
   }
 
+  /* MODIFIED: Added z-index to stay on top of image */
   .book-badge {
     position: absolute;
-    top: -12px; right: -12px;
-    width: 56px; height: 56px;
+    top: -15px;
+    right: -15px;
+    width: 60px; height: 60px;
     background: #e9b949;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.6rem;
-    font-weight: 700;
+    font-size: 0.65rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
     color: var(--clr-primary);
     text-align: center;
-    line-height: 1.2;
-    box-shadow: 0 4px 12px rgba(233,185,73,0.5);
+    line-height: 1.1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     animation: bounce 3s ease-in-out infinite;
+    z-index: 3; /* Sits on the very top */
   }
 
   .book-info .section-title h3 {
@@ -341,6 +334,7 @@
   opacity: 1;
   transform: translateY(0);
 }
+
 
   /* ── FEATURES ── */
   .features-section {
@@ -483,13 +477,13 @@
 
   .author-stat-bubble {
     position: absolute;
-    top: 20px; right: -16px;
+    top: 20px; right: 60px;
     background: var(--clr-white);
     border-radius: var(--radius);
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 0.5rem;
     box-shadow: 0 8px 24px rgba(1,37,125,0.15);
     text-align: center;
-    min-width: 80px;
+    min-width: 50px;
   }
 
   .author-stat-bubble strong {
@@ -559,113 +553,151 @@
   .credential i { font-size: 0.7rem; color: #e9b949; }
 
   /* ── TESTIMONIALS ── */
-  .testimonials-section {
-    background: var(--clr-primary);
-    padding: 5rem 0;
-    position: relative;
-    overflow: hidden;
-  }
+/* ── TESTIMONIALS ── */
+.testimonials-section {
+  background: var(--clr-primary);
+  padding: 5rem 0;
+  position: relative;
+  overflow: hidden;
+}
 
-  .testimonials-section::before {
-    content: '"';
-    position: absolute;
-    font-family: var(--ff-secondary);
-    font-size: 28rem;
-    color: rgba(255,255,255,0.03);
-    top: -6rem; left: -2rem;
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-  }
+.testimonials-section::before {
+  content: '"';
+  position: absolute;
+  font-family: var(--ff-secondary);
+  font-size: 28rem;
+  color: rgba(255,255,255,0.03);
+  top: -6rem; left: -2rem;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
 
-  .testimonials-section .section-title h3 {
-    font-family: var(--ff-secondary);
-    color: var(--clr-primary-light);
-  }
+/* 1. VIEWPORT: This is the "window" that clips the long track */
+.testimonials-slider-viewport {
+  width: 100%;
+  overflow: hidden; /* CRITICAL: This hides the cards that are off-screen */
+  margin-top: 3rem;
+  padding: 1rem 0 2rem;
+}
 
-  .testimonials-section .section-title p {
-    color: rgba(255,255,255,0.65);
-  }
+/* 2. TRACK: The long horizontal line of cards */
+.testimonials-slider-track {
+  display: flex;
+  flex-wrap: nowrap; /* CRITICAL: Prevents cards from jumping to a new line */
+  gap: 1.75rem;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
 
-  .testimonials-section .section-title {
-    text-align: center;
-  }
+/* 3. CARD: Individual review boxes */
+.testimonial-card {
+  /* Desktop: 3 cards visible */
+  flex: 0 0 calc(33.333% - 1.17rem);
+  flex-shrink: 0; /* CRITICAL: Prevents browser from squishing cards to fit the screen */
+  box-sizing: border-box; /* Ensures padding doesn't add to the width */
 
-  .testimonials-grid {
-    width: 85vw;
-    max-width: 1170px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.75rem;
-    margin-top: 3rem;
-    position: relative;
-  }
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius);
+  padding: 2rem;
+  backdrop-filter: blur(8px);
+  transition: var(--transition);
+  height: auto;
+}
 
+.testimonial-card:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-4px);
+}
+
+/* --- Internal Content Styles (unchanged) --- */
+.testimonial-quote {
+  font-size: 2.5rem;
+  color: var(--clr-primary-light);
+  font-family: var(--ff-secondary);
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.testimonial-card p {
+  color: rgba(255,255,255,0.82);
+  font-size: 0.9rem;
+  line-height: 1.75;
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.testimonial-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.testimonial-avatar {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--clr-primary-light), #56e8dc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--clr-primary);
+  flex-shrink: 0;
+}
+
+.testimonial-meta strong {
+  display: block;
+  color: var(--clr-white);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--spacing);
+}
+
+.testimonial-meta span {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+}
+
+.stars { color: #e9b949; font-size: 0.75rem; margin-bottom: 0.15rem; }
+
+/* 4. RESPONSIVE BREAKPOINTS */
+@media (max-width: 992px) {
   .testimonial-card {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: var(--radius);
-    padding: 2rem;
-    backdrop-filter: blur(8px);
-    transition: var(--transition);
+    flex: 0 0 calc(50% - 0.875rem); /* 2 cards visible */
   }
+}
 
-  .testimonial-card:hover {
-    background: rgba(255,255,255,0.12);
-    transform: translateY(-4px);
+@media (max-width: 600px) {
+  .testimonial-card {
+    flex: 0 0 100%; /* 1 card visible */
   }
+}
 
-  .testimonial-quote {
-    font-size: 2.5rem;
-    color: var(--clr-primary-light);
-    font-family: var(--ff-secondary);
-    line-height: 1;
-    margin-bottom: 0.75rem;
-  }
+/* 5. DOTS NAVIGATION */
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
 
-  .testimonial-card p {
-    color: rgba(255,255,255,0.82);
-    font-size: 0.9rem;
-    line-height: 1.75;
-    font-style: italic;
-    margin-bottom: 1.5rem;
-  }
+.dot {
+  width: 10px;
+  height: 10px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+}
 
-  .testimonial-footer {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .testimonial-avatar {
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--clr-primary-light), #56e8dc);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--clr-primary);
-    flex-shrink: 0;
-  }
-
-  .testimonial-meta strong {
-    display: block;
-    color: var(--clr-white);
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: var(--spacing);
-  }
-
-  .testimonial-meta span {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.5);
-  }
-
-  .stars { color: #e9b949; font-size: 0.75rem; margin-bottom: 0.15rem; }
+.dot.active {
+  background: var(--clr-primary-light);
+  transform: scale(1.3);
+  box-shadow: 0 0 10px rgba(86,232,220,0.5);
+}
 
   /* ── CTA BAND ── */
   .cta-band {
