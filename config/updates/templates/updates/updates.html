@@ -6,7 +6,6 @@
 {% endblock %}
 
 {% block content %}
-
 <!-- ══ HERO ══ -->
 <header class="updates-hero">
   <div class="hero-inner">
@@ -59,7 +58,7 @@
       role="tab"
     >
       <i class="fa-solid fa-bullhorn"></i>
-      Entrance Updates
+      <span class="tab-label">Entrance Updates</span>
       <span class="tab-count">{{ entrance_count }}</span>
     </button>
     <button
@@ -68,7 +67,7 @@
       role="tab"
     >
       <i class="fa-solid fa-code-branch"></i>
-      Website Changelog
+      <span class="tab-label">Website Changelog</span>
       <span class="tab-count">{{ changelog_count }}</span>
     </button>
   </div>
@@ -91,12 +90,14 @@
       <article class="update-card priority-{{ update.priority }} {% if update.image %}has-image{% endif %} reveal">
 
         {% if update.image %}
-          <img
-            src="{{ update.image.url }}"
-            alt="{{ update.title }}"
-            class="update-card-img"
-            loading="lazy"
-          >
+          <div class="update-card-img-wrap" onclick="openLightbox('{{ update.image.url }}', '{{ update.title|escapejs }}')">
+            <img
+              src="{{ update.image.url }}"
+              alt="{{ update.title }}"
+              class="update-card-img"
+              loading="lazy"
+            >
+          </div>
         {% endif %}
 
         <div class="update-card-body">
@@ -153,12 +154,14 @@
       <article class="update-card priority-{{ update.priority }} {% if update.image %}has-image{% endif %} reveal">
 
         {% if update.image %}
-          <img
-            src="{{ update.image.url }}"
-            alt="{{ update.title }}"
-            class="update-card-img"
-            loading="lazy"
-          >
+          <div class="update-card-img-wrap" onclick="openLightbox('{{ update.image.url }}', '{{ update.title|escapejs }}')">
+            <img
+              src="{{ update.image.url }}"
+              alt="{{ update.title }}"
+              class="update-card-img"
+              loading="lazy"
+            >
+          </div>
         {% endif %}
 
         <div class="update-card-body">
@@ -197,9 +200,20 @@
     {% endif %}
   </div>
 
+</div><!-- /updates-body -->
+
+<!-- ══ LIGHTBOX ══ -->
+<div class="lightbox-overlay" id="lightbox" onclick="closeLightboxOnOverlay(event)">
+  <div class="lightbox-img-wrap" id="lightbox-wrap">
+    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <img src="" alt="" id="lightbox-img">
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
 </div>
 {% endblock %}
 
-{% extra_js %}
+{% block extra_js %}
 <script src="{% static 'updates/js/app.js' %}" ></script>
 {% endblock %}
