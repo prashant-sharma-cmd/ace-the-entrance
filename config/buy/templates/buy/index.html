@@ -1,0 +1,340 @@
+{% extends 'navbar.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ══ HERO ══ -->
+<header class="buy-hero">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Get Your Copy</span>
+    <h1>Buy the Book</h1>
+    <p class="hero-desc">
+      Choose how you want to get your copy — pick up from a local shop,
+      order on Daraz, or have it delivered straight to your door.
+    </p>
+    <div class="hero-price-badge">
+      <i class="fa-solid fa-tag"></i>
+      Book Price: Rs. [XXX] &nbsp;·&nbsp; Delivery charges extra
+    </div>
+  </div>
+</header>
+
+<div class="content-divider"></div>
+
+<!-- ══ THREE OPTIONS OVERVIEW ══ -->
+<section class="buy-section">
+  <div class="section-inner">
+    <div class="buy-section-title reveal">
+      <span class="eyebrow">How to Buy</span>
+      <h2>Three Ways to Get Your Copy</h2>
+      <p>Pick the option that works best for you — each is simple, fast, and reliable.</p>
+    </div>
+
+    <div class="options-grid">
+      <a class="option-card shop reveal" href="#find-shops" onclick="smoothScroll('find-shops')">
+        <div class="option-icon"><i class="fa-solid fa-store"></i></div>
+        <h3>Physical Shops</h3>
+        <p>Walk in and pick up your copy from any of our partner stationery shops near you. No waiting, instant access.</p>
+        <span class="option-arrow">Find a Shop <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+
+      <a class="option-card daraz reveal" href="#buy-daraz" onclick="smoothScroll('buy-daraz')" style="transition-delay:.1s">
+        <div class="option-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+        <h3>Buy on Daraz</h3>
+        <p>Order online through Nepal's leading e-commerce platform with secure payment and nationwide delivery.</p>
+        <span class="option-arrow">Shop on Daraz <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+
+      <a class="option-card deliver reveal" href="#order-delivery" onclick="smoothScroll('order-delivery')" style="transition-delay:.2s">
+        <div class="option-icon"><i class="fa-solid fa-truck-fast"></i></div>
+        <h3>Home Delivery</h3>
+        <p>Fill out the form and we'll deliver directly to you. Additional delivery charges apply based on your location.</p>
+        <span class="option-arrow">Order Now <i class="fa-solid fa-arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="content-divider"></div>
+
+<!-- ══ SECTION 1: PHYSICAL SHOPS + MAP ══ -->
+<section class="buy-section shaded" id="find-shops">
+  <span class="scroll-anchor" id="anchor-shops"></span>
+  <div class="section-inner">
+    <div class="buy-section-title reveal">
+      <span class="eyebrow">Walk In</span>
+      <h2>Find a Shop Near You</h2>
+      <p>Our book is available at the following stationery shops. Click a location to see it on the map.</p>
+    </div>
+
+    <div class="map-layout">
+      <!-- Shop List -->
+      <div class="shop-list-panel reveal">
+
+        <div class="shop-item active" onclick="focusShop(this, 27.7172, 85.3240, 'Kathmandu Central Stationery')">
+          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Kathmandu Central Stationery</h4>
+          <p><i class="fa-solid fa-location-dot"></i> New Road, Kathmandu</p>
+        </div>
+
+        <div class="shop-item" onclick="focusShop(this, 27.6710, 85.4298, 'Bhaktapur Book House')">
+          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Bhaktapur Book House</h4>
+          <p><i class="fa-solid fa-location-dot"></i> Suryabinayak, Bhaktapur</p>
+        </div>
+
+        <div class="shop-item" onclick="focusShop(this, 27.6762, 85.3142, 'Lalitpur Stationery Mart')">
+          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Lalitpur Stationery Mart</h4>
+          <p><i class="fa-solid fa-location-dot"></i> Pulchowk, Lalitpur</p>
+        </div>
+
+        <div class="shop-item" onclick="focusShop(this, 27.7030, 85.3143, 'Jawalakhel Book Corner')">
+          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Jawalakhel Book Corner</h4>
+          <p><i class="fa-solid fa-location-dot"></i> Jawalakhel, Lalitpur</p>
+        </div>
+
+        <div class="shop-item" onclick="focusShop(this, 27.7361, 85.3385, 'Chabahil Stationery')">
+          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Chabahil Stationery</h4>
+          <p><i class="fa-solid fa-location-dot"></i> Chabahil, Kathmandu</p>
+        </div>
+
+        <div class="shop-item" onclick="focusShop(this, 27.7215, 85.3720, 'Koteshwor Study Zone')">
+          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Koteshwor Study Zone</h4>
+          <p><i class="fa-solid fa-location-dot"></i> Koteshwor, Kathmandu</p>
+        </div>
+
+      </div>
+
+      <!-- Map -->
+      <div class="map-panel reveal" style="transition-delay:.15s">
+        <iframe
+          id="shop-map"
+          src="https://maps.google.com/maps?q=27.7172,85.3240&z=14&output=embed"
+          allowfullscreen
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Shop Location Map"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="content-divider"></div>
+
+<!-- ══ SECTION 2: DARAZ ══ -->
+<section class="buy-section" id="buy-daraz">
+  <span class="scroll-anchor" id="anchor-daraz"></span>
+  <div class="section-inner">
+    <div class="daraz-card reveal">
+      <div class="daraz-info">
+        <div class="daraz-badge">
+          <i class="fa-solid fa-bag-shopping"></i> E-Commerce
+        </div>
+        <h2>Order on Daraz</h2>
+        <p>
+          Skip the queue — browse our listing on Daraz, add to cart, and check out
+          with your preferred payment method. Fast delivery across Nepal.
+        </p>
+        <div class="daraz-perks">
+          <div class="daraz-perk"><i class="fa-solid fa-circle-check"></i> Secure online payment</div>
+          <div class="daraz-perk"><i class="fa-solid fa-circle-check"></i> Nationwide delivery via Daraz logistics</div>
+          <div class="daraz-perk"><i class="fa-solid fa-circle-check"></i> Easy returns &amp; buyer protection</div>
+          <div class="daraz-perk"><i class="fa-solid fa-circle-check"></i> Cash on Delivery available</div>
+        </div>
+        <a href="https://www.daraz.com.np" target="_blank" rel="noopener noreferrer" class="btn-daraz">
+          <i class="fa-solid fa-bag-shopping"></i>
+          Buy on Daraz
+          <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem"></i>
+        </a>
+      </div>
+      <div class="daraz-visual">
+        <div class="daraz-logo-box">
+          <span>Daraz</span>
+        </div>
+        <div class="daraz-visual-label">Official Store</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="content-divider"></div>
+
+<!-- ══ SECTION 3: HOME DELIVERY FORM ══ -->
+<section class="buy-section shaded" id="order-delivery">
+  <span class="scroll-anchor" id="anchor-delivery"></span>
+  <div class="section-inner">
+    <div class="buy-section-title reveal">
+      <span class="eyebrow">Direct Order</span>
+      <h2>Home Delivery</h2>
+      <p>Fill in your details below and we'll confirm your order and get back to you shortly. Or message us on Facebook.</p>
+    </div>
+
+    <div class="delivery-layout">
+
+      <!-- LEFT: info + steps + pricing + FB -->
+      <div class="delivery-info reveal">
+
+        <h3>How It Works</h3>
+        <div class="delivery-steps">
+          <div class="d-step">
+            <div class="d-step-num">1</div>
+            <div class="d-step-text">
+              <strong>Fill the Form</strong>
+              <span>Submit your name, address, and contact details using the form.</span>
+            </div>
+          </div>
+          <div class="d-step">
+            <div class="d-step-num">2</div>
+            <div class="d-step-text">
+              <strong>We Confirm</strong>
+              <span>Our team will reach out via phone or email to confirm your order.</span>
+            </div>
+          </div>
+          <div class="d-step">
+            <div class="d-step-num">3</div>
+            <div class="d-step-text">
+              <strong>We Dispatch</strong>
+              <span>Your book is packed and shipped to your delivery address.</span>
+            </div>
+          </div>
+          <div class="d-step">
+            <div class="d-step-num">4</div>
+            <div class="d-step-text">
+              <strong>You Receive</strong>
+              <span>Book arrives at your door. Payment on delivery or in advance.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pricing-box">
+          <h4>Pricing</h4>
+          <div class="price-row"><span>Book Price</span><span>Rs. [XXX]</span></div>
+          <div class="price-row"><span>Delivery (Inside Valley)</span><span>Rs. [XX]</span></div>
+          <div class="price-row"><span>Delivery (Outside Valley)</span><span>Rs. [XX]</span></div>
+          <div class="price-row note">
+            <span>* Final delivery charge confirmed at order time based on your location.</span>
+          </div>
+          <div class="price-row total"><span>Total (approx.)</span><span>Rs. [XXX+]</span></div>
+        </div>
+
+        <a href="URL" target="_blank" rel="noopener noreferrer" class="fb-cta">
+          <i class="fa-brands fa-facebook"></i>
+          <div class="fb-cta-text">
+            <strong>Message on Facebook</strong>
+            <span>Prefer chat? DM us directly on our page</span>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- RIGHT: order form -->
+      <div class="order-form-card reveal" style="transition-delay:.15s">
+        <div class="form-header">
+          <i class="fa-solid fa-truck-fast"></i>
+          <div>
+            <h3>Place Your Order</h3>
+            <p>We'll get back to you within 24 hours</p>
+          </div>
+        </div>
+
+        <div class="form-body">
+
+          {% for message in messages %}
+            {% if 'order_sent' in message.message %}
+            <div class="form-alert success">
+              <i class="fa-solid fa-circle-check"></i>
+              Order request sent! We'll contact you within 24 hours to confirm.
+            </div>
+            {% elif 'rate_limited' in message.message %}
+            <div class="form-alert error">
+              <i class="fa-solid fa-clock"></i>
+              You're sending too fast. Please wait 5 minutes before trying again.
+            </div>
+            {% elif 'validation_error' in message.message %}
+            <div class="form-alert error">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Please fill in all required fields before submitting.
+            </div>
+            {% elif 'order_failed' in message.message %}
+            <div class="form-alert error">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Something went wrong sending your order. Please message us on Facebook instead.
+            </div>
+            {% endif %}
+          {% endfor %}
+
+          <form method="POST" action="{% url 'buy:index' %}" novalidate>
+            {% csrf_token %}
+
+            {# Honeypot — hidden from real users, bots fill this in #}
+            <div style="display:none" aria-hidden="true">
+              <label for="honeypot">Leave this empty</label>
+              <input type="text" id="honeypot" name="honeypot" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="full_name">Full Name <span class="req">*</span></label>
+                <input type="text" id="full_name" name="full_name" class="form-control"
+                       placeholder="e.g. Ram Bahadur" required>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone Number <span class="req">*</span></label>
+                <input type="tel" id="phone" name="phone" class="form-control"
+                       placeholder="e.g. 98XXXXXXXX" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control"
+                       placeholder="you@email.com">
+              </div>
+              <div class="form-group">
+                <label for="quantity">Quantity <span class="req">*</span></label>
+                <select id="quantity" name="quantity" class="form-control" required>
+                  <option value="1">1 copy</option>
+                  <option value="2">2 copies</option>
+                  <option value="3">3 copies</option>
+                  <option value="4">4 copies</option>
+                  <option value="5">5 copies</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City / District <span class="req">*</span></label>
+                <input type="text" id="city" name="city" class="form-control"
+                       placeholder="e.g. Kathmandu" required>
+              </div>
+              <div class="form-group">
+                <label for="address">Delivery Address <span class="req">*</span></label>
+                <input type="text" id="address" name="address" class="form-control"
+                       placeholder="Street, Tole, Ward No." required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Additional Notes</label>
+              <textarea id="notes" name="notes" class="form-control"
+                        placeholder="Any special instructions, landmark, preferred time..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">
+              <i class="fa-solid fa-paper-plane"></i>
+              Send Order Request
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+
+{% block extra_js %}
+<script src="{% static 'buy/js/app.js' %}"> </script>
+{% endblock %}
