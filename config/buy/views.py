@@ -57,7 +57,7 @@ class BuyPageView(View):
 
         # Basic server-side validation for required fields
         if not all([full_name, phone, address, city, quantity]):
-            messages.error(request, 'validation_error')
+            messages.error(request, 'Please fill all fields')
             return redirect('buy:index')
 
         # ── Build email body ──────────────────────────────────────────────
@@ -89,8 +89,8 @@ Additional Notes : {notes or 'N/A'}
             email_thread.daemon = True  # Won't block server shutdown
             email_thread.start()
 
-            messages.success(request, 'order_sent')
+            messages.success(request, 'Order has been successfully placed!')
         except Exception:
-            messages.error(request, 'order_failed')
+            messages.error(request, 'Order could not be placed!')
 
         return redirect('buy:index')
