@@ -1,46 +1,58 @@
-  /* ── Map focus ── */
-  function focusShop(el, lat, lng, name) {
-    document.querySelectorAll('.shop-item').forEach(s => s.classList.remove('active'));
-    el.classList.add('active');
-    const iframe = document.getElementById('shop-map');
-    iframe.src = `https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
+/* ── Map: highlight shop card and re-focus iframe ── */
+function focusShop(el, embedUrl) {
+  document.querySelectorAll('.shop-item').forEach(function (s) {
+    s.classList.remove('active');
+  });
+  el.classList.add('active');
+  var iframe = document.getElementById('shop-map');
+  if (iframe) iframe.src = embedUrl;
+}
+
+/* ── Smooth scroll to a section by id, with navbar offset ── */
+function smoothScroll(id, e) {
+  if (e) e.preventDefault();
+  var el = document.getElementById(id);
+  if (!el) return;
+  var offset = 72;
+  var top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top: top, behavior: 'smooth' });
+}
+
+/* ── Scroll reveal ── */
+function initReveal() {
+  var revealEls = document.querySelectorAll('.reveal');
+
+  /* Graceful fallback for browsers without IntersectionObserver */
+  if (!('IntersectionObserver' in window)) {
+    revealEls.forEach(function (el) { el.classList.add('visible'); });
+    return;
   }
 
-  /* ── Smooth scroll with offset ── */
-  function smoothScroll(id) {
-    event.preventDefault();
-    const el = document.getElementById(id);
-    if (!el) return;
-    const offset = 72;
-    const top = el.getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: 'smooth' });
-  }
-
-  /* ── Scroll reveal ── */
-  const revealEls = document.querySelectorAll('.reveal');
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
-    });
-  }, { threshold: 0.1 });
-  revealEls.forEach(el => obs.observe(el));
-
-  /* ── Auto-scroll to form if messages present (after redirect) ── */
-  {% if messages %}
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-      const el = document.getElementById('order-delivery');
-      if (el) {
-        const top = el.getBoundingClientRect().top + window.scrollY - 72;
-        window.scrollTo({ top, behavior: 'smooth' });
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
       }
-    }, 200);
+    });
+  }, {
+    threshold: 0,
+    rootMargin: '0px 0px -40px 0px'
   });
-  {% endif %}
 
-  /* ── Auto-scroll to delivery section if form was submitted ── */
-  {% if active_section == 'delivery' %}
-  document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => smoothScroll('order-delivery'), 300);
-  });
-  {% endif %}
+  revealEls.forEach(function (el) { obs.observe(el); });
+
+  /* Hard fallback: force-reveal anything still hidden after 1.5s */
+  setTimeout(function () {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(function (el) {
+      el.classList.add('visible');
+    });
+  }, 1500);
+}
+
+/* Run as soon as DOM is ready */
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initReveal);
+} else {
+  initReveal();
+}

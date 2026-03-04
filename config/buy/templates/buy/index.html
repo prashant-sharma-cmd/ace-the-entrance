@@ -1,5 +1,9 @@
-{% extends 'navbar.html' %}
+{% extends 'footer.html' %}
 {% load static %}
+
+{% block extra_css %}
+<link href="{% static 'buy/css/styles.css' %}" type="text/css" rel="stylesheet" />
+{% endblock %}
 
 {% block content %}
 
@@ -71,34 +75,24 @@
       <!-- Shop List -->
       <div class="shop-list-panel reveal">
 
-        <div class="shop-item active" onclick="focusShop(this, 27.7172, 85.3240, 'Kathmandu Central Stationery')">
-          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Kathmandu Central Stationery</h4>
-          <p><i class="fa-solid fa-location-dot"></i> New Road, Kathmandu</p>
+        <div class="shop-item active" onclick="focusShop(this, 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d220.79629026019137!2d85.3194659127308!3d27.69440979104531!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19ae10865e83%3A0xcb6db51480e2abce!2sTrishakti%20Pustak%20Bhandar!5e0!3m2!1sen!2sjp!4v1772614053466!5m2!1sen!2sjp')">
+          <h4>Trishakti Pustak Bhandar</h4>
+          <p><i class="fa-solid fa-location-dot"></i> Maitighar, Kathmandu</p>
         </div>
 
-        <div class="shop-item" onclick="focusShop(this, 27.6710, 85.4298, 'Bhaktapur Book House')">
-          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Bhaktapur Book House</h4>
-          <p><i class="fa-solid fa-location-dot"></i> Suryabinayak, Bhaktapur</p>
+        <div class="shop-item" onclick="focusShop(this, 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d883.184873855736!2d85.31900146957697!3d27.69444528597815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb1900128c25bf%3A0x2b9704f9f90d1d3e!2sNew%20Lumbini%20Books%20%26%20Stationery!5e0!3m2!1sen!2sjp!4v1772614360579!5m2!1sen!2sjp')">
+          <h4>Lumbini Book Store</h4>
+          <p><i class="fa-solid fa-location-dot"></i> Maitighar, Kathmandu</p>
         </div>
 
-        <div class="shop-item" onclick="focusShop(this, 27.6762, 85.3142, 'Lalitpur Stationery Mart')">
-          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Lalitpur Stationery Mart</h4>
-          <p><i class="fa-solid fa-location-dot"></i> Pulchowk, Lalitpur</p>
+        <div class="shop-item" onclick="focusShop(this, 'https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d467.8524215612514!2d85.31995796670817!3d27.694095383147346!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sjp!4v1772614608170!5m2!1sen!2sjp')">
+          <h4>Thaha Book Store</h4>
+          <p><i class="fa-solid fa-location-dot"></i> Maitighar, Kathmandu</p>
         </div>
 
-        <div class="shop-item" onclick="focusShop(this, 27.7030, 85.3143, 'Jawalakhel Book Corner')">
-          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Jawalakhel Book Corner</h4>
-          <p><i class="fa-solid fa-location-dot"></i> Jawalakhel, Lalitpur</p>
-        </div>
-
-        <div class="shop-item" onclick="focusShop(this, 27.7361, 85.3385, 'Chabahil Stationery')">
-          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Chabahil Stationery</h4>
-          <p><i class="fa-solid fa-location-dot"></i> Chabahil, Kathmandu</p>
-        </div>
-
-        <div class="shop-item" onclick="focusShop(this, 27.7215, 85.3720, 'Koteshwor Study Zone')">
-          <h4><i class="fa-solid fa-store" style="margin-right:0.4rem;font-size:0.75rem"></i> Koteshwor Study Zone</h4>
-          <p><i class="fa-solid fa-location-dot"></i> Koteshwor, Kathmandu</p>
+        <div class="shop-item" onclick="focusShop(this, 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.5219416966265!2d85.32081837519412!3d27.70116672576455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19a89cca10c9%3A0xaffe87016153ded7!2sSamiksha%20Publication-%20New%20Plaza%20Sales%20counter!5e0!3m2!1sen!2sjp!4v1772614722465!5m2!1sen!2sjp')">
+          <h4>Samikshya Publication</h4>
+          <p><i class="fa-solid fa-location-dot"></i> New Plaza Road, Kathmandu</p>
         </div>
 
       </div>
@@ -107,7 +101,7 @@
       <div class="map-panel reveal" style="transition-delay:.15s">
         <iframe
           id="shop-map"
-          src="https://maps.google.com/maps?q=27.7172,85.3240&z=14&output=embed"
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d220.79629026019137!2d85.3194659127308!3d27.69440979104531!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19ae10865e83%3A0xcb6db51480e2abce!2sTrishakti%20Pustak%20Bhandar!5e0!3m2!1sen!2sjp!4v1772614053466!5m2!1sen!2sjp"
           allowfullscreen
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
@@ -332,6 +326,24 @@
     </div>
   </div>
 </section>
+
+{# Pure JS (focusShop, smoothScroll, initReveal) lives in your static JS file. #}
+{# Only Django-template-dependent logic stays inline below.                    #}
+<script>
+  /* ── Post-redirect scroll: jump to order form if messages exist ── */
+  {% if messages %}
+  document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      var el = document.getElementById('order-delivery');
+      if (el) {
+        var top = el.getBoundingClientRect().top + window.scrollY - 72;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    }, 200);
+  });
+  {% endif %}
+</script>
+
 {% endblock %}
 
 
