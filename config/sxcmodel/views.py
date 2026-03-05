@@ -1,10 +1,13 @@
 import json
 
+from django.core.cache import cache
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views import View
 from django.views.generic import ListView, TemplateView
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 from .mixins import MyLoginRequiredMixin
 from .constants import MAX_TIME_SECONDS
@@ -153,7 +156,16 @@ class SectionView(MyLoginRequiredMixin, AttemptMixin, View):
             attempt.save(update_fields=['current_section_index'])
 
         questions = self._ordered_questions(attempt, section_index)
-        elapsed = _elapsed_seconds(attempt)
+
+        # ── Use cached remaining time if available, else derive from wall clock ──
+        cache_key = f'quiz_remaining_{session_key}'
+        cached_remaining = cache.get(cache_key)
+
+        if cached_remaining is not None:
+            time_remaining = cached_remaining
+        else:
+            elapsed = _elapsed_seconds(attempt)  # ← only needed in this branch
+            time_remaining = max(0, MAX_TIME_SECONDS - elapsed)
 
         return render(request, self.template_name, {
             'attempt': attempt,
@@ -161,14 +173,14 @@ class SectionView(MyLoginRequiredMixin, AttemptMixin, View):
             'section_index': section_index,
             'total_sections': len(sequence),
             'section_number': section_index + 1,
-            'subject_label': get_section_label(questions[0].subject) if questions else '',
+            'subject_label': get_section_label(
+                questions[0].subject) if questions else '',
             'is_last_section': section_index == len(sequence) - 1,
             'existing_answers': self._existing_answers(attempt, questions),
-            'time_remaining': max(0, MAX_TIME_SECONDS - elapsed),
+            'time_remaining': time_remaining,
             'max_time': MAX_TIME_SECONDS,
-            'session_key': str(session_key),
+            'session_key': str(attempt.session_key),
         })
-
     # ---- POST ------------------------------------------------------------
 
     def post(self, request, session_key, section_index):
@@ -220,6 +232,10 @@ class SubmitExamView(MyLoginRequiredMixin, AttemptMixin, View):
 
     def _finalise(self, request, session_key):
         attempt = self.get_attempt(session_key)
+
+        # ── Clear cached timer — no longer needed after submission ──
+        cache.delete(f'quiz_remaining_{session_key}')
+
         answers = UserAnswer.objects.filter(attempt=attempt).select_related('question')
         total_questions = sum(len(s) for s in attempt.question_sequence)
 
@@ -315,7 +331,7 @@ class LeaderboardView(ListView):
 # ---------------------------------------------------------------------------
 # AJAX: auto-save progress
 # ---------------------------------------------------------------------------
-
+@method_decorator(csrf_exempt, name='dispatch')
 class SaveProgressView(MyLoginRequiredMixin, AttemptMixin, View):
     """
     Called every 30 s by the exam JS to persist current answers without
@@ -344,5 +360,12 @@ class SaveProgressView(MyLoginRequiredMixin, AttemptMixin, View):
                 question=question,
                 defaults={'selected_option': selected},
             )
+
+            elapsed = data.get('elapsed')
+            if elapsed is not None:
+                remaining = max(0, MAX_TIME_SECONDS - int(elapsed))
+                cache_key = f'quiz_remaining_{session_key}'
+                cache.set(cache_key, remaining,
+                          timeout=60 * 60 * 24)  # 24 hours
 
         return JsonResponse({'status': 'ok'})

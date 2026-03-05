@@ -149,5 +149,24 @@
 <script>
   window.QUIZ_API_URL = "{% url 'daily:get_questions' %}";
 </script>
+
 <script src="{% static 'daily/js/app.js' %}"></script>
+
+<script>
+  function renderLatexInQuiz() {
+    var container = document.getElementById('question-container');
+    if (container && window.renderMathInElement) {
+      renderMathInElement(container, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$',  right: '$',  display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });
+    }
+  }
+</script>
+
 {% endblock %}

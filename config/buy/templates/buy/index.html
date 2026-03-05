@@ -1,6 +1,10 @@
 {% extends 'footer.html' %}
 {% load static %}
 
+{% block title %}
+Shop –
+{% endblock %}
+
 {% block extra_css %}
 <link href="{% static 'buy/css/styles.css' %}" type="text/css" rel="stylesheet" />
 {% endblock %}
@@ -18,7 +22,7 @@
     </p>
     <div class="hero-price-badge">
       <i class="fa-solid fa-tag"></i>
-      Book Price: Rs. [XXX] &nbsp;·&nbsp; Delivery charges extra
+      Book Price: <del> Rs. 750 </del> Rs. 650 &nbsp;·&nbsp; Delivery charges extra
     </div>
   </div>
 </header>
@@ -201,16 +205,15 @@
 
         <div class="pricing-box">
           <h4>Pricing</h4>
-          <div class="price-row"><span>Book Price</span><span>Rs. [XXX]</span></div>
-          <div class="price-row"><span>Delivery (Inside Valley)</span><span>Rs. [XX]</span></div>
-          <div class="price-row"><span>Delivery (Outside Valley)</span><span>Rs. [XX]</span></div>
+          <div class="price-row"><span>Book Price</span><span>Rs. 650</span></div>
+          <div class="price-row"><span>Delivery (Inside Valley)</span><span>Rs. 50</span></div>
+          <div class="price-row"><span>Delivery (Outside Valley)</span><span>Rs. 150</span></div>
           <div class="price-row note">
             <span>* Final delivery charge confirmed at order time based on your location.</span>
           </div>
-          <div class="price-row total"><span>Total (approx.)</span><span>Rs. [XXX+]</span></div>
         </div>
 
-        <a href="URL" target="_blank" rel="noopener noreferrer" class="fb-cta">
+        <a href="{% url 'home:facebook' %}" target="_blank" rel="noopener noreferrer" class="fb-cta">
           <i class="fa-brands fa-facebook"></i>
           <div class="fb-cta-text">
             <strong>Message on Facebook</strong>

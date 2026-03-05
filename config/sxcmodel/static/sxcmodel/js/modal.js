@@ -17,6 +17,8 @@
      QuizModal.close('myModalId');
    ============================================================ */
 
+
+
 (function (global) {
     'use strict';
 

@@ -106,6 +106,13 @@ TEMPLATES = [
     },
 ]
 
+CACHES = {
+    'default': {
+        'BACKEND':  'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+    }
+}
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
@@ -219,3 +226,4 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 # Mimetypes for Favicon
 
 mimetypes.add_type("application/manifest+json", ".webmanifest")
+

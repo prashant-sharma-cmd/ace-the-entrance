@@ -128,12 +128,33 @@ function startQuiz() {
  * Order matters — escape before injecting <sub> tags.
  */
 function safeFormat(str) {
-    /* 1. Pull out $…$ content first (raw, before escaping) */
-    const stripped = str.replace(/\$([^$]+)\$/g, (_, inner) => inner);
-    /* 2. Escape any remaining HTML special chars */
-    const escaped  = escapeHtml(stripped);
-    /* 3. Now safely convert _2 or _{2} → <sub>2</sub> */
-    return escaped.replace(/_\{?(\w+)\}?/g, '<sub>$1</sub>');
+    /* ── Step 1: Extract and protect LaTeX regions ── */
+    const latexChunks = [];
+    const placeholder = '\x00LATEX\x00';
+
+    // Protect $$…$$ first (display math), then $…$ (inline math)
+    let result = str
+        .replace(/\$\$([\s\S]+?)\$\$/g, (match) => {
+            latexChunks.push(match);
+            return placeholder + (latexChunks.length - 1) + '\x00';
+        })
+        .replace(/\$([^$\n]+?)\$/g, (match) => {
+            latexChunks.push(match);
+            return placeholder + (latexChunks.length - 1) + '\x00';
+        });
+
+    /* ── Step 2: Escape HTML in the non-LaTeX parts only ── */
+    result = escapeHtml(result);
+
+    /* ── Step 3: Apply subscript formatting to non-LaTeX text ── */
+    result = result.replace(/_\{?(\w+)\}?/g, '<sub>$1</sub>');
+
+    /* ── Step 4: Restore LaTeX chunks completely unescaped ── */
+    latexChunks.forEach((chunk, i) => {
+        result = result.replace(placeholder + i + '\x00', chunk);
+    });
+
+    return result;
 }
 
 function displayQuestion() {
@@ -157,6 +178,8 @@ function displayQuestion() {
 
     html += '</div>';
     container.innerHTML = html;
+
+    if (typeof renderLatexInQuiz === 'function') renderLatexInQuiz();
 
     updateNavigation();
     updateProgress();
@@ -210,13 +233,29 @@ function updateQuestionCounter() {
 ════════════════════════════════════════ */
 function submitQuiz() {
     const unanswered = userAnswers.filter(a => a === null).length;
-    if (unanswered > 0) {
-        if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) return;
+
+    if (unanswered > 0 && !document.getElementById('submit-warning')) {
+        // Show an inline warning instead of confirm() which can be blocked
+        const footer = document.querySelector('.quiz-footer');
+        const warning = document.createElement('p');
+        warning.id = 'submit-warning';
+        warning.style.cssText = 'color:#b91c1c;font-size:.82rem;margin:0.5rem 0 0;text-align:center;';
+        warning.textContent = `${unanswered} question(s) unanswered. Click Finish again to submit anyway.`;
+        footer.insertAdjacentElement('afterbegin', warning);
+        return; // First click just warns
     }
+
+    // Second click (or no unanswered) — actually submit
+    const warning = document.getElementById('submit-warning');
+    if (warning) warning.remove();
 
     score = 0;
     questions.forEach((q, i) => {
         const correct = q.choices.find(c => c.isCorrect);
+        if (!correct) {
+            console.warn(`Question ${i} has no correct answer:`, q);
+            return;
+        }
         if (userAnswers[i] === correct.id) score++;
     });
 

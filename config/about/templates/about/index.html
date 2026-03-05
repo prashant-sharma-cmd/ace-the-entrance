@@ -1,6 +1,10 @@
 {% extends 'footer.html' %}
 {% load static %}
 
+{% block title %}
+About Us –
+{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'about/css/styles.css' %}">
 {% endblock %}
@@ -386,6 +390,11 @@
     <h2>Ready to Start Learning?</h2>
     <p>Join hundreds of students already using our book to prepare smarter, study deeper, and perform better.</p>
     <div class="cta-btn-group">
+      <a href="{% url 'buy:index' %}" class="btn" style="background:#e9b949;color:#01257D;">
+        <i class="fa-solid fa-book"></i> Buy the Book
+      </a>
+    </div>
+    <div class="cta-btn-group" style="margin-top:0.75rem;">
       <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Browse Model Sets</a>
       <a href="{% url 'daily:quiz' %}" class="btn" style="background:var(--clr-primary-light);color:var(--clr-primary);">Try Daily Question</a>
     </div>

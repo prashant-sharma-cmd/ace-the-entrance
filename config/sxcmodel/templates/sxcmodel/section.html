@@ -209,13 +209,25 @@
         return data;
     }
 
+    function getCookie(name) {
+        var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : '';
+    }
+
+
     function autoSave() {
         saveDot.className    = 'exam-save-dot saving';
         saveText.textContent = 'Saving…';
         fetch('/sxcmodel/exam/' + SESSION_KEY + '/save/', {
             method:  'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}' },
-            body:    JSON.stringify({ answers: collectAnswers(), elapsed: MAX_TIME - getRemaining() }),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken':  getCookie('csrftoken'),  // ← from cookie, works even after token rotation
+            },
+            body: JSON.stringify({
+                answers: collectAnswers(),
+                elapsed: MAX_TIME - getRemaining()
+            }),
         }).then(function (res) {
             saveDot.className    = 'exam-save-dot';
             saveText.textContent = res.ok ? 'Saved' : 'Error';
@@ -236,11 +248,32 @@
         document.getElementById('examForm').submit();
     }
 
-    /* ── Leave warning ── */
-    function warnLeave(e) { e.preventDefault(); e.returnValue = ''; }
-    function removeLeaveWarning() { window.removeEventListener('beforeunload', warnLeave); }
+    /* ── Save remaining time synchronously on tab close/refresh ──
+       sendBeacon survives page unload unlike fetch()              */
+    function saveOnLeave() {
+        var payload = JSON.stringify({
+            answers: collectAnswers(),
+            elapsed: MAX_TIME - getRemaining()
+        });
+        navigator.sendBeacon(
+            '/sxcmodel/exam/' + SESSION_KEY + '/save/',
+            new Blob([payload], { type: 'application/json' })
+        );
+    }
+
+    function warnLeave(e) {
+        saveOnLeave();      // fire-and-forget, no await needed
+        e.preventDefault();
+        e.returnValue = '';
+    }
+
+    function removeLeaveWarning() {
+        window.removeEventListener('beforeunload', warnLeave);
+    }
+
     window.addEventListener('beforeunload', warnLeave);
     document.getElementById('examForm').addEventListener('submit', removeLeaveWarning);
+
 
     /* ── Modal wiring ── */
     function doSubmit() {
