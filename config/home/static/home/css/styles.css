@@ -311,13 +311,15 @@ NAVBAR
   }
 
   .navbar-brand {
-    flex: 1;
     padding: 1rem 0;
-    margin-right: 0;
+    margin-right: auto;
   }
 
   .nav-hamburger {
     display: block;
+    order: -1;
+    margin-left: 0.75rem;
+    margin-right: auto;
   }
 
   /* Hide these until menu is open */

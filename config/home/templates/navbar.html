@@ -7,6 +7,11 @@
     <a href="/" class="nav-brand-link">Ace The Entrance</a>
   </div>
 
+
+  <button class="nav-hamburger" id="nav-hamburger">
+    <i class="fas fa-bars"></i>
+  </button>
+
   <ul class="nav-items">
     <li><a href="/" class="nav-link">Home</a></li>
     <li><a href="{% url 'about:index' %}" class="nav-link">About</a></li>
@@ -40,9 +45,5 @@
     <a href="{% url 'accounts:signup' %}" class="nav-auth-btn signup-btn">Sign Up</a>
   </div>
   {% endif %}
-
-  <button class="nav-hamburger" id="nav-hamburger">
-    <i class="fas fa-bars"></i>
-  </button>
 </nav>
 {% endblock %}
