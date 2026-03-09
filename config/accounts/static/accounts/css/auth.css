@@ -8,7 +8,7 @@
 
 /* ── Auth-specific tokens ─────────────────────────────── */
 :root {
-  --auth-font-display : 'DM Serif Display', Georgia, serif;
+  --auth-font-display : "Grand Hotel", cursive;;
   --auth-font-body    : 'Nunito', sans-serif;
   --auth-card-radius  : 1.25rem;
   --auth-input-bg     : #f0f5ff;

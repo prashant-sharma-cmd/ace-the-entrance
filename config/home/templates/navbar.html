@@ -2,38 +2,47 @@
 {% load static %}
 
 {% block navbar %}
-    <span class="nav-btn" id="nav-btn">
-      <i class="fas fa-bars"></i>
-    </span>
-    {% block signin_button %}
-    {% endblock %}
-    <nav class="navbar" id="navbar">
-      <div class="navbar-header">
-        <span class="nav-close" id="nav-close">
-          <i class="fas fa-times"></i>
-        </span>
-      </div>
-      <ul class="nav-items">
-        <li><a href="/" class="nav-link">home</a></li>
-        <li><a href="{% url 'about:index' %}" class="nav-link">About</a></li>
-        <li><a href="{% url 'buy:index' %}" class="nav-link">Shop</a></li>
-        <li><a href="{% url 'updates:index' %}" class="nav-link">Updates</a></li>
-        <li><a href="{% url 'forum:index' %}" class="nav-link">Discussion</a></li>
-        <li><a href="{% url 'daily:quiz' %}" class="nav-link">daily question</a></li>
-        <li><a href="{% url 'sxcmodel:dashboard' %}" class="nav-link">SXC Model Set</a></li>
-      </ul>
+<nav class="navbar" id="navbar">
+  <div class="navbar-brand">
+    <a href="/" class="nav-brand-link">Ace The Entrance</a>
+  </div>
 
-        {% if user.is_authenticated %}
-        <div class="nav-auth-container">
-          <a href="{% url 'accounts:dashboard' %}" class="btn nav-auth-btn login-btn">Dashboard</a>
-          <a href="{% url 'accounts:logout' %}" class="btn nav-auth-btn logout-btn">Logout</a>
-        </div>
-        {% else %}
-        <div class="nav-auth-container">
-          <a href="#" class="btn nav-auth-btn login-btn">login</a>
-          <a href="#" class="btn nav-auth-btn signup-btn">sign up</a>
-        </div>
-        {% endif %}
+  <ul class="nav-items">
+    <li><a href="/" class="nav-link">Home</a></li>
+    <li><a href="{% url 'about:index' %}" class="nav-link">About</a></li>
+    <li><a href="{% url 'buy:index' %}" class="nav-link">Shop</a></li>
+    <li><a href="{% url 'updates:index' %}" class="nav-link">Updates</a></li>
+    <li><a href="{% url 'forum:index' %}" class="nav-link">Discussion</a></li>
+    <li><a href="{% url 'daily:quiz' %}" class="nav-link">Daily Question</a></li>
+    <li><a href="{% url 'sxcmodel:dashboard' %}" class="nav-link">SXC Model Set</a></li>
+  </ul>
 
-    </nav>
+  <div class="nav-socials">
+    <a href="{% url 'home:facebook' %}" class="nav-social-link" target="_blank" rel="noopener">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+    <a href="{% url 'home:whatsapp' %}" class="nav-social-link" target="_blank" rel="noopener">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="{% url 'home:instagram' %}" class="nav-social-link" target="_blank" rel="noopener">
+      <i class="fab fa-instagram"></i>
+    </a>
+  </div>
+
+  {% if user.is_authenticated %}
+  <div class="nav-auth-container">
+    <a href="{% url 'accounts:dashboard' %}" class="nav-auth-btn login-btn">Dashboard</a>
+    <a href="{% url 'accounts:logout' %}" class="nav-auth-btn logout-btn">Logout</a>
+  </div>
+  {% else %}
+  <div class="nav-auth-container">
+    <a href="{% url 'accounts:login' %}" class="nav-auth-btn login-btn">Login</a>
+    <a href="{% url 'accounts:signup' %}" class="nav-auth-btn signup-btn">Sign Up</a>
+  </div>
+  {% endif %}
+
+  <button class="nav-hamburger" id="nav-hamburger">
+    <i class="fas fa-bars"></i>
+  </button>
+</nav>
 {% endblock %}

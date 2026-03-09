@@ -70,3 +70,6 @@ def redirect_to_instagram(request):
 def redirect_to_daraz(request):
     return redirect('https://www.daraz.pk/')
 
+def redirect_to_whatsapp(request):
+    return redirect('https://wa.me/85270396856')
+

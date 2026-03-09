@@ -5,22 +5,12 @@
 {% block title %}
 {% endblock %}
 
-
-{% block signin_button %}
-{% if user.is_authenticated %}
-{% else %}
-<a href="{% url 'accounts:login' %}" class="login-btn-top">
-  <i class="fas fa-user"></i> Sign In
-</a>
-{% endif %}
-{% endblock %}
-
 <!-- header -->
 {% block header %}
     <header class="header">
       <div class="banner">
         <h2>Entrance Mastery Starts Here</h2>
-        <h1>Ace The <br/> Entrance </h1>
+        <h1>Ace The <br/> Entrance</h1>
         <a href="{% url 'daily:quiz'%}" class="btn banner-btn">Explore Daily Questions</a>
       </div>
     </header>
@@ -31,7 +21,6 @@
 <!-- Features section -->
 {% block feature %}
 <section class="skills clearfix" id="skills">
-      <!-- single skill -->
       <article class="skill">
         <span class="skill-icon">
           <i class="fas fa-graduation-cap"></i>
@@ -39,17 +28,13 @@
         <h4 class="skill-title">By St. Xavier's Alumni</h4>
         <p class="skill-text">Created by successful graduates who've cracked these exact entrances—real insights from those who made it.</p>
       </article>
-      <!-- end of single skill -->
-      <!-- single skill -->
       <article class="skill">
         <span class="skill-icon">
           <i class="fas fa-bullseye"></i>
         </span>
         <h4 class="skill-title">Targeted Prep</h4>
-        <p class="skill-text">Specially designed for St. Xavier’s, KMC, SOS, Budhanilkantha & other top +2 colleges—focus on what actually appears.</p>
+        <p class="skill-text">Specially designed for St. Xavier's, KMC, SOS, Budhanilkantha & other top +2 colleges—focus on what actually appears.</p>
       </article>
-      <!-- end of single skill -->
-      <!-- single skill -->
       <article class="skill">
         <span class="skill-icon">
           <i class="fas fa-book-open"></i>
@@ -57,8 +42,6 @@
         <h4 class="skill-title">2500+ MCQs</h4>
         <p class="skill-text">Massive practice bank with past questions, model sets & high-yield problems to build speed and accuracy.</p>
       </article>
-      <!-- end of single skill -->
-      <!-- single skill -->
       <article class="skill">
         <span class="skill-icon">
           <i class="fas fa-lightbulb"></i>
@@ -66,32 +49,24 @@
         <h4 class="skill-title">Proven Tricks</h4>
         <p class="skill-text">Step-by-step solutions, quick shortcuts & concept refreshers—your tested formula to ace the exam.</p>
       </article>
-      <!-- end of single skill -->
-
     </section>
     <!-- end of skills section -->
+
     <!-- about section -->
     <section id="about">
       <div class="section-center clearfix">
-        <!-- about img -->
         <article class="about-img">
           <div class="about-picture-container">
             <img src="{% static 'home/images/about-bcg.jpg' %}" alt="ace the entrance book" class="about-picture">
           </div>
         </article>
-        <!-- about info -->
         <article class="about-info">
-            <!-- section title -->
             <div class="section-title">
               <h3>about our</h3>
               <h2>Book</h2>
             </div>
-
-            <!-- end of section title -->
               <p class="about-text">
-                Ace the Entrance is the ultimate preparation manual for students aiming to secure a seat at St. Xavier’s College, Maitighar, and other premier +2 institutions in Nepal. This book  is authored by St. Xavier’s alumni and top-ranking medical students to provide an authentic, high-yield study experience.
-              </p>
-              <p class="about-text">
+                Ace the Entrance is the ultimate preparation manual for students aiming to secure a seat at St. Xavier's College, Maitighar, and other premier +2 institutions in Nepal. This book is authored by St. Xavier's alumni and top-ranking medical students to provide an authentic, high-yield study experience.
               </p>
               <p class="about-text">
                 It features over 2,500 practice MCQs, real past entrance papers, and exclusive "Quick Tricks" designed to help you master Science, Mathematics, and English concepts with speed and precision. Whether you are targeting a scholarship or entrance into a competitive stream, this guide is your essential roadmap to cracking the St. Xavier's entrance exam and starting your journey at Nepal's most prestigious college.
@@ -103,12 +78,11 @@
 {% endblock %}
 <!-- end of feature section -->
 
-<!-- about section -->
+<!-- Authors carousel -->
 {% block about_book %}
   <section class="products" id="products">
   <div class="section-center clearfix">
 
-    <!-- products info (left 30%) -->
     <article class="products-info">
       <div class="section-title">
         <h3>Know Our</h3>
@@ -120,33 +94,32 @@
       <a href="{% url 'about:index' %}" class="btn">Learn More</a>
     </article>
 
-    <!-- carousel wrapper MUST be the products-inventory itself (right 70%) -->
     <div class="products-inventory-wrapper">
       <button class="scroll-btn left-btn" onclick="scrollProducts(-1)">&#8249;</button>
 
       <article class="products-inventory">
         <div class="product">
-          <img src="{% static 'home/images/author-picture-1.png' %}" alt="single product" class="product-img">
+          <img src="{% static 'home/images/author-picture-1.png' %}" alt="Prashant Sharma" class="product-img">
           <h4 class="product-title">Prashant Sharma</h4>
           <h4 class="product-price">Nerd🤓</h4>
         </div>
         <div class="product">
-          <img src="{% static 'home/images/author-picture-2.png' %}" alt="single product" class="product-img">
+          <img src="{% static 'home/images/author-picture-2.png' %}" alt="Prabesh Shahi" class="product-img">
           <h4 class="product-title">Prabesh Shahi</h4>
           <h4 class="product-price">Podcast Addict🎤</h4>
         </div>
         <div class="product">
-          <img src="{% static 'home/images/author-picture-3.png' %}" alt="single product" class="product-img">
+          <img src="{% static 'home/images/author-picture-3.png' %}" alt="Prajwol Tamang" class="product-img">
           <h4 class="product-title">Prajwol Tamang</h4>
           <h4 class="product-price">Body Builder🏋️</h4>
         </div>
         <div class="product">
-          <img src="{% static 'home/images/author-picture-4.png' %}" alt="single product" class="product-img">
+          <img src="{% static 'home/images/author-picture-4.png' %}" alt="Prashant Bashyal" class="product-img">
           <h4 class="product-title">Prashant Bashyal</h4>
           <h4 class="product-price">Dactar Sahab🧑‍⚕️️</h4>
         </div>
         <div class="product">
-          <img src="{% static 'home/images/author-picture-5.png' %}" alt="single product" class="product-img">
+          <img src="{% static 'home/images/author-picture-5.png' %}" alt="Kishor Kafle" class="product-img">
           <h4 class="product-title">Kishor Kafle</h4>
           <h4 class="product-price">Mogger🧏</h4>
         </div>
@@ -158,31 +131,24 @@
   </div>
 </section>
 {% endblock %}
-<!-- end of about section -->
+<!-- end of authors carousel -->
 
-<!-- authors -->
+<!-- Services -->
 {% block about_author %}
     <section class="services" id="services">
-      <!-- section title -->
       <div class="section-title services-title">
         <h3>Explore</h3>
         <h2>Our Website</h2>
       </div>
-      <!-- end of section title -->
 
       <div class="section-center clearfix">
-        <!-- single card 1-->
         <article class="service-card">
-          <!-- img container -->
           <div class="service-img-container">
-            <!-- img -->
-            <img src="{% static 'home/images/daily-quiz.jpg' %}" alt="single service" class="service-img">
-            <!-- service icon  -->
+            <img src="{% static 'home/images/daily-quiz.jpg' %}" alt="Daily Questions" class="service-img">
             <span class="service-icon">
               <i class="fas fa-calendar-alt fa-fw"></i>
             </span>
           </div>
-          <!-- service info -->
           <div class="service-info">
             <h4>Daily Questions</h4>
             <p>Challenge yourself every 24 hours with a fresh set of problems
@@ -192,43 +158,31 @@
             <a href="{% url 'daily:quiz' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
-        <!-- end of single card -->
 
-        <!-- single card 2-->
         <article class="service-card">
-          <!-- img container -->
           <div class="service-img-container">
-            <!-- img -->
-            <img src="{% static 'home/images/sxc-model.jpg' %}" alt="single service" class="service-img">
-            <!-- service icon  -->
+            <img src="{% static 'home/images/sxc-model.jpg' %}" alt="SXC Model Set" class="service-img">
             <span class="service-icon">
               <i class="fas fa-edit fa-fw"></i>
             </span>
           </div>
-          <!-- service info -->
           <div class="service-info">
             <h4>SXC Model Set</h4>
-            <p>Think you’re ready for SXC? Take on 100 actual memory
+            <p>Think you're ready for SXC? Take on 100 actual memory
               questions from last year's entrance exam with
               only 90 minutes on the clock.
             </p>
             <a href="{% url 'sxcmodel:dashboard' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
-        <!-- end of single card -->
 
-        <!-- single card 3-->
         <article class="service-card">
-          <!-- img container -->
           <div class="service-img-container">
-            <!-- img -->
-            <img src="{% static 'home/images/discussion-forum.jpg' %}" alt="single service" class="service-img">
-            <!-- service icon  -->
+            <img src="{% static 'home/images/discussion-forum.jpg' %}" alt="Discussion Forum" class="service-img">
             <span class="service-icon">
               <i class="fas fa-comments fa-fw"></i>
             </span>
           </div>
-          <!-- service info -->
           <div class="service-info">
             <h4>Discussion Forum</h4>
             <p>Don't study in isolation. Our Discussion Forum is the ultimate
@@ -238,24 +192,18 @@
             <a href="{% url 'forum:index' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
-        <!-- end of single card -->
       </div>
     </section>
 {% endblock %}
-<!-- end of authors -->
 
-<!-- contact -->
+<!-- Contact -->
 {% block contact %}
  <section class="contact" id="contact">
       <div class="section-center clearfix">
-        <!-- contact info-->
         <article class="contact-info">
-          <!-- contact item -->
           <div class="contact-item">
             <h4 class="contact-title">
-              <span class="contact-icon">
-                <i class="fas fa-location-arrow"></i>
-              </span>
+              <span class="contact-icon"><i class="fas fa-location-arrow"></i></span>
               address
             </h4>
             <h4 class="contact-text">
@@ -263,41 +211,27 @@
               Nepal
             </h4>
           </div>
-          <!-- end of contact item -->
-          <!-- contact item -->
           <div class="contact-item">
             <h4 class="contact-title">
-              <span class="contact-icon">
-                <i class="fas fa-envelope"></i>
-              </span>
+              <span class="contact-icon"><i class="fas fa-envelope"></i></span>
               Email
             </h4>
-            <h4 class="contact-text">
-              acetheentrance@gmail.com
-            </h4>
+            <h4 class="contact-text">acetheentrance@gmail.com</h4>
           </div>
-          <!-- end of contact item -->
-          <!-- contact item -->
           <div class="contact-item">
             <h4 class="contact-title">
-              <span class="contact-icon">
-                <i class="fas fa-phone"></i>
-              </span>
+              <span class="contact-icon"><i class="fas fa-phone"></i></span>
               phone
             </h4>
-            <h4 class="contact-text">
-              +977 9742352700
-            </h4>
+            <h4 class="contact-text">+977 9742352700</h4>
           </div>
-          <!-- end of contact item -->
         </article>
-        <!-- contact form -->
+
         <article class="contact-form">
           <h3>contact us</h3>
           <form action="{% url 'home:contact_us' %}" method="POST">
             {% csrf_token %}
             <div class="form-group">
-              <!-- inputs -->
               <input type="text" placeholder="name" class="form-control" name="name" required/>
               <input type="email" placeholder="email" class="form-control" name="email" required/>
               <textarea name="message" placeholder="message" class="form-control" rows="5" required></textarea>
@@ -306,23 +240,19 @@
               <label>Keep this blank</label>
               <input type="text" name="honeypot" tabindex="-1" autocomplete="off">
             </div>
-            <!-- button -->
             <button type="submit" class="submit-btn btn">Submit Here</button>
           </form>
         </article>
       </div>
     </section>
 {% endblock %}
-<!-- end of contact -->
-
-
 
 {% block extra_js %}
 <script>
   function scrollProducts(direction) {
     const inventory = document.querySelector('.products-inventory');
     const card = inventory.querySelector('.product');
-    const scrollAmount = card.offsetWidth + 16; /* 16px = 1rem gap */
+    const scrollAmount = card.offsetWidth + 16;
     inventory.scrollLeft += direction * scrollAmount;
   }
 </script>
