@@ -9,64 +9,60 @@
 
 {% block content %}
 
-<div class="forum-wrap">
-
-  <!-- ===================== MASTHEAD ===================== -->
-  <div class="masthead">
-    <div class="masthead-top">
-      <div>
-        <h1>Discussion Forum</h1>
-        <p class="masthead-sub">Ace the Entrance · Questions &amp; Doubts</p>
-      </div>
-      <button class="new-btn" id="btn-open-new">+ Ask Questions</button>
+<!-- ══ HERO — matches about page exactly ══ -->
+<header class="forum-hero">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Community</span>
+    <h1>Discussion Forum</h1>
+    <p class="hero-desc">Ace the Entrance · Ask questions, share doubts, and help each other succeed.</p>
+    <div class="hero-cta-group">
+      <button class="btn" id="btn-open-new">+ Ask a Question</button>
     </div>
   </div>
-  <div class="content-divider"></div>
+</header>
 
-  <!-- ===================== TOAST ===================== -->
+<div class="content-divider"></div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="forum-wrap">
+
   <div id="toast-container"></div>
 
-  <!-- ===================== THREAD LIST VIEW ===================== -->
+  <!-- ── THREAD LIST ── -->
   <div id="view-list">
 
-    <!-- Category Filter -->
     <div class="controls" id="category-controls">
       <button class="cat-btn active" data-category="All">All</button>
       <button class="cat-btn" data-category="Science">Science</button>
       <button class="cat-btn" data-category="Maths">Maths</button>
       <button class="cat-btn" data-category="English">English</button>
-      <button class="cat-btn" data-category="GK &amp; IQ">Gk &amp; Iq</button>
+      <button class="cat-btn" data-category="GK &amp; IQ">GK &amp; IQ</button>
       <button class="cat-btn" data-category="General">General</button>
     </div>
 
-    <!-- Sort Row -->
     <div class="sort-row">
       Sort by:
       <button class="sort-opt active" data-sort="recent">Recent</button>
       <button class="sort-opt" data-sort="popular">Popular</button>
     </div>
 
-    <!-- Thread Cards -->
     <div id="thread-list">
       <div class="loading">Loading Questions…</div>
     </div>
 
-  </div><!-- /#view-list -->
+  </div>
 
-  <!-- ===================== THREAD DETAIL VIEW ===================== -->
+  <!-- ── THREAD DETAIL ── -->
   <div id="view-thread" style="display:none;">
 
     <button class="back-btn" id="btn-back">&#8592; Back to Questions</button>
 
-    <!-- Thread Full -->
-    <div class="thread-full" id="thread-detail-box">
-      <!-- populated by JS -->
-    </div>
+    <div class="thread-full" id="thread-detail-box"></div>
 
-    <!-- Replies -->
     <div class="divider" id="reply-count-divider">0 replies</div>
-    <div id="reply-list"><!-- populated by JS --></div>
+    <div id="reply-list"></div>
 
+    <!-- Edit modal -->
     <div id="edit-modal-overlay" class="modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
       <div class="modal-box">
         <div class="modal-header">
@@ -74,7 +70,6 @@
           <button class="modal-close" id="btn-modal-close" title="Close">&times;</button>
         </div>
         <div class="modal-body">
-          <!-- shown only when editing a thread -->
           <div id="edit-thread-fields">
             <div class="field">
               <label for="edit-title">Title</label>
@@ -83,9 +78,10 @@
             <div class="field">
               <label for="edit-category">Category</label>
               <select id="edit-category">
-                <option value="Technology">Technology</option>
-                <option value="Culture">Culture</option>
-                <option value="Work &amp; Life">Work &amp; Life</option>
+                <option value="Science">Science</option>
+                <option value="Maths">Maths</option>
+                <option value="English">English</option>
+                <option value="GK &amp; IQ">GK &amp; IQ</option>
                 <option value="General">General</option>
               </select>
             </div>
@@ -102,13 +98,11 @@
       </div>
     </div>
 
-    <!-- Reply Form -->
     {% if user.is_authenticated %}
     <div class="reply-form" id="reply-form-box">
       <h3>Join the discussion</h3>
       <div class="form-group">
         <textarea id="reply-body" placeholder="Write your reply…"></textarea>
-
         <div class="upload-zone upload-zone--sm" id="reply-upload-zone" tabindex="0" role="button" aria-label="Attach image to reply" style="margin-top:0.75rem;">
           <div class="upload-zone__idle" id="reply-upload-idle">
             <span class="upload-icon">📎</span>
@@ -132,9 +126,9 @@
     </div>
     {% endif %}
 
-  </div><!-- /#view-thread -->
+  </div>
 
-  <!-- ===================== NEW THREAD VIEW ===================== -->
+  <!-- ── NEW THREAD ── -->
   <div id="view-new" style="display:none;">
 
     <button class="back-btn" id="btn-back-new">&#8592; Back to Questions</button>
@@ -142,7 +136,6 @@
     {% if user.is_authenticated %}
     <div class="new-thread-view">
       <h2>Ask a New Question</h2>
-
       <div class="field">
         <label for="new-category">Category</label>
         <select id="new-category">
@@ -153,19 +146,16 @@
           <option value="General" selected>General</option>
         </select>
       </div>
-
       <div class="field">
         <label for="new-title">Title</label>
         <input type="text" id="new-title" placeholder="A clear, interesting title…" maxlength="255">
       </div>
-
       <div class="field">
         <label for="new-body">Body</label>
         <textarea id="new-body" placeholder="Share your thoughts, question, or idea…" style="min-height:140px;"></textarea>
       </div>
-
       <div class="field">
-        <label>Image Attachment <span class="field-hint">(optional — JPG, PNG, GIF, WEBP, max 5 MB)</span></label>
+        <label>Image <span class="field-hint">(optional — JPG, PNG, GIF, WEBP, max 5 MB)</span></label>
         <div class="upload-zone" id="upload-zone" tabindex="0" role="button" aria-label="Upload image">
           <div class="upload-zone__idle" id="upload-idle">
             <span class="upload-icon">📎</span>
@@ -181,7 +171,6 @@
         </div>
         <input type="file" id="new-image" accept="image/jpeg,image/png,image/gif,image/webp" style="display:none;">
       </div>
-
       <button class="submit-btn" id="btn-publish">Publish Question</button>
     </div>
     {% else %}
@@ -190,7 +179,7 @@
     </div>
     {% endif %}
 
-  </div><!-- /#view-new -->
+  </div>
 
 </div><!-- /.forum-wrap -->
 
@@ -198,13 +187,11 @@
 
 {% block extra_js %}
   <script>
-    // Pass Django config to JS safely
-    console.log("No World");
     const FORUM_CONFIG = {
-      apiBase:        "{% url 'forum:api-threads' %}",
-      csrfToken:      "{{ csrf_token }}",
+      apiBase:         "{% url 'forum:api-threads' %}",
+      csrfToken:       "{{ csrf_token }}",
       isAuthenticated: {{ user.is_authenticated|yesno:"true,false" }},
-      currentUser:    "{{ user.username|default:'' }}",
+      currentUser:     "{{ user.username|default:'' }}",
       isSuperuser:     {{ user.is_superuser|yesno:"true,false" }},
     };
   </script>
