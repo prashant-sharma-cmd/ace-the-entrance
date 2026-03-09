@@ -14,14 +14,19 @@
         <h2>🏆 Leaderboard</h2>
         <p>Best scores from all participants. Only each user's highest attempt is shown.</p>
         {% if current_user_rank %}
-        <span class="lb-rank-badge">Your rank: #{{ current_user_rank }}</span>
+        <span class="lb-rank-badge">📍 Your rank: #{{ current_user_rank }}</span>
         {% endif %}
     </div>
 
-    <!-- Table card -->
+    {% if entries %}
+
+    <!-- Full table -->
     <div class="lb-card">
-        {% if entries %}
-        <div style="overflow-x:auto;">
+        <div class="lb-card-header">
+            <span>📋 All Rankings</span>
+            <span style="font-weight:400;font-size:0.8rem;color:#556;">{{ entries|length }} participant{{ entries|length|pluralize }}</span>
+        </div>
+        <div class="lb-table-wrapper">
             <table class="lb-table">
                 <thead>
                     <tr>
@@ -37,7 +42,7 @@
                 </thead>
                 <tbody>
                     {% for entry in entries %}
-                    <tr {% if request.user.is_authenticated and entry.user_id == request.user.id %}class="lb-my-row"{% endif %}>
+                    <tr class="{% if request.user.is_authenticated and entry.user_id == request.user.id %}lb-my-row{% endif %} {% if forloop.counter == 1 %}lb-top-1{% elif forloop.counter == 2 %}lb-top-2{% elif forloop.counter == 3 %}lb-top-3{% endif %}">
 
                         <!-- Rank -->
                         <td class="lb-rank-cell">
@@ -86,19 +91,25 @@
                 </tbody>
             </table>
         </div>
+    </div>
 
-        {% else %}
+    {% else %}
+
+    <!-- Empty state -->
+    <div class="lb-card">
         <div class="lb-empty">
+            <div class="lb-empty-icon">🎯</div>
             <h3>No attempts yet</h3>
             <p>Be the first to complete the exam and claim the top spot!</p>
             {% if request.user.is_authenticated %}
-            <a href="{% url 'sxcmodel:start' %}" class="btn" style="margin-top:1rem;">Start Exam</a>
+            <a href="{% url 'sxcmodel:start' %}" class="btn" style="margin-top:1.25rem;">🚀 Start Exam</a>
             {% else %}
-            <a href="{% url 'accounts:login' %}" class="btn" style="margin-top:1rem;">Sign in to Start</a>
+            <a href="{% url 'accounts:login' %}" class="btn" style="margin-top:1.25rem;">Sign in to Start</a>
             {% endif %}
         </div>
-        {% endif %}
     </div>
+
+    {% endif %}
 
     <div class="lb-back">
         <a href="{% url 'sxcmodel:dashboard' %}" class="btn">← Back to Dashboard</a>

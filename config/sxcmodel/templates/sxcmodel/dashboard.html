@@ -13,7 +13,7 @@
 <!-- ── Start exam confirm modal ── -->
 <div class="qmodal-backdrop" id="startModal" role="dialog" aria-modal="true">
     <div class="qmodal">
-        <span class="qmodal-icon">🚀</span>
+        <span class="qmodal-icon"></span>
         <div class="qmodal-title">Start a new exam?</div>
         <div class="qmodal-body">
             {% if incomplete_attempt %}
@@ -26,7 +26,7 @@
             <button class="qmodal-btn qmodal-btn-cancel" id="startModalCancel">Not yet</button>
             <button class="qmodal-btn {% if incomplete_attempt %}qmodal-btn-danger{% else %}qmodal-btn-confirm{% endif %}"
                     id="startModalConfirm">
-                Let's go →
+                Let's go
             </button>
         </div>
     </div>
@@ -37,10 +37,10 @@
     <!-- Page header -->
     <div class="quiz-page-header">
         <div>
-            <h2>Welcome back, {{ user.get_full_name|default:user.username }} 👋</h2>
+            <h2>Welcome back, {{ user.get_full_name|default:user.username }} </h2>
             <p>Ready for your entrance exam? Good luck!</p>
         </div>
-        <a href="{% url 'sxcmodel:leaderboard' %}" class="btn">🏆 Leaderboard</a>
+        <a href="{% url 'sxcmodel:leaderboard' %}" class="btn"> Leaderboard</a>
     </div>
 
     <!-- Resume banner -->
@@ -59,7 +59,7 @@
     {% if best_attempt %}
     <div class="quiz-card">
         <div class="quiz-card-header">
-            <span>⭐ Your Best Performance</span>
+            <span> Your Best Performance</span>
             <span>{{ best_attempt.end_time|date:"M j, Y" }}</span>
         </div>
         <div class="quiz-card-body">
@@ -96,7 +96,7 @@
     <!-- Attempt history -->
     {% if completed_attempts %}
     <div class="quiz-card">
-        <div class="quiz-card-header">📋 All Attempts</div>
+        <div class="quiz-card-header"> All Attempts</div>
         <div class="quiz-table-wrapper">
             <table class="quiz-table">
                 <thead>
@@ -133,23 +133,23 @@
 
     <!-- Exam info -->
     <div class="quiz-card">
-        <div class="quiz-card-header">ℹ️ Exam Information</div>
+        <div class="quiz-card-header">ℹ Exam Information</div>
         <div class="quiz-card-body">
             <div class="quiz-info-grid">
                 <div class="quiz-info-item">
-                    <p class="quiz-info-item-label">📚 Subjects</p>
+                    <p class="quiz-info-item-label"> Subjects</p>
                     <p class="quiz-info-item-value">Physics · Chemistry · Biology · Maths · English · IQ/GK</p>
                 </div>
                 <div class="quiz-info-item">
-                    <p class="quiz-info-item-label">❓ Questions</p>
+                    <p class="quiz-info-item-label"> Questions</p>
                     <p class="quiz-info-item-value">20 per subject · 100 total</p>
                 </div>
                 <div class="quiz-info-item">
-                    <p class="quiz-info-item-label">⏱ Duration</p>
+                    <p class="quiz-info-item-label"> Duration</p>
                     <p class="quiz-info-item-value">90 minutes</p>
                 </div>
                 <div class="quiz-info-item">
-                    <p class="quiz-info-item-label">🎯 Marking</p>
+                    <p class="quiz-info-item-label"> Marking</p>
                     <p class="quiz-info-item-value">+1 correct &nbsp;·&nbsp; −¼ wrong &nbsp;·&nbsp; 0 skipped</p>
                 </div>
             </div>

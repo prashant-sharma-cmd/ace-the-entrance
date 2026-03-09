@@ -28,7 +28,7 @@
 
 <div class="results-page">
 
-    <!-- Score ring -->
+    <!-- Score ring hero -->
     <div class="results-hero">
         <div class="results-score-ring" style="--pct: {{ attempt.final_grade|mul:3.6 }}deg;">
             <div class="results-score-inner">
@@ -98,9 +98,7 @@
                         <div class="results-stat-label">Time Remaining</div>
                     </div>
                     <div class="results-stat-card">
-                        <div class="results-stat-value">
-                            {{ speed_bonus }}
-                        </div>
+                        <div class="results-stat-value">{{ speed_bonus }}</div>
                         <div class="results-stat-label">Speed Bonus</div>
                     </div>
                 </div>
@@ -122,7 +120,6 @@
 {% block extra_js %}
 <script src="{% static 'sxcmodel/js/modal.js' %}"></script>
 <script>
-    /* ── Time display ── */
     var _totalSec = {{ attempt.total_time_seconds }};
     var _avgSec   = {{ avg_time_seconds }};
     var _maxTime  = 5400;
@@ -136,7 +133,6 @@
     document.getElementById('rAvgTime').textContent    = _avgSec + 's';
     document.getElementById('rRemaining').textContent  = fmt(Math.max(0, _maxTime - _totalSec));
 
-    /* ── Tab switching ── */
     function switchTab(e, name) {
         document.querySelectorAll('.results-tab-btn').forEach(function(b){ b.classList.remove('active'); });
         document.querySelectorAll('.results-tab-panel').forEach(function(p){ p.classList.remove('active'); });
@@ -144,7 +140,6 @@
         document.getElementById('rtab-' + name).classList.add('active');
     }
 
-    /* ── Try again modal ── */
     var startUrl = '{% url "sxcmodel:start" %}';
 
     document.getElementById('tryAgainBtn').addEventListener('click', function () {

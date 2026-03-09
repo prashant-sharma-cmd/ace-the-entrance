@@ -1,8 +1,8 @@
 /* ============================================================
-   quiz/section.css  –  Exam / section question page
+   sxcmodel/section.css
    ============================================================ */
 
-/* ── Timer bar (fixed below any site header) ── */
+/* ── Timer bar (fixed, sits directly below nothing — it IS the top bar) ── */
 .exam-timer-bar {
     position: fixed;
     top: 0;
@@ -11,18 +11,18 @@
     z-index: 200;
     background: var(--clr-white);
     border-bottom: 3px solid var(--clr-primary);
-    padding: 0.55rem 1.5rem;
+    padding: 0.5rem 1.5rem;
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.09);
 }
 
 .exam-timer-display {
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-size: 1.45rem;
+    font-weight: 800;
     font-variant-numeric: tabular-nums;
-    min-width: 75px;
+    min-width: 72px;
     color: var(--clr-primary);
     letter-spacing: 0.05em;
 }
@@ -44,12 +44,15 @@
 }
 
 .exam-section-pill {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
     color: var(--clr-primary);
     text-transform: uppercase;
     letter-spacing: var(--spacing);
     white-space: nowrap;
+    background: var(--clr-grey-10);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
 }
 
 .exam-save-status {
@@ -76,11 +79,11 @@
     50%       { opacity: 0.3; }
 }
 
-/* ── Main content wrapper (padded for fixed bars) ── */
+/* ── Main content: below timer bar (~56px) + breathing room ── */
 .exam-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 5.5rem 1.25rem 7rem;
+    padding: 90px 1.25rem 7rem;
 }
 
 /* ── Section sub-header ── */
@@ -108,16 +111,22 @@
 /* ── Question card ── */
 .exam-q-card {
     background: var(--clr-white);
-    border-radius: var(--radius);
-    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    border-radius: calc(var(--radius) * 1.5);
+    box-shadow: 0 2px 10px rgba(1, 37, 125, 0.07);
     margin-bottom: 1.25rem;
     overflow: hidden;
-    transition: box-shadow var(--transition);
+    transition: box-shadow 0.2s ease, border-left-color 0.2s ease;
+    border-left: 3px solid transparent;
+    border: 1px solid rgba(1, 37, 125, 0.07);
     border-left: 3px solid transparent;
 }
 .exam-q-card:hover {
-    box-shadow: 0 4px 18px rgba(1,37,125,0.1);
+    box-shadow: 0 5px 20px rgba(1, 37, 125, 0.12);
     border-left-color: var(--clr-primary-light);
+}
+/* Card turns solid accent when any option inside is selected */
+.exam-q-card.answered {
+    border-left-color: var(--clr-primary);
 }
 
 .exam-q-head {
@@ -129,9 +138,9 @@
 .exam-q-num {
     background: var(--clr-grey-10);
     color: var(--clr-primary);
-    font-weight: 700;
-    font-size: 0.78rem;
-    padding: 0.2rem 0.55rem;
+    font-weight: 800;
+    font-size: 0.72rem;
+    padding: 0.25rem 0.6rem;
     border-radius: 5px;
     flex-shrink: 0;
     margin-top: 3px;
@@ -140,7 +149,7 @@
 }
 .exam-q-text {
     font-size: 0.975rem;
-    line-height: 1.65;
+    line-height: 1.7;
     color: var(--clr-grey-1);
 }
 
@@ -156,10 +165,10 @@
 
 /* ── Options ── */
 .exam-q-options {
-    padding: 0.4rem 1.25rem 1rem;
+    padding: 0.4rem 1.25rem 1.1rem;
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
+    gap: 0.5rem;
 }
 .exam-option-label {
     display: flex;
@@ -172,32 +181,37 @@
     transition: var(--transition);
     font-size: 0.9rem;
     color: var(--clr-grey-1);
+    user-select: none;
 }
 .exam-option-label:hover {
     border-color: var(--clr-primary);
-    background: var(--clr-grey-10);
+    background: rgba(173, 216, 230, 0.3);
 }
 .exam-option-label input[type="radio"] { display: none; }
 .exam-option-label.selected {
     border-color: var(--clr-primary);
-    background: var(--clr-primary-light);
+    background: rgba(86, 232, 220, 0.18);
     color: var(--clr-primary);
     font-weight: 600;
 }
 
 .exam-option-circle {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 2px solid #ccc;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #888;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #999;
     transition: var(--transition);
+}
+.exam-option-label:hover .exam-option-circle {
+    border-color: var(--clr-primary);
+    color: var(--clr-primary);
 }
 .exam-option-label.selected .exam-option-circle {
     background: var(--clr-primary);
@@ -218,7 +232,7 @@
     justify-content: space-between;
     align-items: center;
     z-index: 200;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.07);
+    box-shadow: 0 -3px 14px rgba(1, 37, 125, 0.1);
 }
 .exam-answered-info {
     font-size: 0.875rem;
@@ -226,5 +240,38 @@
 }
 .exam-answered-info strong {
     color: var(--clr-primary);
-    font-size: 1.1rem;
+    font-size: 1.15rem;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 768px) {
+    .exam-timer-bar {
+        padding: 0.45rem 1rem;
+        gap: 0.75rem;
+    }
+    .exam-container {
+        padding-top: 80px;
+    }
+    .exam-section-pill {
+        display: none; /* save space — section is shown in header below */
+    }
+    .exam-save-status span { display: none; } /* just show the dot */
+}
+
+@media screen and (max-width: 480px) {
+    .exam-timer-display { font-size: 1.2rem; min-width: 60px; }
+
+    .exam-q-head { padding: 0.85rem 1rem 0.6rem; }
+    .exam-q-text { font-size: 0.9rem; }
+
+    .exam-q-options { padding: 0.3rem 0.85rem 0.9rem; }
+    .exam-option-label {
+        padding: 0.65rem 0.85rem;
+        font-size: 0.875rem;
+    }
+
+    .exam-nav-footer {
+        padding: 0.75rem 1rem;
+    }
+    .exam-answered-info { font-size: 0.8rem; }
 }

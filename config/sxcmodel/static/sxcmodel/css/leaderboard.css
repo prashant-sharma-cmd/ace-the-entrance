@@ -1,66 +1,93 @@
 /* ============================================================
-   quiz/leaderboard.css  –  Leaderboard page
+   sxcmodel/leaderboard.css
    ============================================================ */
 
+/* ── Page wrapper ── */
 .lb-page {
     width: 92vw;
     max-width: 1080px;
-    margin: 2.5rem auto 4rem;
+    margin: 0 auto 4rem;
+    padding-top: 88px;
 }
 
 /* ── Hero header ── */
 .lb-hero {
     text-align: center;
-    padding: 2rem 1rem 1.5rem;
+    padding: 2.5rem 1rem 2rem;
+    position: relative;
 }
 .lb-hero h2 {
     text-transform: none;
     letter-spacing: 0;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.4rem;
+    font-size: 2.2rem;
+    color: var(--clr-primary);
 }
 .lb-hero p {
-    color: #666;
-    margin-bottom: 0.75rem;
+    color: #667;
+    margin-bottom: 1rem;
     font-size: 0.95rem;
 }
 .lb-rank-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     background: var(--clr-primary);
     color: var(--clr-white);
     font-size: 0.875rem;
     font-weight: 700;
-    padding: 0.35rem 1rem;
+    padding: 0.4rem 1.2rem;
     border-radius: 20px;
     letter-spacing: var(--spacing);
+    box-shadow: 0 3px 10px rgba(1, 37, 125, 0.25);
 }
 
 /* ── Card wrapper ── */
 .lb-card {
     background: var(--clr-white);
-    border-radius: var(--radius);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.09);
+    border-radius: calc(var(--radius) * 1.5);
+    box-shadow: 0 4px 20px rgba(1, 37, 125, 0.08);
     overflow: hidden;
     margin-bottom: 1.5rem;
+    border: 1px solid rgba(1, 37, 125, 0.07);
+}
+
+.lb-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.4rem;
+    background: linear-gradient(135deg, var(--clr-grey-10) 0%, #d4eef8 100%);
+    border-bottom: 1px solid var(--clr-grey-10);
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--clr-primary);
 }
 
 /* ── Table ── */
+.lb-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 .lb-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.875rem;
+    min-width: 600px;
 }
 .lb-table thead tr {
-    background: var(--clr-grey-10);
-    border-bottom: 2px solid #c5d8e8;
+    background: linear-gradient(135deg, var(--clr-grey-10) 0%, #d4eef8 100%);
+    border-bottom: 2px solid rgba(1, 37, 125, 0.15);
 }
 .lb-table th {
     padding: 0.8rem 1.1rem;
     text-align: left;
     font-weight: 700;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: var(--spacing);
+    letter-spacing: 0.05rem;
     color: var(--clr-primary);
+    white-space: nowrap;
 }
 .lb-table td {
     padding: 0.8rem 1.1rem;
@@ -69,18 +96,30 @@
     color: #333;
 }
 .lb-table tbody tr:last-child td { border-bottom: none; }
-.lb-table tbody tr:hover td { background: var(--clr-grey-10); transition: var(--transition); }
+.lb-table tbody tr {
+    transition: background 0.15s ease;
+}
+.lb-table tbody tr:hover td { background: rgba(173, 216, 230, 0.3); }
 .lb-table tbody tr.lb-my-row td {
     background: #e8f0fe !important;
 }
+.lb-table tbody tr.lb-my-row:hover td {
+    background: #d8e4fd !important;
+}
+
+/* Top-3 row tints */
+.lb-table tbody tr.lb-top-1 td { background: rgba(251, 191, 36, 0.07); }
+.lb-table tbody tr.lb-top-2 td { background: rgba(148, 163, 184, 0.07); }
+.lb-table tbody tr.lb-top-3 td { background: rgba(200, 121, 65, 0.07); }
 
 /* ── Rank cell ── */
 .lb-rank-cell {
     font-weight: 800;
-    font-size: 1.05rem;
+    font-size: 1rem;
     width: 56px;
+    text-align: center;
 }
-.lb-medal { font-size: 1.3rem; }
+.lb-medal { font-size: 1.4rem; }
 
 /* ── Avatar + name cell ── */
 .lb-user-cell {
@@ -102,19 +141,19 @@
     flex-shrink: 0;
     text-transform: uppercase;
 }
-.lb-name { font-weight: 600; font-size: 0.9rem; }
-.lb-username { font-size: 0.75rem; color: #888; }
+.lb-name { font-weight: 600; font-size: 0.9rem; color: #222; }
+.lb-username { font-size: 0.72rem; color: #999; margin-top: 0.1rem; }
 .lb-you-badge {
     display: inline-block;
     background: var(--clr-primary-light);
     color: var(--clr-primary);
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 0.1rem 0.45rem;
+    font-size: 0.62rem;
+    font-weight: 800;
+    padding: 0.1rem 0.5rem;
     border-radius: 10px;
     margin-left: 0.4rem;
     vertical-align: middle;
-    letter-spacing: var(--spacing);
+    letter-spacing: 0.04rem;
     text-transform: uppercase;
 }
 
@@ -123,7 +162,7 @@
     display: flex;
     align-items: center;
     gap: 0.7rem;
-    min-width: 160px;
+    min-width: 140px;
 }
 .lb-score-track {
     flex: 1;
@@ -134,13 +173,14 @@
 }
 .lb-score-fill {
     height: 100%;
-    background: var(--clr-primary);
+    background: linear-gradient(90deg, var(--clr-primary), var(--clr-primary-light));
     border-radius: 4px;
+    transition: width 0.6s ease;
 }
 .lb-score-text {
-    font-weight: 700;
+    font-weight: 800;
     font-size: 0.9rem;
-    min-width: 38px;
+    min-width: 36px;
     text-align: right;
     color: var(--clr-primary);
 }
@@ -149,20 +189,36 @@
 .clr-correct { color: #16a34a; font-weight: 700; }
 .clr-wrong   { color: #dc2626; font-weight: 700; }
 .clr-muted   { color: #888; font-size: 0.8rem; }
-.mono        { font-family: monospace; }
+.mono        { font-family: monospace; letter-spacing: 0.02rem; }
 
 /* ── Empty state ── */
 .lb-empty {
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 5rem 2rem;
     color: #888;
 }
+.lb-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
 .lb-empty h3 {
     margin-bottom: 0.5rem;
     color: var(--clr-primary);
     text-transform: none;
     letter-spacing: 0;
+    font-size: 1.3rem;
 }
+.lb-empty p { font-size: 0.95rem; }
 
 /* ── Back link row ── */
-.lb-back { text-align: center; padding: 0.5rem 0 1rem; }
+.lb-back {
+    text-align: center;
+    padding: 0.5rem 0 1rem;
+}
+
+/* ── Responsive ── */
+@media screen and (max-width: 768px) {
+    .lb-page {
+        width: 96vw;
+        padding-top: 80px;
+    }
+    .lb-hero h2 { font-size: 1.6rem; }
+
+}
