@@ -66,7 +66,7 @@
             <div class="quiz-stats-grid">
                 <div class="quiz-stat-card">
                     <div class="quiz-stat-value">{{ best_attempt.final_grade|floatformat:1 }}</div>
-                    <div class="quiz-stat-label">Final Score / 100</div>
+                    <div class="quiz-stat-label">Score / 100</div>
                 </div>
                 <div class="quiz-stat-card">
                     <div class="quiz-stat-value clr-correct">{{ best_attempt.correct_count }}</div>
@@ -97,7 +97,7 @@
     {% if completed_attempts %}
     <div class="quiz-card">
         <div class="quiz-card-header">📋 All Attempts</div>
-        <div style="overflow-x:auto;">
+        <div class="quiz-table-wrapper">
             <table class="quiz-table">
                 <thead>
                     <tr>
@@ -136,20 +136,20 @@
         <div class="quiz-card-header">ℹ️ Exam Information</div>
         <div class="quiz-card-body">
             <div class="quiz-info-grid">
-                <div>
-                    <p class="quiz-info-item-label">Subjects</p>
+                <div class="quiz-info-item">
+                    <p class="quiz-info-item-label">📚 Subjects</p>
                     <p class="quiz-info-item-value">Physics · Chemistry · Biology · Maths · English · IQ/GK</p>
                 </div>
-                <div>
-                    <p class="quiz-info-item-label">Questions</p>
-                    <p class="quiz-info-item-value">20 per subject (100 total)</p>
+                <div class="quiz-info-item">
+                    <p class="quiz-info-item-label">❓ Questions</p>
+                    <p class="quiz-info-item-value">20 per subject · 100 total</p>
                 </div>
-                <div>
-                    <p class="quiz-info-item-label">Duration</p>
+                <div class="quiz-info-item">
+                    <p class="quiz-info-item-label">⏱ Duration</p>
                     <p class="quiz-info-item-value">90 minutes</p>
                 </div>
-                <div>
-                    <p class="quiz-info-item-label">Marking</p>
+                <div class="quiz-info-item">
+                    <p class="quiz-info-item-label">🎯 Marking</p>
                     <p class="quiz-info-item-value">+1 correct &nbsp;·&nbsp; −¼ wrong &nbsp;·&nbsp; 0 skipped</p>
                 </div>
             </div>
@@ -158,11 +158,11 @@
 
     <!-- Start CTA -->
     <div class="quiz-cta">
-        <button type="button" id="startExamBtn" class="btn" style="font-size:1rem;padding:0.75rem 2rem;">
+        <button type="button" id="startExamBtn" class="quiz-cta-btn">
             🚀 Start New Exam
         </button>
         {% if not best_attempt and not incomplete_attempt %}
-        <p>This will be your first attempt!</p>
+        <p>This will be your first attempt — give it your best shot!</p>
         {% endif %}
     </div>
 
