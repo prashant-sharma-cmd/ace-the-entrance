@@ -9,8 +9,38 @@ let state = {
   likedReplies:  new Set(JSON.parse(localStorage.getItem("likedReplies") || "[]")),
 };
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+/* ─────────────────────────────────────────
+   Image validation config  (single source of truth)
+───────────────────────────────────────── */
+const IMAGE_CONFIG = {
+  maxBytes:     3 * 1024 * 1024,
+  allowedTypes: ["image/jpeg", "image/png", "image/webp"],
+  allowedExts:  [".jpg", ".jpeg", ".png", ".webp"],
+  maxLabel:     "3 MB",
+};
+
+/**
+ * Validate a File object before attaching it to a form.
+ * Returns a user-friendly error string on failure, or null on success.
+ */
+function validateImageFile(file) {
+  if (!file) return null;
+
+  const ext = "." + file.name.split(".").pop().toLowerCase();
+
+  if (!IMAGE_CONFIG.allowedTypes.includes(file.type)) {
+    return `Invalid file type (${file.type || "unknown"}). Please upload a JPEG, PNG or WebP image.`;
+  }
+  if (!IMAGE_CONFIG.allowedExts.includes(ext)) {
+    return `Invalid extension (${ext}). Allowed: .jpg  .jpeg  .png  .webp`;
+  }
+  if (file.size > IMAGE_CONFIG.maxBytes) {
+    const mb = (file.size / (1024 * 1024)).toFixed(1);
+    return `File too large (${mb} MB). Maximum size is ${IMAGE_CONFIG.maxLabel}.`;
+  }
+
+  return null;
+}
 
 /* ─────────────────────────────────────────
    Generic helpers
@@ -32,11 +62,66 @@ function timeAgo(dateStr) {
 
 function showToast(message, type = "success") {
   const container = document.getElementById("toast-container");
+  const isSuccess = (type === "success");
+
   const toast = document.createElement("div");
-  toast.className = `toast-msg toast-${type}`;
-  toast.textContent = message;
+
+  // Inline styles mirror the Django messages template exactly
+  Object.assign(toast.style, {
+    boxSizing:      "border-box",
+    display:        "flex",
+    alignItems:     "center",
+    gap:            "10px",
+    padding:        "10px 16px",
+    borderRadius:   "6px",
+    fontSize:       "13px",
+    fontFamily:     "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    fontWeight:     "500",
+    lineHeight:     "1.4",
+    boxShadow:      "0 2px 12px rgba(0,0,0,0.15)",
+    pointerEvents:  "auto",
+    whiteSpace:     "normal",
+    textDecoration: "none",
+    opacity:        "0",
+    transform:      "translateX(20px)",
+    // colour scheme — green for success, red for everything else
+    background:   isSuccess ? "#dcfce7" : "#fee2e2",
+    color:        isSuccess ? "#15803d" : "#b91c1c",
+    borderLeft:   isSuccess ? "3px solid #22c55e" : "3px solid #ef4444",
+  });
+
+  const icon = document.createElement("span");
+  Object.assign(icon.style, { fontSize: "14px", flexShrink: "0", lineHeight: "1" });
+  icon.textContent = isSuccess ? "✓" : "✕";
+
+  const text = document.createElement("span");
+  text.textContent = message;
+
+  toast.appendChild(icon);
+  toast.appendChild(text);
   container.appendChild(toast);
-  setTimeout(() => toast.remove(), 4200);
+
+  // Inject keyframes once if not already present
+  if (!document.getElementById("toast-keyframes")) {
+    const style = document.createElement("style");
+    style.id = "toast-keyframes";
+    style.textContent = `
+      @keyframes toastIn  {
+        from { opacity: 0; transform: translateX(20px); }
+        to   { opacity: 1; transform: translateX(0);    }
+      }
+      @keyframes toastOut {
+        from { opacity: 1; transform: translateX(0);    }
+        to   { opacity: 0; transform: translateX(20px); }
+      }`;
+    document.head.appendChild(style);
+  }
+
+  // Run animations — matches Django's 0.3s in / 0.4s out at 3.5s
+  toast.style.animation = "toastIn 0.3s ease forwards, toastOut 0.4s ease forwards 3.5s";
+  toast.addEventListener("animationend", (e) => {
+    if (e.animationName === "toastOut") toast.remove();
+  });
 }
 
 function saveLikedThreads() {
@@ -55,12 +140,6 @@ function esc(str) {
 /* ─────────────────────────────────────────
    Image upload helpers
 ───────────────────────────────────────── */
-function validateImageFile(file) {
-  if (!ALLOWED_TYPES.includes(file.type)) return "Only JPG, PNG, GIF and WEBP images are allowed.";
-  if (file.size > MAX_FILE_SIZE)          return "Image must be smaller than 5 MB.";
-  return null;
-}
-
 function wireUploadZone(opts) {
   const zone       = document.getElementById(opts.zoneId);
   const input      = document.getElementById(opts.inputId);
@@ -74,7 +153,7 @@ function wireUploadZone(opts) {
   function showPreview(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      previewImg.src = e.target.result;
+      previewImg.src        = e.target.result;
       filename.textContent  = file.name;
       idle.style.display    = "none";
       preview.style.display = "";
@@ -92,7 +171,12 @@ function wireUploadZone(opts) {
 
   function handleFile(file) {
     const err = validateImageFile(file);
-    if (err) { showToast(err, "error"); return; }
+    if (err) {
+      showToast(err, "error");
+      input.value = "";   // clear the bad file
+      clearPreview();
+      return;
+    }
     const dt = new DataTransfer();
     dt.items.add(file);
     input.files = dt.files;
@@ -141,28 +225,41 @@ function openLightbox(src) {
 /* ─────────────────────────────────────────
    API calls
 ───────────────────────────────────────── */
+
+/**
+ * Read the `detail` field from a non-ok API response and throw with it.
+ * This ensures every failed fetch surfaces a meaningful message via showToast.
+ */
+async function throwApiError(res, fallback) {
+  let message = fallback;
+  try {
+    const data = await res.json();
+    if (data && data.detail) message = data.detail;
+  } catch (_) { /* body wasn't JSON — use fallback */ }
+  throw new Error(message);
+}
+
 async function fetchThreads() {
   const params = new URLSearchParams();
   if (state.category !== "All") params.set("category", state.category);
   params.set("sort", state.sort);
   const res = await fetch(`${FORUM_CONFIG.apiBase}?${params}`);
-  if (!res.ok) throw new Error("Failed to load threads");
+  if (!res.ok) await throwApiError(res, "Failed to load threads");
   return res.json();
 }
 
 async function fetchThread(id) {
   const res = await fetch(`${FORUM_CONFIG.apiBase}${id}/`);
-  if (!res.ok) throw new Error("Thread not found");
+  if (!res.ok) await throwApiError(res, "Thread not found");
   return res.json();
 }
 
 async function fetchReplies(threadId) {
   const res = await fetch(`${FORUM_CONFIG.apiBase}${threadId}/replies/`);
-  if (!res.ok) throw new Error("Failed to load replies");
+  if (!res.ok) await throwApiError(res, "Failed to load replies");
   return res.json();
 }
 
-/* CHANGED: uses FormData instead of JSON so image file can be sent */
 async function postThread(data, imageFile) {
   const fd = new FormData();
   fd.append("title",    data.title);
@@ -172,14 +269,10 @@ async function postThread(data, imageFile) {
   const res = await fetch(FORUM_CONFIG.apiBase, {
     method: "POST", headers: csrfHeader(), body: fd,
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || "Failed to create thread");
-  }
+  if (!res.ok) await throwApiError(res, "Failed to create thread");
   return res.json();
 }
 
-/* CHANGED: uses FormData so image file can be sent with reply */
 async function postReply(threadId, body, imageFile) {
   const fd = new FormData();
   fd.append("body", body);
@@ -187,10 +280,7 @@ async function postReply(threadId, body, imageFile) {
   const res = await fetch(`${FORUM_CONFIG.apiBase}${threadId}/replies/`, {
     method: "POST", headers: csrfHeader(), body: fd,
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || "Failed to post reply");
-  }
+  if (!res.ok) await throwApiError(res, "Failed to post reply");
   return res.json();
 }
 
@@ -198,7 +288,7 @@ async function likeThread(id) {
   const res = await fetch(`${FORUM_CONFIG.apiBase}${id}/like/`, {
     method: "POST", headers: { ...csrfHeader(), "Content-Type": "application/json" },
   });
-  if (!res.ok) throw new Error("Like failed");
+  if (!res.ok) await throwApiError(res, "Like failed");
   return res.json();
 }
 
@@ -207,7 +297,7 @@ async function likeReply(id) {
   const res  = await fetch(`${base}${id}/like/`, {
     method: "POST", headers: { ...csrfHeader(), "Content-Type": "application/json" },
   });
-  if (!res.ok) throw new Error("Like failed");
+  if (!res.ok) await throwApiError(res, "Like failed");
   return res.json();
 }
 
@@ -217,27 +307,19 @@ async function patchThread(id, data) {
     headers: { ...csrfHeader(), "Content-Type": "application/json" },
     body:    JSON.stringify(data),
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || "Failed to update thread");
-  }
+  if (!res.ok) await throwApiError(res, "Failed to update thread");
   return res.json();
 }
 
-/* Delete a thread */
 async function deleteThread(id) {
   const res = await fetch(`${FORUM_CONFIG.apiBase}${id}/`, {
     method:  "DELETE",
     headers: { ...csrfHeader(), "Content-Type": "application/json" },
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || "Failed to delete thread");
-  }
-  // DELETE returns 204 No Content — no body to parse
+  if (!res.ok) await throwApiError(res, "Failed to delete thread");
+  // 204 No Content — no body to parse
 }
 
-/* Update (PATCH) a reply */
 async function patchReply(id, body) {
   const base = FORUM_CONFIG.apiBase.replace(/\/threads\/$/, "/replies/");
   const res  = await fetch(`${base}${id}/`, {
@@ -245,35 +327,26 @@ async function patchReply(id, body) {
     headers: { ...csrfHeader(), "Content-Type": "application/json" },
     body:    JSON.stringify({ body }),
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || "Failed to update reply");
-  }
+  if (!res.ok) await throwApiError(res, "Failed to update reply");
   return res.json();
 }
 
-/* Delete a reply */
 async function deleteReply(id) {
   const base = FORUM_CONFIG.apiBase.replace(/\/threads\/$/, "/replies/");
   const res  = await fetch(`${base}${id}/`, {
     method:  "DELETE",
     headers: { ...csrfHeader(), "Content-Type": "application/json" },
   });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || "Failed to delete reply");
-  }
+  if (!res.ok) await throwApiError(res, "Failed to delete reply");
 }
 
 /*
  * editModal — handles the shared Edit modal for both threads and replies.
- * It stores a callback (onSave) that is set differently depending on
- * whether the user is editing a thread or a reply.
  */
 const editModal = {
   overlay:    null,
-  onSave:     null,   // set before opening
-  editType:   null,   // "thread" | "reply"
+  onSave:     null,
+  editType:   null,
 
   init() {
     this.overlay = document.getElementById("edit-modal-overlay");
@@ -282,18 +355,15 @@ const editModal = {
     document.getElementById("btn-modal-cancel").addEventListener("click", () => this.close());
     document.getElementById("btn-modal-save")  .addEventListener("click", () => this._save());
 
-    // Close when clicking the dim background
     this.overlay.addEventListener("click", (e) => {
       if (e.target === this.overlay) this.close();
     });
 
-    // Close on Escape key
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && this.overlay.style.display !== "none") this.close();
     });
   },
 
-  /** Open the modal pre-filled with existing values */
   open({ type, title = "", category = "", body = "", onSave }) {
     this.editType = type;
     this.onSave   = onSave;
@@ -310,14 +380,13 @@ const editModal = {
       type === "thread" ? "Edit Thread" : "Edit Reply";
 
     this.overlay.style.display = "flex";
-    // Focus first input for accessibility
     const first = this.overlay.querySelector("input, textarea");
     if (first) setTimeout(() => first.focus(), 50);
   },
 
   close() {
     this.overlay.style.display = "none";
-    this.onSave  = null;
+    this.onSave   = null;
     this.editType = null;
   },
 
@@ -350,17 +419,10 @@ const editModal = {
   },
 };
 
-
 /**
  * Show a red confirmation bar inside a container element.
- * Calls onConfirm() when the user clicks "Yes, delete".
- * Removes itself on Cancel.
- *
- * @param {HTMLElement} container  — element to append the bar into
- * @param {Function}    onConfirm  — async function to call on confirm
  */
 function showConfirmDeleteBar(container, onConfirm) {
-  // Remove any existing bar first
   container.querySelector(".confirm-delete-bar")?.remove();
 
   const bar = document.createElement("div");
@@ -388,7 +450,6 @@ function renderThreadCard_NEW(thread) {
   const replies = thread.reply_count ?? 0;
   const hasImg  = !!thread.image_url;
 
-  // Determine if the current user owns this thread
   const isOwner = FORUM_CONFIG.isAuthenticated &&
     (FORUM_CONFIG.currentUser === thread.author_username || FORUM_CONFIG.isSuperuser);
 
@@ -424,18 +485,15 @@ function renderThreadCard_NEW(thread) {
     await handleThreadLike(thread.id, card.querySelector(".like-btn"));
   });
 
-  // Edit button on card (opens thread then triggers edit)
   if (isOwner) {
     card.querySelector("[data-action='edit-thread']").addEventListener("click", async (e) => {
       e.stopPropagation();
-      await openThread(thread.id);  // navigate to detail view first
-      // Small delay so detail view renders before we open modal
+      await openThread(thread.id);
       setTimeout(() => triggerThreadEdit(), 100);
     });
 
     card.querySelector("[data-action='delete-thread']").addEventListener("click", async (e) => {
       e.stopPropagation();
-      // Show confirm bar inside the card itself
       showConfirmDeleteBar(card, async () => {
         card.classList.add("being-deleted");
         try {
@@ -454,13 +512,10 @@ function renderThreadCard_NEW(thread) {
   return card;
 }
 
-
-
 function renderReplyCard(reply) {
   const liked  = state.likedReplies.has(reply.id);
   const hasImg = !!reply.image_url;
 
-  // Determine if the current user owns this reply
   const isOwner = FORUM_CONFIG.isAuthenticated &&
     (FORUM_CONFIG.currentUser === reply.author_username || FORUM_CONFIG.isSuperuser);
 
@@ -492,28 +547,24 @@ function renderReplyCard(reply) {
   }
 
   if (isOwner) {
-    // Edit reply
     card.querySelector("[data-action='edit-reply']").addEventListener("click", () => {
       editModal.open({
         type: "reply",
         body: reply.body,
         onSave: async ({ body }) => {
           const updated = await patchReply(reply.id, body);
-          // Update the displayed text in-place without re-fetching
           card.querySelector(".reply-body-text").textContent = updated.body;
-          reply.body = updated.body;  // keep local state in sync
+          reply.body = updated.body;
           showToast("Reply updated.");
         },
       });
     });
 
-    // Delete reply
     card.querySelector("[data-action='delete-reply']").addEventListener("click", () => {
       showConfirmDeleteBar(card, async () => {
         card.classList.add("being-deleted");
         try {
           await deleteReply(reply.id);
-          // Remove from local state array
           state.activeReplies = state.activeReplies.filter(r => r.id !== reply.id);
           card.remove();
           const count = state.activeReplies.length;
@@ -535,10 +586,6 @@ function renderReplyCard(reply) {
   return card;
 }
 
-/**
- * Opens the edit modal pre-filled with state.activeThread's values.
- * Updates the thread detail view in-place on save (no full reload).
- */
 function triggerThreadEdit() {
   const thread = state.activeThread;
   if (!thread) return;
@@ -550,23 +597,17 @@ function triggerThreadEdit() {
     body:     thread.body,
     onSave: async ({ title, category, body }) => {
       const updated = await patchThread(thread.id, { title, category, body });
-
-      // Update local state
       state.activeThread = { ...thread, ...updated };
-
-      // Patch the visible detail box without a full reload
       const box = document.getElementById("thread-detail-box");
       if (box) {
-        box.querySelector(".thread-title").textContent  = updated.title;
-        box.querySelector(".thread-body").textContent   = updated.body;
-        box.querySelector(".thread-cat").textContent    = updated.category;
+        box.querySelector(".thread-title").textContent = updated.title;
+        box.querySelector(".thread-body").textContent  = updated.body;
+        box.querySelector(".thread-cat").textContent   = updated.category;
       }
-
       showToast("Thread updated.");
     },
   });
 }
-
 
 /* ─────────────────────────────────────────
    Like handlers
@@ -579,7 +620,7 @@ async function handleThreadLike(threadId, btn) {
     state.likedThreads.add(threadId); saveLikedThreads();
     btn.classList.add("liked");
     btn.querySelector(".like-count").textContent = data.likes;
-  } catch { showToast("Could not record your like.", "error"); }
+  } catch (err) { showToast(err.message || "Could not record your like.", "error"); }
 }
 
 async function handleReplyLike(replyId, btn) {
@@ -590,7 +631,7 @@ async function handleReplyLike(replyId, btn) {
     state.likedReplies.add(replyId); saveLikedReplies();
     btn.classList.add("liked");
     btn.querySelector(".like-count").textContent = data.likes;
-  } catch { showToast("Could not record your like.", "error"); }
+  } catch (err) { showToast(err.message || "Could not record your like.", "error"); }
 }
 
 /* ─────────────────────────────────────────
@@ -606,7 +647,10 @@ async function showList() {
   try {
     state.threads = await fetchThreads();
     list.innerHTML = "";
-    if (!state.threads.length) { list.innerHTML = `<div class="empty-state">No threads yet in this category.</div>`; return; }
+    if (!state.threads.length) {
+      list.innerHTML = `<div class="empty-state">No threads yet in this category.</div>`;
+      return;
+    }
     state.threads.forEach(t => list.appendChild(renderThreadCard_NEW(t)));
   } catch (err) {
     list.innerHTML = `<div class="empty-state">Could not load threads. Please try again.</div>`;
@@ -628,8 +672,8 @@ async function openThread(threadId) {
     const [thread, replies] = await Promise.all([fetchThread(threadId), fetchReplies(threadId)]);
     state.activeThread  = thread;
     state.activeReplies = replies;
-    const liked  = state.likedThreads.has(thread.id);
-    const hasImg = !!thread.image_url;
+    const liked   = state.likedThreads.has(thread.id);
+    const hasImg  = !!thread.image_url;
     const isOwner = FORUM_CONFIG.isAuthenticated &&
       (FORUM_CONFIG.currentUser === thread.author_username || FORUM_CONFIG.isSuperuser);
 
@@ -651,7 +695,6 @@ async function openThread(threadId) {
       <div class="thread-body">${esc(thread.body)}</div>
       ${hasImg ? `<div class="thread-image"><img src="${esc(thread.image_url)}" alt="Thread attachment"></div>` : ""}`;
 
-    // Wire up existing like button
     detailBox.querySelector("#detail-like-btn").addEventListener("click", async (e) => {
       await handleThreadLike(thread.id, e.currentTarget);
     });
@@ -660,12 +703,8 @@ async function openThread(threadId) {
       detailBox.querySelector(".thread-image img").addEventListener("click", () => openLightbox(thread.image_url));
     }
 
-    // Wire up owner edit/delete buttons (only present for owners)
     if (isOwner) {
-      detailBox.querySelector("#btn-edit-thread")?.addEventListener("click", () => {
-        triggerThreadEdit();
-      });
-
+      detailBox.querySelector("#btn-edit-thread")?.addEventListener("click", () => triggerThreadEdit());
       detailBox.querySelector("#btn-delete-thread")?.addEventListener("click", () => {
         showConfirmDeleteBar(detailBox, async () => {
           detailBox.classList.add("being-deleted");
@@ -680,12 +719,7 @@ async function openThread(threadId) {
         });
       });
     }
-    detailBox.querySelector("#detail-like-btn").addEventListener("click", async (e) => {
-      await handleThreadLike(thread.id, e.currentTarget);
-    });
-    if (hasImg) {
-      detailBox.querySelector(".thread-image img").addEventListener("click", () => openLightbox(thread.image_url));
-    }
+
     const count = replies.length;
     divider.textContent = `${count} ${count === 1 ? "reply" : "replies"}`;
     replyList.innerHTML = "";
@@ -716,7 +750,15 @@ async function submitThread() {
   const body      = document.getElementById("new-body")?.value.trim();
   const category  = document.getElementById("new-category")?.value;
   const imageFile = document.getElementById("new-image")?.files[0] || null;
+
   if (!title || !body) { showToast("Please fill in a title and body.", "warning"); return; }
+
+  // Client-side image guard (catches oversized files before any network request)
+  if (imageFile) {
+    const err = validateImageFile(imageFile);
+    if (err) { showToast(err, "error"); return; }
+  }
+
   const btn = document.getElementById("btn-publish");
   btn.disabled = true; btn.textContent = "Publishing\u2026";
   try {
@@ -729,7 +771,7 @@ async function submitThread() {
   } catch (err) {
     showToast(err.message, "error");
   } finally {
-    btn.disabled = false; btn.textContent = "Publish Thread";
+    btn.disabled = false; btn.textContent = "Publish Question";
   }
 }
 
@@ -737,6 +779,13 @@ async function submitReply() {
   const body      = document.getElementById("reply-body")?.value.trim();
   const imageFile = document.getElementById("reply-image")?.files[0] || null;
   if (!body || !state.activeThread) return;
+
+  // Client-side image guard
+  if (imageFile) {
+    const err = validateImageFile(imageFile);
+    if (err) { showToast(err, "error"); return; }
+  }
+
   const btn = document.getElementById("btn-post-reply");
   btn.disabled = true; btn.textContent = "Posting\u2026";
   try {
@@ -749,7 +798,8 @@ async function submitReply() {
     if (placeholder) placeholder.remove();
     replyList.appendChild(renderReplyCard(reply));
     const count = state.activeReplies.length;
-    document.getElementById("reply-count-divider").textContent = `${count} ${count === 1 ? "reply" : "replies"}`;
+    document.getElementById("reply-count-divider").textContent =
+      `${count} ${count === 1 ? "reply" : "replies"}`;
     showToast("Reply posted!");
   } catch (err) {
     showToast(err.message, "error");
@@ -762,10 +812,10 @@ async function submitReply() {
    Initialisation
 ───────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("btn-open-new") ?.addEventListener("click", showNew);
-  document.getElementById("btn-back")     ?.addEventListener("click", () => showList());
-  document.getElementById("btn-back-new") ?.addEventListener("click", () => showList());
-  document.getElementById("btn-publish")  ?.addEventListener("click", submitThread);
+  document.getElementById("btn-open-new")  ?.addEventListener("click", showNew);
+  document.getElementById("btn-back")      ?.addEventListener("click", () => showList());
+  document.getElementById("btn-back-new")  ?.addEventListener("click", () => showList());
+  document.getElementById("btn-publish")   ?.addEventListener("click", submitThread);
   document.getElementById("btn-post-reply")?.addEventListener("click", submitReply);
 
   document.getElementById("category-controls").addEventListener("click", (e) => {
@@ -774,7 +824,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
     state.category = btn.dataset.category;
-    editModal.init();
     showList();
   });
 
@@ -802,6 +851,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   editModal.init();
-
   showList();
 });

@@ -10,11 +10,52 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Thread, Reply
+from .utils import validate_image_upload, compress_image, check_image_upload_rate_limit
 
 
 class IndexPageView(TemplateView):
     template_name = "discussion/index.html"
 
+
+# ── Shared helper ──────────────────────────────────────────────────────────────
+
+def _process_image(request, field_name: str = "image"):
+    """
+    Validate, rate-limit and compress an uploaded image from the request.
+
+    Returns:
+        (ContentFile | None, JsonResponse | None)
+        On success  → (compressed_file_or_None, None)
+        On failure  → (None, error_JsonResponse)
+
+    Errors are added to Django's messages framework AND returned as a
+    JSON detail so both server-rendered pages and the JS frontend
+    surface a readable message.
+    """
+    from django.contrib import messages
+
+    raw = request.FILES.get(field_name)
+    if raw is None:
+        return None, None  # no image uploaded — that's fine
+
+    # 1. Validate type and size
+    err = validate_image_upload(raw)
+    if err:
+        messages.error(request, err)
+        return None, JsonResponse({"detail": err}, status=400)
+
+    # 2. Rate-limit per user
+    err = check_image_upload_rate_limit(request.user)
+    if err:
+        messages.error(request, err)
+        return None, JsonResponse({"detail": err}, status=429)
+
+    # 3. Compress / resize
+    compressed = compress_image(raw, raw.name)
+    return compressed, None
+
+
+# ── Views ──────────────────────────────────────────────────────────────────────
 
 class ThreadListView(View):
     """GET  /forum/api/threads/   — list threads
@@ -41,17 +82,20 @@ class ThreadListView(View):
         if not request.user.is_authenticated:
             return JsonResponse({"detail": "Authentication required."}, status=401)
 
-        title    = self.request.POST.get("title", "").strip()
-        body     = self.request.POST.get("body", "").strip()
-        category = self.request.POST.get("category", "General")
-        image    = self.request.FILES.get("image")
+        title    = request.POST.get("title", "").strip()
+        body     = request.POST.get("body", "").strip()
+        category = request.POST.get("category", "General")
 
         if not title or not body:
             return JsonResponse({"detail": "Title and body are required."}, status=400)
 
+        image, err = _process_image(request)
+        if err:
+            return err
+
         thread = Thread.objects.create(
-            title=title, body=body, category=category, author=request.user,
-            image=image
+            title=title, body=body, category=category,
+            author=request.user, image=image,
         )
         return JsonResponse(thread_to_dict(thread), status=201)
 
@@ -74,13 +118,18 @@ class ReplyListView(View):
         except Thread.DoesNotExist:
             return JsonResponse({"detail": "Thread not found."}, status=404)
 
-        body = self.request.POST.get("body", "").strip()
-        image = self.request.FILES.get("image")
+        body = request.POST.get("body", "").strip()
         if not body:
             return JsonResponse({"detail": "Body is required."}, status=400)
 
-        reply = Reply.objects.create(thread=thread, body=body, author=request.user,
-                                     image=image)
+        image, err = _process_image(request)
+        if err:
+            return err
+
+        reply = Reply.objects.create(
+            thread=thread, body=body,
+            author=request.user, image=image,
+        )
         return JsonResponse(reply_to_dict(reply), status=201)
 
 
@@ -115,8 +164,10 @@ class ReplyLikeView(View):
         reply.refresh_from_db()
         return JsonResponse({"likes": reply.likes})
 
+
 class ThreadDetailEditView(View):
     """
+    GET    /forum/api/threads/<pk>/  — fetch single thread
     PATCH  /forum/api/threads/<pk>/  — update title/body/category (owner only)
     DELETE /forum/api/threads/<pk>/  — delete thread (owner only)
     """
@@ -129,7 +180,6 @@ class ThreadDetailEditView(View):
         return JsonResponse(thread_to_dict(thread))
 
     def _get_thread_for_owner(self, request, pk):
-        """Return (thread, error_response).  error_response is None on success."""
         if not request.user.is_authenticated:
             return None, JsonResponse({"detail": "Authentication required."}, status=401)
         try:
@@ -150,7 +200,6 @@ class ThreadDetailEditView(View):
         except json.JSONDecodeError:
             return JsonResponse({"detail": "Invalid JSON."}, status=400)
 
-        # Only update fields that were actually sent
         if "title" in payload:
             title = payload["title"].strip()
             if not title:
@@ -184,7 +233,6 @@ class ReplyDetailEditView(View):
     """
 
     def _get_reply_for_owner(self, request, pk):
-        """Return (reply, error_response).  error_response is None on success."""
         if not request.user.is_authenticated:
             return None, JsonResponse({"detail": "Authentication required."}, status=401)
         try:
@@ -222,7 +270,8 @@ class ReplyDetailEditView(View):
         return JsonResponse({}, status=204)
 
 
-# ── Serialisation helpers ──────────────────────────────────────────
+# ── Serialisation helpers ──────────────────────────────────────────────────────
+
 def thread_to_dict(thread):
     return {
         "id":              thread.id,
@@ -236,6 +285,7 @@ def thread_to_dict(thread):
         "reply_count":     getattr(thread, "reply_count", thread.replies.count()),
         "created_at":      thread.created_at.isoformat(),
     }
+
 
 def reply_to_dict(reply):
     return {
