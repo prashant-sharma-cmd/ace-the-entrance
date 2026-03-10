@@ -76,7 +76,6 @@ Shop –
     </div>
 
     <div class="map-layout">
-      <!-- Shop List -->
       <div class="shop-list-panel reveal">
 
         <div class="shop-item active" onclick="focusShop(this, 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d220.79629026019137!2d85.3194659127308!3d27.69440979104531!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19ae10865e83%3A0xcb6db51480e2abce!2sTrishakti%20Pustak%20Bhandar!5e0!3m2!1sen!2sjp!4v1772614053466!5m2!1sen!2sjp')">
@@ -101,7 +100,6 @@ Shop –
 
       </div>
 
-      <!-- Map -->
       <div class="map-panel reveal" style="transition-delay:.15s">
         <iframe
           id="shop-map"
@@ -170,7 +168,6 @@ Shop –
 
       <!-- LEFT: info + steps + pricing + FB -->
       <div class="delivery-info reveal">
-
         <h3>How It Works</h3>
         <div class="delivery-steps">
           <div class="d-step">
@@ -220,7 +217,6 @@ Shop –
             <span>Prefer chat? DM us directly on our page</span>
           </div>
         </a>
-
       </div>
 
       <!-- RIGHT: order form -->
@@ -235,6 +231,7 @@ Shop –
 
         <div class="form-body">
 
+          {# ── Alert banners — keyed on message tag + content ── #}
           {% for message in messages %}
             {% if 'order_sent' in message.message %}
             <div class="form-alert success">
@@ -249,7 +246,8 @@ Shop –
             {% elif 'validation_error' in message.message %}
             <div class="form-alert error">
               <i class="fa-solid fa-circle-exclamation"></i>
-              Please fill in all required fields before submitting.
+              Please check your details — make sure all required fields are filled correctly.
+              Phone must be a valid Nepal number (e.g. 98XXXXXXXX).
             </div>
             {% elif 'order_failed' in message.message %}
             <div class="form-alert error">
@@ -272,12 +270,16 @@ Shop –
               <div class="form-group">
                 <label for="full_name">Full Name <span class="req">*</span></label>
                 <input type="text" id="full_name" name="full_name" class="form-control"
-                       placeholder="e.g. Ram Bahadur" required>
+                       placeholder="e.g. Ram Bahadur"
+                       maxlength="100" required>
               </div>
               <div class="form-group">
                 <label for="phone">Phone Number <span class="req">*</span></label>
                 <input type="tel" id="phone" name="phone" class="form-control"
-                       placeholder="e.g. 98XXXXXXXX" required>
+                       placeholder="e.g. 98XXXXXXXX"
+                       maxlength="10" pattern="9[6-9][0-9]{8}"
+                       title="Enter a valid Nepal phone number (e.g. 9800000000)"
+                       required>
               </div>
             </div>
 
@@ -285,7 +287,8 @@ Shop –
               <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email" name="email" class="form-control"
-                       placeholder="you@email.com">
+                       placeholder="you@email.com"
+                       maxlength="254">
               </div>
               <div class="form-group">
                 <label for="quantity">Quantity <span class="req">*</span></label>
@@ -303,19 +306,25 @@ Shop –
               <div class="form-group">
                 <label for="city">City / District <span class="req">*</span></label>
                 <input type="text" id="city" name="city" class="form-control"
-                       placeholder="e.g. Kathmandu" required>
+                       placeholder="e.g. Kathmandu"
+                       maxlength="100" required>
               </div>
               <div class="form-group">
                 <label for="address">Delivery Address <span class="req">*</span></label>
                 <input type="text" id="address" name="address" class="form-control"
-                       placeholder="Street, Tole, Ward No." required>
+                       placeholder="Street, Tole, Ward No."
+                       maxlength="300" required>
               </div>
             </div>
 
             <div class="form-group">
-              <label for="notes">Additional Notes</label>
+              <label for="notes">
+                Additional Notes
+                <span class="field-hint">(max 500 characters)</span>
+              </label>
               <textarea id="notes" name="notes" class="form-control"
-                        placeholder="Any special instructions, landmark, preferred time..."></textarea>
+                        placeholder="Any special instructions, landmark, preferred time..."
+                        maxlength="500"></textarea>
             </div>
 
             <button type="submit" class="submit-btn">
@@ -330,10 +339,7 @@ Shop –
   </div>
 </section>
 
-{# Pure JS (focusShop, smoothScroll, initReveal) lives in your static JS file. #}
-{# Only Django-template-dependent logic stays inline below.                    #}
 <script>
-  /* ── Post-redirect scroll: jump to order form if messages exist ── */
   {% if messages %}
   document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
@@ -349,7 +355,6 @@ Shop –
 
 {% endblock %}
 
-
 {% block extra_js %}
-<script src="{% static 'buy/js/app.js' %}"> </script>
+<script src="{% static 'buy/js/app.js' %}"></script>
 {% endblock %}

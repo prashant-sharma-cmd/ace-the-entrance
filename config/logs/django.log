@@ -86,3 +86,5 @@ ERROR 2026-03-10 15:44:55,821 log You're accessing the development server over H
 ERROR 2026-03-10 15:44:55,824 log You're accessing the development server over HTTPS, but it only supports HTTP.
 ERROR 2026-03-10 15:45:06,132 log You're accessing the development server over HTTPS, but it only supports HTTP.
 ERROR 2026-03-10 15:45:06,134 log You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2026-03-10 20:00:03,029 log You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2026-03-10 20:00:03,031 log You're accessing the development server over HTTPS, but it only supports HTTP.
