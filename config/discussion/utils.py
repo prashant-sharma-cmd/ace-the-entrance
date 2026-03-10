@@ -147,3 +147,31 @@ def check_image_upload_rate_limit(user) -> str | None:
         cache.incr(key)
 
     return None
+
+
+def check_post_rate_limit(user, action: str = "post") -> str | None:
+    """
+    Prevent post spam. Limits per user per hour:
+      - thread : 10 new threads
+      - reply  : 30 new replies
+    Returns an error message if exceeded, else None.
+    """
+    limits = {"thread": 10, "reply": 30}
+    limit = limits.get(action, 10)
+
+    key   = f"forum:post_rate:{action}:{user.id}"
+    count = cache.get(key, 0)
+
+    if count >= limit:
+        return (
+            f"You are posting too fast. "
+            f"Please wait before submitting another {action} "
+            f"(limit: {limit} per hour)."
+        )
+
+    if count == 0:
+        cache.set(key, 1, timeout=IMAGE_UPLOAD_WINDOW_SECS)
+    else:
+        cache.incr(key)
+
+    return None

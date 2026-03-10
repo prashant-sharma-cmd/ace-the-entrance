@@ -1,58 +1,59 @@
 # forum/views.py
 import json
+from django.contrib import messages
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic import TemplateView
-
 from django.db.models import Count
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 
-from .models import Thread, Reply
-from .utils import validate_image_upload, compress_image, check_image_upload_rate_limit
+from .models import Thread, Reply, ThreadLike, ReplyLike
+from .utils import (
+    validate_image_upload,
+    compress_image,
+    check_image_upload_rate_limit,
+    check_post_rate_limit,
+)
+
+# ── Constants ──────────────────────────────────────────────────────────────────
+
+TITLE_MAX_LENGTH = 255
+BODY_MAX_LENGTH  = 10_000   # characters
 
 
 class IndexPageView(TemplateView):
     template_name = "discussion/index.html"
 
 
-# ── Shared helper ──────────────────────────────────────────────────────────────
+# ── Shared helpers ─────────────────────────────────────────────────────────────
 
 def _process_image(request, field_name: str = "image"):
     """
-    Validate, rate-limit and compress an uploaded image from the request.
-
-    Returns:
-        (ContentFile | None, JsonResponse | None)
-        On success  → (compressed_file_or_None, None)
-        On failure  → (None, error_JsonResponse)
-
-    Errors are added to Django's messages framework AND returned as a
-    JSON detail so both server-rendered pages and the JS frontend
-    surface a readable message.
+    Validate, rate-limit and compress an uploaded image.
+    Returns (ContentFile | None, JsonResponse | None).
     """
-    from django.contrib import messages
-
     raw = request.FILES.get(field_name)
     if raw is None:
-        return None, None  # no image uploaded — that's fine
+        return None, None
 
-    # 1. Validate type and size
     err = validate_image_upload(raw)
     if err:
         messages.error(request, err)
         return None, JsonResponse({"detail": err}, status=400)
 
-    # 2. Rate-limit per user
     err = check_image_upload_rate_limit(request.user)
     if err:
         messages.error(request, err)
         return None, JsonResponse({"detail": err}, status=429)
 
-    # 3. Compress / resize
-    compressed = compress_image(raw, raw.name)
-    return compressed, None
+    return compress_image(raw, raw.name), None
+
+
+def _validate_body(body, max_length=BODY_MAX_LENGTH):
+    if not body:
+        return "Body is required."
+    if len(body) > max_length:
+        return f"Body is too long (max {max_length:,} characters)."
+    return None
 
 
 # ── Views ──────────────────────────────────────────────────────────────────────
@@ -70,24 +71,31 @@ class ThreadListView(View):
             qs = qs.filter(category=category)
 
         sort = request.GET.get("sort", "recent")
-        if sort == "popular":
-            qs = qs.order_by("-likes", "-created_at")
-        else:
-            qs = qs.order_by("-created_at")
+        qs = qs.order_by("-likes", "-created_at") if sort == "popular" else qs.order_by("-created_at")
 
-        data = [thread_to_dict(t) for t in qs]
-        return JsonResponse(data, safe=False)
+        return JsonResponse([thread_to_dict(t) for t in qs], safe=False)
 
     def post(self, request):
         if not request.user.is_authenticated:
             return JsonResponse({"detail": "Authentication required."}, status=401)
 
+        # Rate-limit posts
+        err = check_post_rate_limit(request.user, action="thread")
+        if err:
+            return JsonResponse({"detail": err}, status=429)
+
         title    = request.POST.get("title", "").strip()
         body     = request.POST.get("body", "").strip()
         category = request.POST.get("category", "General")
 
-        if not title or not body:
-            return JsonResponse({"detail": "Title and body are required."}, status=400)
+        if not title:
+            return JsonResponse({"detail": "Title is required."}, status=400)
+        if len(title) > TITLE_MAX_LENGTH:
+            return JsonResponse({"detail": f"Title is too long (max {TITLE_MAX_LENGTH} characters)."}, status=400)
+
+        err = _validate_body(body)
+        if err:
+            return JsonResponse({"detail": err}, status=400)
 
         image, err = _process_image(request)
         if err:
@@ -113,14 +121,20 @@ class ReplyListView(View):
         if not request.user.is_authenticated:
             return JsonResponse({"detail": "Authentication required."}, status=401)
 
+        # Rate-limit posts
+        err = check_post_rate_limit(request.user, action="reply")
+        if err:
+            return JsonResponse({"detail": err}, status=429)
+
         try:
             thread = Thread.objects.get(pk=pk)
         except Thread.DoesNotExist:
             return JsonResponse({"detail": "Thread not found."}, status=404)
 
         body = request.POST.get("body", "").strip()
-        if not body:
-            return JsonResponse({"detail": "Body is required."}, status=400)
+        err  = _validate_body(body)
+        if err:
+            return JsonResponse({"detail": err}, status=400)
 
         image, err = _process_image(request)
         if err:
@@ -139,14 +153,20 @@ class ThreadLikeView(View):
     def post(self, request, pk):
         if not request.user.is_authenticated:
             return JsonResponse({"detail": "Authentication required."}, status=401)
+
         try:
             thread = Thread.objects.get(pk=pk)
         except Thread.DoesNotExist:
             return JsonResponse({"detail": "Not found."}, status=404)
 
-        Thread.objects.filter(pk=pk).update(likes=thread.likes + 1)
-        thread.refresh_from_db()
-        return JsonResponse({"likes": thread.likes})
+        _, created = ThreadLike.objects.get_or_create(user=request.user, thread=thread)
+        if not created:
+            return JsonResponse({"detail": "You have already liked this thread."}, status=409)
+
+        # Count real likes from the junction table
+        likes = thread.thread_likes.count()
+        Thread.objects.filter(pk=pk).update(likes=likes)
+        return JsonResponse({"likes": likes})
 
 
 class ReplyLikeView(View):
@@ -155,21 +175,26 @@ class ReplyLikeView(View):
     def post(self, request, pk):
         if not request.user.is_authenticated:
             return JsonResponse({"detail": "Authentication required."}, status=401)
+
         try:
             reply = Reply.objects.get(pk=pk)
         except Reply.DoesNotExist:
             return JsonResponse({"detail": "Not found."}, status=404)
 
-        Reply.objects.filter(pk=pk).update(likes=reply.likes + 1)
-        reply.refresh_from_db()
-        return JsonResponse({"likes": reply.likes})
+        _, created = ReplyLike.objects.get_or_create(user=request.user, reply=reply)
+        if not created:
+            return JsonResponse({"detail": "You have already liked this reply."}, status=409)
+
+        likes = reply.reply_likes.count()
+        Reply.objects.filter(pk=pk).update(likes=likes)
+        return JsonResponse({"likes": likes})
 
 
 class ThreadDetailEditView(View):
     """
-    GET    /forum/api/threads/<pk>/  — fetch single thread
-    PATCH  /forum/api/threads/<pk>/  — update title/body/category (owner only)
-    DELETE /forum/api/threads/<pk>/  — delete thread (owner only)
+    GET    /forum/api/threads/<pk>/
+    PATCH  /forum/api/threads/<pk>/
+    DELETE /forum/api/threads/<pk>/
     """
 
     def get(self, request, pk):
@@ -204,12 +229,15 @@ class ThreadDetailEditView(View):
             title = payload["title"].strip()
             if not title:
                 return JsonResponse({"detail": "Title cannot be empty."}, status=400)
+            if len(title) > TITLE_MAX_LENGTH:
+                return JsonResponse({"detail": f"Title too long (max {TITLE_MAX_LENGTH} characters)."}, status=400)
             thread.title = title
 
         if "body" in payload:
             body = payload["body"].strip()
-            if not body:
-                return JsonResponse({"detail": "Body cannot be empty."}, status=400)
+            err  = _validate_body(body)
+            if err:
+                return JsonResponse({"detail": err}, status=400)
             thread.body = body
 
         if "category" in payload:
@@ -228,8 +256,8 @@ class ThreadDetailEditView(View):
 
 class ReplyDetailEditView(View):
     """
-    PATCH  /forum/api/replies/<pk>/  — update body (owner only)
-    DELETE /forum/api/replies/<pk>/  — delete reply (owner only)
+    PATCH  /forum/api/replies/<pk>/
+    DELETE /forum/api/replies/<pk>/
     """
 
     def _get_reply_for_owner(self, request, pk):
@@ -255,8 +283,9 @@ class ReplyDetailEditView(View):
 
         if "body" in payload:
             body = payload["body"].strip()
-            if not body:
-                return JsonResponse({"detail": "Body cannot be empty."}, status=400)
+            err  = _validate_body(body)
+            if err:
+                return JsonResponse({"detail": err}, status=400)
             reply.body = body
 
         reply.save()
