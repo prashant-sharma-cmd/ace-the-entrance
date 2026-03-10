@@ -88,3 +88,80 @@ ERROR 2026-03-10 15:45:06,132 log You're accessing the development server over H
 ERROR 2026-03-10 15:45:06,134 log You're accessing the development server over HTTPS, but it only supports HTTP.
 ERROR 2026-03-10 20:00:03,029 log You're accessing the development server over HTTPS, but it only supports HTTP.
 ERROR 2026-03-10 20:00:03,031 log You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2026-03-10 20:04:55,088 log Internal Server Error: /contact_us/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 998, in connect_check_health
+    sock = self._connect()
+           ^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 1512, in _connect
+    raise err
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 1496, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django_ratelimit\decorators.py", line 19, in _wrapped
+    ratelimited = is_ratelimited(request=request, group=group, fn=fn,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django_ratelimit\core.py", line 153, in is_ratelimited
+    usage = get_usage(request, group, fn, key, rate, method, increment)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django_ratelimit\core.py", line 231, in get_usage
+    added = cache.add(cache_key, initial_value, period + EXPIRATION_FUDGE)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\cache\backends\redis.py", line 184, in add
+    return self._cache.add(key, value, self.get_backend_timeout(timeout))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\cache\backends\redis.py", line 96, in add
+    return bool(client.set(key, value, ex=timeout, nx=True))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\utils.py", line 493, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\commands\core.py", line 2664, in set
+    return self.execute_command("SET", *pieces, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\client.py", line 722, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\utils.py", line 236, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 2958, in get_connection
+    connection.connect()
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 976, in connect
+    self.retry.call_with_retry(
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 977, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 1022, in connect_check_health
+    raise e
+redis.exceptions.ConnectionError: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2026-03-10 20:04:55,098 log "POST /contact_us/ HTTP/1.1" 500 176860
+WARNING 2026-03-10 20:04:55,219 log Not Found: /favicon.ico
+WARNING 2026-03-10 20:04:55,220 log "GET /favicon.ico HTTP/1.1" 404 5282

@@ -16,41 +16,31 @@
     </header>
     <div class="content-divider"></div>
 {% endblock %}
-<!-- end of header -->
 
 <!-- Features section -->
 {% block feature %}
 <section class="skills clearfix" id="skills">
       <article class="skill">
-        <span class="skill-icon">
-          <i class="fas fa-graduation-cap"></i>
-        </span>
+        <span class="skill-icon"><i class="fas fa-graduation-cap"></i></span>
         <h4 class="skill-title">By St. Xavier's Alumni</h4>
         <p class="skill-text">Created by successful graduates who've cracked these exact entrances—real insights from those who made it.</p>
       </article>
       <article class="skill">
-        <span class="skill-icon">
-          <i class="fas fa-bullseye"></i>
-        </span>
+        <span class="skill-icon"><i class="fas fa-bullseye"></i></span>
         <h4 class="skill-title">Targeted Prep</h4>
         <p class="skill-text">Specially designed for St. Xavier's, KMC, SOS, Budhanilkantha & other top +2 colleges—focus on what actually appears.</p>
       </article>
       <article class="skill">
-        <span class="skill-icon">
-          <i class="fas fa-book-open"></i>
-        </span>
+        <span class="skill-icon"><i class="fas fa-book-open"></i></span>
         <h4 class="skill-title">2500+ MCQs</h4>
         <p class="skill-text">Massive practice bank with past questions, model sets & high-yield problems to build speed and accuracy.</p>
       </article>
       <article class="skill">
-        <span class="skill-icon">
-          <i class="fas fa-lightbulb"></i>
-        </span>
+        <span class="skill-icon"><i class="fas fa-lightbulb"></i></span>
         <h4 class="skill-title">Proven Tricks</h4>
         <p class="skill-text">Step-by-step solutions, quick shortcuts & concept refreshers—your tested formula to ace the exam.</p>
       </article>
     </section>
-    <!-- end of skills section -->
 
     <!-- about section -->
     <section id="about">
@@ -76,13 +66,11 @@
       </div>
     </section>
 {% endblock %}
-<!-- end of feature section -->
 
 <!-- Authors carousel -->
 {% block about_book %}
   <section class="products" id="products">
   <div class="section-center clearfix">
-
     <article class="products-info">
       <div class="section-title">
         <h3>Know Our</h3>
@@ -96,7 +84,6 @@
 
     <div class="products-inventory-wrapper">
       <button class="scroll-btn left-btn" onclick="scrollProducts(-1)">&#8249;</button>
-
       <article class="products-inventory">
         <div class="product">
           <img src="{% static 'home/images/author-picture-1.png' %}" alt="Prashant Sharma" class="product-img">
@@ -124,14 +111,11 @@
           <h4 class="product-price">Mogger🧏</h4>
         </div>
       </article>
-
       <button class="scroll-btn right-btn" onclick="scrollProducts(1)">&#8250;</button>
     </div>
-
   </div>
 </section>
 {% endblock %}
-<!-- end of authors carousel -->
 
 <!-- Services -->
 {% block about_author %}
@@ -140,55 +124,37 @@
         <h3>Explore</h3>
         <h2>Our Website</h2>
       </div>
-
       <div class="section-center clearfix">
         <article class="service-card">
           <div class="service-img-container">
             <img src="{% static 'home/images/daily-quiz.jpg' %}" alt="Daily Questions" class="service-img">
-            <span class="service-icon">
-              <i class="fas fa-calendar-alt fa-fw"></i>
-            </span>
+            <span class="service-icon"><i class="fas fa-calendar-alt fa-fw"></i></span>
           </div>
           <div class="service-info">
             <h4>Daily Questions</h4>
-            <p>Challenge yourself every 24 hours with a fresh set of problems
-              from Science, Maths, English and IQ/GK to train your brain
-              for mastering exams.
-            </p>
+            <p>Challenge yourself every 24 hours with a fresh set of problems from Science, Maths, English and IQ/GK to train your brain for mastering exams.</p>
             <a href="{% url 'daily:quiz' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
-
         <article class="service-card">
           <div class="service-img-container">
             <img src="{% static 'home/images/sxc-model.jpg' %}" alt="SXC Model Set" class="service-img">
-            <span class="service-icon">
-              <i class="fas fa-edit fa-fw"></i>
-            </span>
+            <span class="service-icon"><i class="fas fa-edit fa-fw"></i></span>
           </div>
           <div class="service-info">
             <h4>SXC Model Set</h4>
-            <p>Think you're ready for SXC? Take on 100 actual memory
-              questions from last year's entrance exam with
-              only 90 minutes on the clock.
-            </p>
+            <p>Think you're ready for SXC? Take on 100 actual memory questions from last year's entrance exam with only 90 minutes on the clock.</p>
             <a href="{% url 'sxcmodel:dashboard' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
-
         <article class="service-card">
           <div class="service-img-container">
             <img src="{% static 'home/images/discussion-forum.jpg' %}" alt="Discussion Forum" class="service-img">
-            <span class="service-icon">
-              <i class="fas fa-comments fa-fw"></i>
-            </span>
+            <span class="service-icon"><i class="fas fa-comments fa-fw"></i></span>
           </div>
           <div class="service-info">
             <h4>Discussion Forum</h4>
-            <p>Don't study in isolation. Our Discussion Forum is the ultimate
-              hub for SXC aspirants to brainstorm solutions, debate answers,
-              and stay updated.
-            </p>
+            <p>Don't study in isolation. Our Discussion Forum is the ultimate hub for SXC aspirants to brainstorm solutions, debate answers, and stay updated.</p>
             <a href="{% url 'forum:index' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
@@ -206,10 +172,7 @@
               <span class="contact-icon"><i class="fas fa-location-arrow"></i></span>
               address
             </h4>
-            <h4 class="contact-text">
-              Kathmandu, Bagmati Province <br/>
-              Nepal
-            </h4>
+            <h4 class="contact-text">Kathmandu, Bagmati Province <br/> Nepal</h4>
           </div>
           <div class="contact-item">
             <h4 class="contact-title">
@@ -229,16 +192,48 @@
 
         <article class="contact-form">
           <h3>contact us</h3>
+
+          {# ── Alert banners ── #}
+          {% for message in messages %}
+            {% if 'contact_sent' in message.message %}
+            <div class="form-alert success">
+              <i class="fa-solid fa-circle-check"></i>
+              Message sent! We'll get back to you soon.
+            </div>
+            {% elif 'contact_rate_limited' in message.message %}
+            <div class="form-alert error">
+              <i class="fa-solid fa-clock"></i>
+              You're sending too fast. Please wait 5 minutes before trying again.
+            </div>
+            {% elif 'contact_validation_error' in message.message %}
+            <div class="form-alert error">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Please fill in all fields with valid details.
+            </div>
+            {% elif 'contact_failed' in message.message %}
+            <div class="form-alert error">
+              <i class="fa-solid fa-circle-exclamation"></i>
+              Something went wrong. Please email us directly at acetheentrance@gmail.com.
+            </div>
+            {% endif %}
+          {% endfor %}
+
           <form action="{% url 'home:contact_us' %}" method="POST">
             {% csrf_token %}
-            <div class="form-group">
-              <input type="text" placeholder="name" class="form-control" name="name" required/>
-              <input type="email" placeholder="email" class="form-control" name="email" required/>
-              <textarea name="message" placeholder="message" class="form-control" rows="5" required></textarea>
-            </div>
-            <div style="display:none;">
+
+            {# Honeypot #}
+            <div style="display:none;" aria-hidden="true">
               <label>Keep this blank</label>
               <input type="text" name="honeypot" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+              <input type="text"  placeholder="name"    class="form-control" name="name"
+                     maxlength="100" required/>
+              <input type="email" placeholder="email"   class="form-control" name="email"
+                     maxlength="254" required/>
+              <textarea name="message" placeholder="message" class="form-control"
+                        rows="5" maxlength="2000" required></textarea>
             </div>
             <button type="submit" class="submit-btn btn">Submit Here</button>
           </form>
@@ -255,5 +250,22 @@
     const scrollAmount = card.offsetWidth + 16;
     inventory.scrollLeft += direction * scrollAmount;
   }
+
+  // Scroll to contact form after submission so the alert is visible
+  {% if messages %}
+  document.addEventListener('DOMContentLoaded', function () {
+    {% for message in messages %}
+      {% if 'contact_' in message.message %}
+      setTimeout(function () {
+        var el = document.getElementById('contact');
+        if (el) {
+          var top = el.getBoundingClientRect().top + window.scrollY - 72;
+          window.scrollTo({ top: top, behavior: 'smooth' });
+        }
+      }, 200);
+      {% endif %}
+    {% endfor %}
+  });
+  {% endif %}
 </script>
 {% endblock %}
