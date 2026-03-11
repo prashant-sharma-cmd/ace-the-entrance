@@ -1,107 +1,286 @@
-# accounts/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
+from django.utils import timezone
 
-from .models import User, EmailVerificationToken, UserOnboarding
+from .models import (
+    User,
+    UserOnboarding,
+    EmailVerificationToken,
+    DeletionOTP,
+    PasswordResetToken,
+)
+
+
+# ── Inlines ───────────────────────────────────────────────────────────────────
 
 class UserOnboardingInline(admin.StackedInline):
-    model = UserOnboarding
-    can_delete = False
-    verbose_name = "Onboarding Profile"
-    fields = (
+    model         = UserOnboarding
+    can_delete    = False
+    verbose_name  = "Onboarding Profile"
+    fields        = (
         'primary_purpose',
         'visit_frequency',
         'how_discovered',
+        'newsletter_opt_in',
         'completed',
-        'complete_date', # Fixed: was 'completed_at'
+        'complete_date',
     )
-    readonly_fields = ('complete_date',) # Fixed: was 'completed_at'
+    readonly_fields = ('complete_date',)
     extra = 0
+
+
+# ── User ──────────────────────────────────────────────────────────────────────
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     list_display = (
-        'email', # Custom users often prioritize email
+        'email',
         'username',
+        'full_name',
+        'phone_number',
+        'email_verified_badge',
         'is_onboarded',
-        'is_staff',
         'is_active',
+        'is_staff',
         'date_joined',
     )
-    list_filter = (
-        'is_staff',
-        'is_active',
-        'groups',
-        # Removed 'email_verified' because it's not in your model
-    )
-    search_fields = ('username', 'email', 'first_name', 'last_name')
-    ordering = ('-date_joined',)
+    list_filter  = ('is_staff', 'is_active', 'email_verified', 'groups')
+    search_fields = ('username', 'email', 'first_name', 'last_name', 'phone_number')
+    ordering      = ('-date_joined',)
     date_hierarchy = 'date_joined'
+    readonly_fields = ('date_joined', 'last_login')
+    inlines = (UserOnboardingInline,)
 
-    # Fixed: Removed 'email_verified' and 'avatar' as they aren't in your User model
     fieldsets = BaseUserAdmin.fieldsets + (
-        ('Site-specific', {
-            'fields': ('phone_number',),
+        ('Contact & Verification', {
+            'fields': ('phone_number', 'email_verified'),
         }),
     )
     add_fieldsets = BaseUserAdmin.add_fieldsets + (
-        ('Site-specific', {
-            'fields': ('email', 'phone_number'),
+        ('Contact & Verification', {
+            'fields': ('email', 'phone_number', 'email_verified'),
         }),
     )
 
-    readonly_fields = ('date_joined', 'last_login')
-    inlines = (UserOnboardingInline,)
+    # ── Custom columns ────────────────────────────────────────────────────────
+
+    @admin.display(description='Name')
+    def full_name(self, obj):
+        name = f"{obj.first_name} {obj.last_name}".strip()
+        return name or '—'
+
+    @admin.display(description='Email Verified', boolean=False)
+    def email_verified_badge(self, obj):
+        if obj.email_verified:
+            return format_html(
+                '<span style="color:#15803d;font-weight:700;">✓ Verified</span>'
+            )
+        return format_html(
+            '<span style="color:#b91c1c;font-weight:700;">✗ Unverified</span>'
+        )
 
     @admin.display(description='Onboarded')
     def is_onboarded(self, obj):
         onboarding = getattr(obj, 'onboarding', None)
         if onboarding and onboarding.completed:
-            # Pass color and text as arguments to format_html
             return format_html(
-                '<span style="color:#15803d;font-weight:700;">{}</span>',
-                "✓ Done")
+                '<span style="color:#15803d;font-weight:700;">✓ Done</span>'
+            )
         return format_html(
-            '<span style="color:#92400e;font-weight:700;">{}</span>',
-            "− Pending")
+            '<span style="color:#92400e;font-weight:700;">− Pending</span>'
+        )
 
-@admin.register(EmailVerificationToken)
-class EmailVerificationTokenAdmin(admin.ModelAdmin):
-    list_display = ('user', 'user_email', 'short_token', 'status_badge', 'created_at', 'is_used')
-    list_filter = ('is_used', 'created_at')
-    search_fields = ('user__username', 'user__email')
-    readonly_fields = ('token', 'created_at', 'user')
+    # ── Admin actions ─────────────────────────────────────────────────────────
 
-    def has_add_permission(self, request): return False
+    actions = ['mark_email_verified', 'mark_email_unverified', 'activate_users', 'deactivate_users']
 
-    @admin.display(description='Email')
-    def user_email(self, obj): return obj.user.email
+    @admin.action(description='Mark selected users as email verified')
+    def mark_email_verified(self, request, queryset):
+        updated = queryset.update(email_verified=True, is_active=True)
+        self.message_user(request, f"{updated} user(s) marked as verified and activated.")
 
-    @admin.display(description='Token (short)')
-    def short_token(self, obj):
-        return format_html('<code>{}</code>', str(obj.token)[:8] + '...')
+    @admin.action(description='Mark selected users as email unverified')
+    def mark_email_unverified(self, request, queryset):
+        updated = queryset.update(email_verified=False, is_active=False)
+        self.message_user(request, f"{updated} user(s) marked as unverified and deactivated.")
 
-    @admin.display(description='Status')
-    def status_badge(self, obj):
-        if obj.is_used: return format_html('<span style="color:gray;">Used</span>')
-        if obj.is_expired(): return format_html('<span style="color:red;">Expired</span>')
-        return format_html('<span style="color:green;">Active</span>')
+    @admin.action(description='Activate selected users')
+    def activate_users(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f"{updated} user(s) activated.")
+
+    @admin.action(description='Deactivate selected users')
+    def deactivate_users(self, request, queryset):
+        # Prevent deactivating yourself
+        updated = queryset.exclude(pk=request.user.pk).update(is_active=False)
+        self.message_user(request, f"{updated} user(s) deactivated.")
+
+
+# ── UserOnboarding ────────────────────────────────────────────────────────────
 
 @admin.register(UserOnboarding)
 class UserOnboardingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'user_email', 'primary_purpose', 'completed_badge', 'complete_date')
-    list_filter = ('completed', 'primary_purpose')
-    readonly_fields = ('user', 'complete_date') # Fixed: was 'completed_at'
-    date_hierarchy = 'complete_date' # Fixed: was 'completed_at'
+    list_display  = (
+        'user',
+        'user_email',
+        'primary_purpose',
+        'visit_frequency',
+        'how_discovered',
+        'newsletter_opt_in',
+        'completed_badge',
+        'complete_date',
+    )
+    list_filter   = ('completed', 'primary_purpose', 'visit_frequency', 'newsletter_opt_in')
+    search_fields = ('user__username', 'user__email')
+    readonly_fields = ('user', 'complete_date')
+    date_hierarchy  = 'complete_date'
 
     @admin.display(description='Email')
-    def user_email(self, obj): return obj.user.email
+    def user_email(self, obj):
+        return obj.user.email
 
     @admin.display(description='Completed')
     def completed_badge(self, obj):
-        color = "#15803d" if obj.completed else "#92400e"
-        text = "✓ Yes" if obj.completed else "− No"
-        # Ensure color and text are passed AFTER the string
-        return format_html('<span style="color:{};font-weight:700;">{}</span>',
-                           color, text)
+        if obj.completed:
+            return format_html(
+                '<span style="color:#15803d;font-weight:700;">✓ Yes</span>'
+            )
+        return format_html(
+            '<span style="color:#92400e;font-weight:700;">− No</span>'
+        )
+
+
+# ── EmailVerificationToken ────────────────────────────────────────────────────
+
+@admin.register(EmailVerificationToken)
+class EmailVerificationTokenAdmin(admin.ModelAdmin):
+    list_display  = ('user', 'user_email', 'short_token', 'status_badge', 'created_at', 'is_used')
+    list_filter   = ('is_used', 'created_at')
+    search_fields = ('user__username', 'user__email')
+    readonly_fields = ('token', 'created_at', 'user')
+    ordering      = ('-created_at',)
+
+    def has_add_permission(self, request):
+        return False
+
+    @admin.display(description='Email')
+    def user_email(self, obj):
+        return obj.user.email
+
+    @admin.display(description='Token (short)')
+    def short_token(self, obj):
+        return format_html('<code>{}</code>', str(obj.token)[:8] + '…')
+
+    @admin.display(description='Status')
+    def status_badge(self, obj):
+        if obj.is_used:
+            return format_html('<span style="color:#6b7280;">Used</span>')
+        if obj.is_expired():
+            return format_html('<span style="color:#b91c1c;font-weight:600;">Expired</span>')
+        return format_html('<span style="color:#15803d;font-weight:600;">Active</span>')
+
+    actions = ['revoke_tokens']
+
+    @admin.action(description='Revoke selected tokens')
+    def revoke_tokens(self, request, queryset):
+        updated = queryset.update(is_used=True)
+        self.message_user(request, f"{updated} token(s) revoked.")
+
+
+# ── DeletionOTP ───────────────────────────────────────────────────────────────
+
+@admin.register(DeletionOTP)
+class DeletionOTPAdmin(admin.ModelAdmin):
+    list_display  = (
+        'user',
+        'user_email',
+        'short_code',
+        'attempt_count',
+        'status_badge',
+        'created_at',
+        'is_used',
+    )
+    list_filter   = ('is_used', 'created_at')
+    search_fields = ('user__username', 'user__email')
+    readonly_fields = ('user', 'code', 'created_at', 'attempt_count')
+    ordering      = ('-created_at',)
+
+    # OTP codes should never be manually created via admin
+    def has_add_permission(self, request):
+        return False
+
+    @admin.display(description='Email')
+    def user_email(self, obj):
+        return obj.user.email
+
+    @admin.display(description='Code')
+    def short_code(self, obj):
+        # Show only first 2 digits in admin for audit — full code not needed
+        return format_html('<code>{}****</code>', obj.code[:2])
+
+    @admin.display(description='Status')
+    def status_badge(self, obj):
+        if obj.is_used:
+            return format_html('<span style="color:#6b7280;">Used</span>')
+        if obj.is_locked():
+            return format_html('<span style="color:#b91c1c;font-weight:600;">Locked ({} attempts)</span>', obj.attempt_count)
+        if obj.is_expired():
+            return format_html('<span style="color:#b91c1c;font-weight:600;">Expired</span>')
+        remaining = obj.MAX_ATTEMPTS - obj.attempt_count
+        return format_html(
+            '<span style="color:#15803d;font-weight:600;">Active ({} attempt(s) left)</span>',
+            remaining
+        )
+
+    actions = ['revoke_otps']
+
+    @admin.action(description='Revoke selected OTPs')
+    def revoke_otps(self, request, queryset):
+        updated = queryset.update(is_used=True)
+        self.message_user(request, f"{updated} OTP(s) revoked.")
+
+
+# ── PasswordResetToken ────────────────────────────────────────────────────────
+
+@admin.register(PasswordResetToken)
+class PasswordResetTokenAdmin(admin.ModelAdmin):
+    list_display  = ('user', 'user_email', 'short_token', 'status_badge', 'created_at', 'is_used')
+    list_filter   = ('is_used', 'created_at')
+    search_fields = ('user__username', 'user__email')
+    readonly_fields = ('token', 'created_at', 'user')
+    ordering      = ('-created_at',)
+
+    def has_add_permission(self, request):
+        return False
+
+    @admin.display(description='Email')
+    def user_email(self, obj):
+        return obj.user.email
+
+    @admin.display(description='Token (short)')
+    def short_token(self, obj):
+        return format_html('<code>{}</code>', str(obj.token)[:8] + '…')
+
+    @admin.display(description='Status')
+    def status_badge(self, obj):
+        if obj.is_used:
+            return format_html('<span style="color:#6b7280;">Used</span>')
+        if obj.is_expired():
+            return format_html('<span style="color:#b91c1c;font-weight:600;">Expired</span>')
+        # Show time remaining
+        from datetime import timedelta
+        expires_at = obj.created_at + timedelta(hours=1)
+        remaining  = expires_at - timezone.now()
+        mins       = int(remaining.total_seconds() // 60)
+        return format_html(
+            '<span style="color:#15803d;font-weight:600;">Active (~{}m left)</span>',
+            mins
+        )
+
+    actions = ['revoke_tokens']
+
+    @admin.action(description='Revoke selected tokens')
+    def revoke_tokens(self, request, queryset):
+        updated = queryset.update(is_used=True)
+        self.message_user(request, f"{updated} token(s) revoked.")
