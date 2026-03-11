@@ -76,6 +76,13 @@
           </div>
           {% endif %}
 
+          {% for message in messages %}
+          <div class="auth-alert {% if 'error' in message.tags %}error{% elif 'success' in message.tags %}success{% else %}info{% endif %}">
+            <i class="fas fa-circle-info"></i>
+            <span>{{ message }}</span>
+          </div>
+          {% endfor %}
+
           <!-- Social buttons -->
           {% load socialaccount %}
           <div class="social-row cols-3">
@@ -103,7 +110,7 @@
             <div class="auth-form-group">
               <label class="auth-label" for="id_password">
                 Password
-                <a href="#" class="auth-label-link">Forgot password?</a>
+                <a href="{% url 'accounts:forgot_password' %}" class="auth-label-link">Forgot password?</a>
               </label>
               <div class="auth-input-wrap">
                 <i class="fas fa-lock auth-input-icon"></i>

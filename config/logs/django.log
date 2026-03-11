@@ -566,3 +566,7 @@ LINE 1: ...er"."last_name", "accounts_user"."is_active" FROM "accounts_...
                                                              ^
 
 ERROR 2026-03-11 17:01:55,584 log "POST /admin/accounts/user/ HTTP/1.1" 500 211144
+WARNING 2026-03-11 17:35:16,139 log Forbidden (CSRF token from POST incorrect.): /accounts/login/
+WARNING 2026-03-11 17:35:16,141 log "POST /accounts/login/ HTTP/1.1" 403 2503
+WARNING 2026-03-11 17:35:16,250 log Not Found: /favicon.ico
+WARNING 2026-03-11 17:35:16,251 log "GET /favicon.ico HTTP/1.1" 404 5282

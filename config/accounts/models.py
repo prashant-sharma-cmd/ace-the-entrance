@@ -101,3 +101,22 @@ class DeletionOTP(models.Model):
 
     def __str__(self):
         return f"DeletionOTP for {self.user.email}"
+
+
+class PasswordResetToken(models.Model):
+    """
+    Secure single-use token for password reset links.
+    Expires after 1 hour, invalidated on use.
+    """
+    user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name='password_reset_token')
+    token      = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used    = models.BooleanField(default=False)
+
+    def is_expired(self):
+        from django.utils import timezone
+        from datetime import timedelta
+        return timezone.now() > self.created_at + timedelta(hours=1)
+
+    def __str__(self):
+        return f"PasswordResetToken for {self.user.email}"

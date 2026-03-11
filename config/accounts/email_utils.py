@@ -71,3 +71,38 @@ This code expires in 10 minutes. If you didn't request this, you can safely igno
         )
     except Exception as e:
         logger.error(f"Failed to send deletion OTP to {user.email}: {e}", exc_info=True)
+
+
+def send_password_reset_email(request, user):
+    """
+    Deletes any existing reset token, creates a fresh one, and emails the
+    reset link.  Always called from a background thread.
+    """
+    from .models import PasswordResetToken
+    try:
+        PasswordResetToken.objects.filter(user=user).delete()
+        token_obj = PasswordResetToken.objects.create(user=user)
+
+        reset_url = request.build_absolute_uri(
+            reverse('accounts:password_reset_confirm', args=[str(token_obj.token)])
+        )
+
+        send_mail(
+            subject="Reset your password",
+            message=f"""Hi {user.username},
+
+We received a request to reset the password for your account.
+
+Click the link below to choose a new password:
+
+{reset_url}
+
+This link expires in 1 hour. If you didn't request a password reset, you can safely ignore this email — your password will not change.
+
+— The Team""",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        logger.error(f"Failed to send password reset email to {user.email}: {e}", exc_info=True)

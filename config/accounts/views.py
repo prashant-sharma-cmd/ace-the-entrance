@@ -13,7 +13,7 @@ from django_ratelimit.decorators import ratelimit
 
 from .forms import SignUpForm, OnboardingForm
 from .models import User, EmailVerificationToken, UserOnboarding, DeletionOTP
-from .email_utils import send_verification_email, send_deletion_otp_email
+from .email_utils import send_verification_email, send_deletion_otp_email, send_password_reset_email
 from .mixins import GuestOnlyMixin, VerifiedEmailRequiredMixin, OnboardingCompletedMixin
 
 logger = logging.getLogger(__name__)
@@ -325,3 +325,115 @@ class RequestDeletionOTPView(LoginRequiredMixin, View):
         _run_async(send_deletion_otp_email, request.user)
         messages.success(request, "A 6-digit code has been sent to your email. It expires in 10 minutes.")
         return redirect('accounts:dashboard')
+
+
+# ── Forgot Password ───────────────────────────────────────────────────────────
+
+@method_decorator(
+    ratelimit(key='ip', rate='5/10m', method='POST', block=False),
+    name='dispatch'
+)
+class ForgotPasswordView(View):
+    """
+    Step 1 — user enters their email.
+    Always shows the same success message to prevent email enumeration.
+    """
+    template_name = 'accounts/forgot_password.html'
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('accounts:dashboard')
+        return render(request, self.template_name)
+
+    def post(self, request):
+        if getattr(request, 'limited', False):
+            messages.error(request, "Too many requests. Please wait 10 minutes.")
+            return redirect('accounts:forgot_password')
+
+        # Honeypot check
+        if request.POST.get('honeypot'):
+            return redirect('accounts:password_reset_sent')
+
+        email = request.POST.get('email', '').strip()
+        try:
+            user = User.objects.get(email=email, is_active=True)
+            # Don't send reset to Google-only accounts — they have no password
+            if user.has_usable_password():
+                _run_async(send_password_reset_email, request, user)
+        except User.DoesNotExist:
+            pass  # Same response regardless — no email enumeration
+
+        return redirect('accounts:password_reset_sent')
+
+
+class PasswordResetSentView(TemplateView):
+    """Step 2 — confirmation page after submitting the email."""
+    template_name = 'accounts/password_reset_sent.html'
+
+
+class PasswordResetConfirmView(View):
+    """
+    Step 3 — user clicks the link from their email and sets a new password.
+    """
+    template_name = 'accounts/password_reset_confirm.html'
+
+    def _get_valid_token(self, token):
+        """Return token object or None if invalid/expired/used."""
+        from .models import PasswordResetToken
+        try:
+            obj = PasswordResetToken.objects.get(token=token, is_used=False)
+            if obj.is_expired():
+                obj.delete()
+                return None
+            return obj
+        except PasswordResetToken.DoesNotExist:
+            return None
+
+    def get(self, request, token):
+        token_obj = self._get_valid_token(token)
+        if not token_obj:
+            messages.error(request, "This reset link is invalid or has expired.")
+            return redirect('accounts:forgot_password')
+        return render(request, self.template_name, {'token': token})
+
+    def post(self, request, token):
+        token_obj = self._get_valid_token(token)
+        if not token_obj:
+            messages.error(request, "This reset link is invalid or has expired.")
+            return redirect('accounts:forgot_password')
+
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+
+        if not password1:
+            return render(request, self.template_name, {
+                'token': token,
+                'error': "Please enter a new password."
+            })
+        if len(password1) < 8:
+            return render(request, self.template_name, {
+                'token': token,
+                'error': "Password must be at least 8 characters."
+            })
+        if password1 != password2:
+            return render(request, self.template_name, {
+                'token': token,
+                'error': "Passwords do not match."
+            })
+
+        user = token_obj.user
+        user.set_password(password1)
+        user.save(update_fields=['password'])
+
+        # Invalidate the token
+        token_obj.is_used = True
+        token_obj.save(update_fields=['is_used'])
+
+        # Log the user in immediately so they don't have to sign in again
+        login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        return redirect('accounts:password_reset_done')
+
+
+class PasswordResetDoneView(TemplateView):
+    """Step 4 — success page shown after password is changed."""
+    template_name = 'accounts/password_reset_done.html'
