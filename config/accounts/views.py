@@ -22,7 +22,10 @@ logger = logging.getLogger(__name__)
 # ── Async helpers ─────────────────────────────────────────────────────────────
 
 def _run_async(fn, *args):
-    """Run fn(*args) in a daemon thread so the HTTP response isn't blocked."""
+    """Run fn(*args) in a daemon thread so the HTTP response isn't blocked.
+    Never pass the request object — it's not thread-safe after response is sent.
+    Extract what you need (e.g. build_absolute_uri) before calling this.
+    """
     t = threading.Thread(target=fn, args=args)
     t.daemon = True
     t.start()
@@ -45,13 +48,13 @@ class SignUpView(GuestOnlyMixin, FormView):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        # Save with is_active=False (model default) — account only activates
-        # after the email verification link is clicked.
         user = form.save(commit=False)
         user.is_active = False
         user.save()
 
-        _run_async(send_verification_email, self.request, user)
+        # Extract base URL before spawning thread — request is not thread-safe
+        base_url = self.request.build_absolute_uri('/')[:-1]
+        _run_async(send_verification_email, base_url, user)
         messages.success(
             self.request,
             "Almost there! Check your email and click the verification link to activate your account."
@@ -119,9 +122,9 @@ class ResendVerificationView(View):
         email = request.POST.get('email', '').strip()
 
         try:
-            # is_active=False means the account exists but isn't verified yet
             user = User.objects.get(email=email, is_active=False, email_verified=False)
-            _run_async(send_verification_email, request, user)
+            base_url = request.build_absolute_uri('/')[:-1]
+            _run_async(send_verification_email, base_url, user)
         except User.DoesNotExist:
             pass  # Always show the same response — prevents email enumeration
 
@@ -154,16 +157,18 @@ class LoginView(GuestOnlyMixin, View):
         user = authenticate(request, username=email, password=password)
 
         if not user:
-            # Check if the account exists but is just unverified — give a
-            # helpful message rather than a generic "invalid credentials"
-            try:
-                unverified = User.objects.get(email=email, is_active=False, email_verified=False)
-                _run_async(send_verification_email, request, unverified)
+            # Check for unverified account — but only AFTER authenticate() has
+            # already done its constant-time work, so we don't add a timing gap.
+            # Use filter+first (no exception path) to keep timing uniform.
+            unverified = User.objects.filter(
+                email=email, is_active=False, email_verified=False
+            ).first()
+            if unverified:
+                base_url = request.build_absolute_uri('/')[:-1]
+                _run_async(send_verification_email, base_url, unverified)
                 return render(request, self.template_name, {
                     'error': "Your email isn't verified yet. We've resent the verification link."
                 })
-            except User.DoesNotExist:
-                pass
 
             return render(request, self.template_name, {
                 'error': "Invalid email or password."
@@ -289,8 +294,16 @@ class DeleteAccountView(LoginRequiredMixin, View):
                 messages.error(request, "Your OTP has expired. Please request a new one.")
                 return redirect('accounts:dashboard')
 
+            if otp.is_locked():
+                otp.delete()
+                messages.error(request, "Too many incorrect attempts. Please request a new code.")
+                return redirect('accounts:dashboard')
+
             if otp.code != submitted_code:
-                messages.error(request, "Incorrect code. Please try again.")
+                otp.attempt_count += 1
+                otp.save(update_fields=['attempt_count'])
+                remaining = otp.MAX_ATTEMPTS - otp.attempt_count
+                messages.error(request, f"Incorrect code. {remaining} attempt(s) remaining.")
                 return redirect('accounts:dashboard')
 
             otp.is_used = True
@@ -357,9 +370,9 @@ class ForgotPasswordView(View):
         email = request.POST.get('email', '').strip()
         try:
             user = User.objects.get(email=email, is_active=True)
-            # Don't send reset to Google-only accounts — they have no password
             if user.has_usable_password():
-                _run_async(send_password_reset_email, request, user)
+                base_url = request.build_absolute_uri('/')[:-1]
+                _run_async(send_password_reset_email, base_url, user)
         except User.DoesNotExist:
             pass  # Same response regardless — no email enumeration
 
@@ -371,6 +384,10 @@ class PasswordResetSentView(TemplateView):
     template_name = 'accounts/password_reset_sent.html'
 
 
+@method_decorator(
+    ratelimit(key='ip', rate='5/10m', method='POST', block=False),
+    name='dispatch'
+)
 class PasswordResetConfirmView(View):
     """
     Step 3 — user clicks the link from their email and sets a new password.
@@ -397,6 +414,10 @@ class PasswordResetConfirmView(View):
         return render(request, self.template_name, {'token': token})
 
     def post(self, request, token):
+        if getattr(request, 'limited', False):
+            messages.error(request, "Too many attempts. Please request a new reset link.")
+            return redirect('accounts:forgot_password')
+
         token_obj = self._get_valid_token(token)
         if not token_obj:
             messages.error(request, "This reset link is invalid or has expired.")
@@ -429,8 +450,12 @@ class PasswordResetConfirmView(View):
         token_obj.is_used = True
         token_obj.save(update_fields=['is_used'])
 
-        # Log the user in immediately so they don't have to sign in again
+        # Log the user in and rotate the session hash so any stolen
+        # pre-reset sessions are immediately invalidated (#5)
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+        from django.contrib.auth import update_session_auth_hash
+        update_session_auth_hash(request, user)
+
         return redirect('accounts:password_reset_done')
 
 

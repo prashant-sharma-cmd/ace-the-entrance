@@ -1,5 +1,5 @@
 import uuid
-import random
+import secrets
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -84,20 +84,27 @@ class DeletionOTP(models.Model):
     """
     6-digit OTP for confirming account deletion for Google/SSO users who
     have no password.  Expires after 10 minutes, single-use.
+    Locks after 5 failed attempts to prevent brute-force.
     """
-    user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name='deletion_otp')
-    code       = models.CharField(max_length=6)
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_used    = models.BooleanField(default=False)
+    user          = models.OneToOneField(User, on_delete=models.CASCADE, related_name='deletion_otp')
+    code          = models.CharField(max_length=6)
+    created_at    = models.DateTimeField(auto_now_add=True)
+    is_used       = models.BooleanField(default=False)
+    attempt_count = models.PositiveSmallIntegerField(default=0)
+
+    MAX_ATTEMPTS = 5
 
     @staticmethod
     def generate_code():
-        return f"{random.randint(0, 999999):06d}"
+        return f"{secrets.randbelow(1_000_000):06d}"
 
     def is_expired(self):
         from django.utils import timezone
         from datetime import timedelta
         return timezone.now() > self.created_at + timedelta(minutes=10)
+
+    def is_locked(self):
+        return self.attempt_count >= self.MAX_ATTEMPTS
 
     def __str__(self):
         return f"DeletionOTP for {self.user.email}"

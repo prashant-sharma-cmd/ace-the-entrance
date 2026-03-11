@@ -10,10 +10,16 @@ EXEMPT_URLS = {
     '/accounts/logout/',
     '/accounts/email-sent/',
     '/accounts/resend-verification/',
+    '/accounts/forgot-password/',
+    '/accounts/forgot-password/sent/',
+    '/accounts/reset/done/',
 }
 
 # Kept as a prefix since verify links include a UUID segment
 VERIFY_PREFIX = '/accounts/verify/'
+
+# Password reset confirm links include a UUID segment
+RESET_PREFIX = '/accounts/reset/'
 
 # SSO callbacks use a dynamic prefix — kept as prefix match
 SOCIAL_PREFIX = '/accounts/social/'
@@ -31,6 +37,7 @@ class EmailVerificationMiddleware:
             is_exempt = (
                 path in EXEMPT_URLS
                 or path.startswith(VERIFY_PREFIX)
+                or path.startswith(RESET_PREFIX)
                 or path.startswith(SOCIAL_PREFIX)
             )
 
