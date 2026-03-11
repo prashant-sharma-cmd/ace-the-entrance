@@ -21,7 +21,6 @@
         <div class="dash-avatar">{{ user.username|first|upper }}</div>
         <span class="dash-username">{{ user.username }}</span>
       </div>
-      <!-- FIX: logout is now a POST form — GET logout is vulnerable to CSRF logout attacks -->
       <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
         {% csrf_token %}
         <button type="submit" class="dash-logout" style="background:none;border:none;cursor:pointer;">
@@ -31,7 +30,6 @@
     </div>
   </nav>
 
-  <!-- Content -->
   <div class="dash-content">
 
     <!-- Welcome hero -->
@@ -104,16 +102,24 @@
             </span>
           </div>
           <div class="dash-row">
+            <span class="dash-row-key">Sign-in method</span>
+            <span class="dash-row-val">
+              {% if has_password %}
+                <i class="fas fa-lock" style="font-size:0.75rem;"></i> Password
+              {% else %}
+                <i class="fab fa-google" style="font-size:0.75rem;"></i> Google
+              {% endif %}
+            </span>
+          </div>
+          <div class="dash-row">
             <span class="dash-row-key">Member Since</span>
             <span class="dash-row-val">{{ user.date_joined|date:"F Y" }}</span>
           </div>
 
           <div class="dash-actions">
-            <!-- FIX: delete account now requires password confirmation server-side -->
             <button type="button" class="dash-action-btn danger" onclick="showDeleteModal()">
               <i class="fas fa-trash"></i> Delete Account
             </button>
-            <!-- FIX: logout is POST -->
             <form method="post" action="{% url 'accounts:logout' %}" style="display:inline;">
               {% csrf_token %}
               <button type="submit" class="dash-action-btn danger">
@@ -185,32 +191,90 @@
 
     </div>
   </div>
-
 </div>
 
-<!-- FIX: Delete account modal with password confirmation -->
-<div id="delete-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:8px;padding:2rem;max-width:400px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
-    <h3 style="margin-bottom:0.5rem;color:#b91c1c;">Delete Account</h3>
-    <p style="font-size:0.9rem;color:#555;margin-bottom:1.25rem;">
-      This is permanent and cannot be undone. Enter your password to confirm.
+<!-- ══ Delete Account Modal ══ -->
+<div id="delete-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:10px;padding:2rem;max-width:420px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+
+    <h3 style="margin-bottom:0.4rem;color:#b91c1c;"><i class="fas fa-trash"></i> Delete Account</h3>
+    <p style="font-size:0.88rem;color:#666;margin-bottom:1.25rem;">
+      This is <strong>permanent and cannot be undone.</strong>
+      {% if has_password %}
+        Enter your password to confirm.
+      {% else %}
+        Because you signed in with Google, we'll send a 6-digit code to <strong>{{ user.email }}</strong> to confirm.
+      {% endif %}
     </p>
+
+    {% if has_password %}
+    <!-- ── Password confirmation form ── -->
     <form method="post" action="{% url 'accounts:delete_account' %}" id="delete-form">
       {% csrf_token %}
-      <input type="password" name="confirm_password" placeholder="Your password"
+      <input type="password" name="confirm_password"
+             placeholder="Enter your password"
              style="width:100%;padding:0.65rem 0.85rem;border:1px solid #ddd;border-radius:6px;margin-bottom:1rem;font-size:0.9rem;box-sizing:border-box;"
              required autofocus />
       <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
         <button type="button" onclick="hideDeleteModal()"
-                style="padding:0.5rem 1rem;border:1px solid #ddd;border-radius:6px;background:#f5f5f5;cursor:pointer;">
+                style="padding:0.5rem 1.1rem;border:1px solid #ddd;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:0.9rem;">
           Cancel
         </button>
         <button type="submit"
-                style="padding:0.5rem 1rem;border:none;border-radius:6px;background:#dc2626;color:#fff;font-weight:600;cursor:pointer;">
+                style="padding:0.5rem 1.1rem;border:none;border-radius:6px;background:#dc2626;color:#fff;font-weight:600;cursor:pointer;font-size:0.9rem;">
           Delete My Account
         </button>
       </div>
     </form>
+
+    {% else %}
+    <!-- ── OTP flow for Google/SSO users ── -->
+    <div id="otp-step-1">
+      <p style="font-size:0.85rem;color:#555;margin-bottom:1rem;">
+        Click the button below to receive your confirmation code.
+      </p>
+      <form method="post" action="{% url 'accounts:request_deletion_otp' %}">
+        {% csrf_token %}
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+          <button type="button" onclick="hideDeleteModal()"
+                  style="padding:0.5rem 1.1rem;border:1px solid #ddd;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:0.9rem;">
+            Cancel
+          </button>
+          <button type="submit"
+                  style="padding:0.5rem 1.1rem;border:none;border-radius:6px;background:#01257D;color:#fff;font-weight:600;cursor:pointer;font-size:0.9rem;">
+            <i class="fas fa-paper-plane"></i> Send Code
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- OTP entry — shown after the user has requested a code via page reload -->
+    {% if otp_requested %}
+    <div id="otp-step-2" style="margin-top:1rem;border-top:1px solid #eee;padding-top:1rem;">
+      <p style="font-size:0.85rem;color:#555;margin-bottom:0.75rem;">
+        Enter the 6-digit code sent to <strong>{{ user.email }}</strong>:
+      </p>
+      <form method="post" action="{% url 'accounts:delete_account' %}" id="otp-delete-form">
+        {% csrf_token %}
+        <input type="text" name="otp_code" inputmode="numeric" maxlength="6"
+               placeholder="000000"
+               style="width:100%;padding:0.65rem 0.85rem;border:1px solid #ddd;border-radius:6px;margin-bottom:1rem;font-size:1.1rem;letter-spacing:0.3em;text-align:center;box-sizing:border-box;"
+               required autofocus />
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+          <button type="button" onclick="hideDeleteModal()"
+                  style="padding:0.5rem 1.1rem;border:1px solid #ddd;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:0.9rem;">
+            Cancel
+          </button>
+          <button type="submit"
+                  style="padding:0.5rem 1.1rem;border:none;border-radius:6px;background:#dc2626;color:#fff;font-weight:600;cursor:pointer;font-size:0.9rem;">
+            Confirm & Delete
+          </button>
+        </div>
+      </form>
+    </div>
+    {% endif %}
+
+    {% endif %}
   </div>
 </div>
 
@@ -221,16 +285,24 @@
   function showDeleteModal() {
     var m = document.getElementById('delete-modal');
     m.style.display = 'flex';
+    var pw = m.querySelector('input[type=password]');
+    if (pw) pw.focus();
   }
   function hideDeleteModal() {
     var m = document.getElementById('delete-modal');
     m.style.display = 'none';
-    m.querySelector('input[type=password]').value = '';
+    var pw = m.querySelector('input[type=password]');
+    if (pw) pw.value = '';
   }
-  // Close on backdrop click
   document.getElementById('delete-modal').addEventListener('click', function(e) {
     if (e.target === this) hideDeleteModal();
   });
+
+  // Auto-open the modal on page load if the user just requested an OTP
+  // so they land straight on the code-entry step
+  {% if otp_requested %}
+  document.addEventListener('DOMContentLoaded', function() { showDeleteModal(); });
+  {% endif %}
 </script>
 <script src="{% static 'accounts/js/auth.js' %}"></script>
 {% endblock %}

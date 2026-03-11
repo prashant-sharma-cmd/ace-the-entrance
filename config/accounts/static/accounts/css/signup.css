@@ -15,6 +15,15 @@
   .auth-form-row { grid-template-columns: 1fr; }
 }
 
+/* Optional label hint */
+.auth-label-optional {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--auth-muted);
+  font-size: 0.78rem;
+}
+
 /* Terms notice */
 .auth-terms {
   font-size: 0.75rem;
@@ -51,4 +60,203 @@
   background: var(--auth-gold);
   bottom: 5%; right: 5%;
   animation: floatY 12s ease-in-out 3s infinite;
+}
+
+/* ── Phone number ──────────────────────────────────────── */
+
+/*
+  .phone-wrap mirrors .auth-input-wrap — it's the single border host.
+  The trigger button and the text input both live inside it, borderless.
+*/
+.phone-wrap {
+  display: flex;
+  align-items: stretch;
+  background: var(--auth-input-bg);
+  border: 1.5px solid transparent;
+  border-radius: 0.65rem;
+  transition: var(--auth-transition);
+  box-sizing: border-box;
+}
+
+/* Focus state — mirrors .auth-input:focus exactly */
+.phone-wrap:focus-within {
+  border-color: var(--clr-primary);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(1, 37, 125, 0.07);
+}
+
+/* Error state — mirrors .auth-input.is-error */
+.phone-wrap.has-error {
+  border-color: var(--auth-danger) !important;
+  background: #fff8f8;
+}
+
+/* ── Country trigger ───────────────────────────────────── */
+.phone-country {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.phone-country-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.8rem 0.75rem 0.8rem 1rem;
+  height: 100%;
+  min-height: 44px;
+  background: transparent;           /* inherits from .phone-wrap */
+  border: none;
+  /* Subtle right divider matching --auth-input-border */
+  border-right: 1.5px solid var(--auth-input-border);
+  border-radius: 0.65rem 0 0 0.65rem;
+  font-family: var(--auth-font-body);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  outline: none;
+  transition: var(--auth-transition);
+  box-sizing: border-box;
+}
+
+.phone-country-trigger:hover {
+  background: rgba(1, 37, 125, 0.04);
+}
+
+/* Divider lightens when the whole group is focused */
+.phone-wrap:focus-within .phone-country-trigger {
+  border-right-color: #c0cff0;
+}
+
+.phone-flag { font-size: 1.1rem; line-height: 1; }
+
+.phone-dial {
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--clr-primary);
+}
+
+/* Matches .auth-input-icon muted colour */
+.phone-caret {
+  width: 8px;
+  height: 5px;
+  color: var(--auth-muted);
+  flex-shrink: 0;
+  margin-left: 1px;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.phone-country-trigger[aria-expanded="true"] .phone-caret {
+  transform: rotate(180deg);
+  color: var(--clr-primary);
+}
+
+/* ── Dropdown ──────────────────────────────────────────── */
+.phone-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  background: #fff;
+  border: 1.5px solid var(--auth-input-border);
+  border-radius: 0.75rem;
+  box-shadow: var(--auth-shadow-card);   /* same shadow as the card itself */
+  z-index: 300;
+  overflow: hidden;
+  /* Entrance matches authFadeDown */
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+.phone-dropdown.open {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.phone-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.62rem 0.9rem;
+  font-family: var(--auth-font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--clr-primary);
+  cursor: pointer;
+  transition: background 0.14s ease;
+}
+.phone-option:not(:last-child) {
+  border-bottom: 1px solid #edf0f9;
+}
+.phone-option:hover {
+  background: var(--auth-input-bg);    /* same as input hover bg */
+}
+.phone-option.is-selected {
+  background: #eff4ff;
+  font-weight: 800;
+}
+
+/* Checkmark for selected — uses same primary colour as the card icon */
+.phone-option.is-selected::after {
+  content: "✓";
+  margin-left: auto;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: var(--clr-primary);
+}
+
+.phone-option-flag { font-size: 1.05rem; line-height: 1; flex-shrink: 0; }
+
+.phone-option-name { flex: 1; }
+
+/* Dial code on the right — matches --auth-muted */
+.phone-option-dial {
+  font-size: 0.78rem;
+  color: var(--auth-muted);
+  font-weight: 700;
+}
+/* Hide dial code on selected row — checkmark already fills that slot */
+.phone-option.is-selected .phone-option-dial { display: none; }
+
+/* ── Local number text input ───────────────────────────── */
+/*
+  Strips all its own border/bg/shadow so it merges seamlessly into
+  .phone-wrap which hosts the shared border.
+*/
+.phone-local-input {
+  flex: 1;
+  min-width: 0;
+  padding-left: 0.85rem !important;
+  border: none !important;
+  border-radius: 0 0.65rem 0.65rem 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  /* Inherit typography from .auth-input */
+  font-family: var(--auth-font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--clr-primary);
+}
+.phone-local-input::placeholder {
+  color: #aab4cc;
+  font-weight: 400;
+}
+
+/* ── Phone format hint ─────────────────────────────────── */
+.phone-hint {
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--auth-muted);
+  letter-spacing: 0.01em;
+  transition: color 0.2s;
+  min-height: 1em;   /* prevent layout jump when text changes */
 }

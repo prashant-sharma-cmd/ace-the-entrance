@@ -8,22 +8,24 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import TemplateView, FormView, RedirectView
+from django.views.generic import TemplateView, FormView
 from django_ratelimit.decorators import ratelimit
 
 from .forms import SignUpForm, OnboardingForm
-from .models import User, EmailVerificationToken, UserOnboarding
-from .email_utils import send_verification_email
+from .models import User, EmailVerificationToken, UserOnboarding, DeletionOTP
+from .email_utils import send_verification_email, send_deletion_otp_email
 from .mixins import GuestOnlyMixin, VerifiedEmailRequiredMixin, OnboardingCompletedMixin
 
 logger = logging.getLogger(__name__)
 
 
-def _send_verification_async(request, user):
-    """Fire-and-forget wrapper so signup/resend don't block on SMTP."""
-    thread = threading.Thread(target=send_verification_email, args=(request, user))
-    thread.daemon = True
-    thread.start()
+# ── Async helpers ─────────────────────────────────────────────────────────────
+
+def _run_async(fn, *args):
+    """Run fn(*args) in a daemon thread so the HTTP response isn't blocked."""
+    t = threading.Thread(target=fn, args=args)
+    t.daemon = True
+    t.start()
 
 
 # ── Signup ────────────────────────────────────────────────────────────────────
@@ -34,7 +36,7 @@ def _send_verification_async(request, user):
 )
 class SignUpView(GuestOnlyMixin, FormView):
     template_name = 'accounts/signup.html'
-    form_class = SignUpForm
+    form_class    = SignUpForm
 
     def post(self, request, *args, **kwargs):
         if getattr(request, 'limited', False):
@@ -43,9 +45,17 @@ class SignUpView(GuestOnlyMixin, FormView):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        user = form.save()
-        _send_verification_async(self.request, user)
-        messages.success(self.request, "Account created! Check your email to verify your account.")
+        # Save with is_active=False (model default) — account only activates
+        # after the email verification link is clicked.
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+
+        _run_async(send_verification_email, self.request, user)
+        messages.success(
+            self.request,
+            "Almost there! Check your email and click the verification link to activate your account."
+        )
         return redirect('accounts:email_sent')
 
     def form_invalid(self, form):
@@ -71,17 +81,15 @@ class VerifyEmailView(View):
 
         user = token_obj.user
 
-        # FIX: check account is still active before logging in
-        if not user.is_active:
-            messages.error(request, "This account has been disabled.")
-            return redirect('accounts:login')
-
+        # Activate the account and mark email as verified in one save
+        user.is_active     = True
         user.email_verified = True
-        user.save()
+        user.save(update_fields=['is_active', 'email_verified'])
 
         token_obj.is_used = True
-        token_obj.save()
+        token_obj.save(update_fields=['is_used'])
 
+        # Log the user in immediately after verification
         login(request, user, backend='django.contrib.auth.backends.ModelBackend')
         messages.success(request, "Email verified! Let's finish setting up your account.")
         return redirect('accounts:onboarding')
@@ -100,12 +108,10 @@ class ResendVerificationView(View):
         return render(request, self.template_name)
 
     def post(self, request):
-        # FIX: rate limit to prevent email bombing
         if getattr(request, 'limited', False):
             messages.error(request, "Too many requests. Please wait 10 minutes before trying again.")
             return redirect('accounts:resend_verification')
 
-        # FIX: honeypot check
         if request.POST.get('honeypot'):
             messages.success(request, "If that email exists and is unverified, we've sent a new link.")
             return redirect('accounts:email_sent')
@@ -113,12 +119,12 @@ class ResendVerificationView(View):
         email = request.POST.get('email', '').strip()
 
         try:
-            user = User.objects.get(email=email, email_verified=False)
-            _send_verification_async(request, user)
+            # is_active=False means the account exists but isn't verified yet
+            user = User.objects.get(email=email, is_active=False, email_verified=False)
+            _run_async(send_verification_email, request, user)
         except User.DoesNotExist:
-            pass  # Don't reveal whether the email exists
+            pass  # Always show the same response — prevents email enumeration
 
-        # Always show the same message — prevents email enumeration
         messages.success(request, "If that email exists and is unverified, we've sent a new link.")
         return redirect('accounts:email_sent')
 
@@ -136,7 +142,6 @@ class LoginView(GuestOnlyMixin, View):
         return render(request, self.template_name)
 
     def post(self, request):
-        # FIX: rate limit brute force attempts
         if getattr(request, 'limited', False):
             return render(request, self.template_name, {
                 'error': "Too many login attempts. Please wait 5 minutes."
@@ -144,32 +149,33 @@ class LoginView(GuestOnlyMixin, View):
 
         email    = request.POST.get('email', '').strip()
         password = request.POST.get('password', '')
-        user     = authenticate(request, username=email, password=password)
+
+        # authenticate() returns None for inactive (unverified) users
+        user = authenticate(request, username=email, password=password)
 
         if not user:
+            # Check if the account exists but is just unverified — give a
+            # helpful message rather than a generic "invalid credentials"
+            try:
+                unverified = User.objects.get(email=email, is_active=False, email_verified=False)
+                _run_async(send_verification_email, request, unverified)
+                return render(request, self.template_name, {
+                    'error': "Your email isn't verified yet. We've resent the verification link."
+                })
+            except User.DoesNotExist:
+                pass
+
             return render(request, self.template_name, {
                 'error': "Invalid email or password."
             })
 
-        if not user.is_active:
-            return render(request, self.template_name, {
-                'error': "This account has been disabled."
-            })
-
-        if not user.email_verified:
-            _send_verification_async(request, user)
-            return render(request, self.template_name, {
-                'error': "Please verify your email first. We've resent the verification link."
-            })
-
         login(request, user)
 
-        # FIX: implement remember_me properly
-        remember = request.POST.get('remember_me')
-        if remember:
-            request.session.set_expiry(60 * 60 * 24 * 30)   # 30 days
+        # remember_me: persist session for 30 days, otherwise expire on close
+        if request.POST.get('remember_me'):
+            request.session.set_expiry(60 * 60 * 24 * 30)
         else:
-            request.session.set_expiry(0)                    # expires on browser close
+            request.session.set_expiry(0)
 
         if not hasattr(user, 'onboarding') or not user.onboarding.completed:
             return redirect('accounts:onboarding')
@@ -198,9 +204,8 @@ class OnboardingView(VerifiedEmailRequiredMixin, FormView):
         return kwargs
 
     def form_valid(self, form):
-        onboarding = form.save(commit=False)
-        onboarding.completed    = True
-        # FIX: use the correct field name from the model
+        onboarding               = form.save(commit=False)
+        onboarding.completed     = True
         onboarding.complete_date = timezone.now()
         onboarding.save()
         messages.success(self.request, "Welcome! Your profile is all set.")
@@ -210,11 +215,7 @@ class OnboardingView(VerifiedEmailRequiredMixin, FormView):
 # ── Logout ────────────────────────────────────────────────────────────────────
 
 class LogoutView(LoginRequiredMixin, View):
-    """
-    FIX: logout is now POST-only to prevent CSRF logout attacks
-    (e.g. a malicious page with <img src='/accounts/logout/'> logging users out).
-    Update your logout links/buttons to use a small POST form instead of <a href>.
-    """
+    """POST-only to prevent CSRF logout attacks via <img src='/logout/'>."""
     login_url = '/accounts/login/'
 
     def post(self, request):
@@ -223,7 +224,7 @@ class LogoutView(LoginRequiredMixin, View):
         return redirect('/accounts/login/')
 
     def get(self, request):
-        # Graceful fallback: show a confirmation page rather than silently failing
+        # Show a confirmation page for direct GET visits
         return render(request, 'accounts/logout_confirm.html')
 
 
@@ -237,23 +238,90 @@ class DashboardView(OnboardingCompletedMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['user']       = self.request.user
         context['onboarding'] = getattr(self.request.user, 'onboarding', None)
+        # Tell the template whether this user has a usable password
+        context['has_password'] = self.request.user.has_usable_password()
+        # Tell the template if the user just requested a deletion OTP
+        context['otp_requested'] = DeletionOTP.objects.filter(
+            user=self.request.user, is_used=False
+        ).exists()
         return context
 
 
 # ── Account Deletion ──────────────────────────────────────────────────────────
 
+@method_decorator(
+    ratelimit(key='ip', rate='3/10m', method='POST', block=False),
+    name='dispatch'
+)
 class DeleteAccountView(LoginRequiredMixin, View):
+    """
+    Two flows:
+      - Password users:  confirm with their password (POST confirm_password)
+      - SSO/Google users: confirm with a 6-digit OTP sent to their email
+    The template shows the correct form based on has_usable_password().
+    """
     login_url = '/accounts/login/'
 
     def post(self, request):
-        # FIX: require password confirmation server-side — JS confirm() is client-side only
-        password = request.POST.get('confirm_password', '')
-        if not password or not request.user.check_password(password):
-            messages.error(request, "Incorrect password. Account not deleted.")
+        if getattr(request, 'limited', False):
+            messages.error(request, "Too many attempts. Please wait 10 minutes.")
             return redirect('accounts:dashboard')
 
         user = request.user
+
+        if user.has_usable_password():
+            # ── Password flow ──────────────────────────────────────────────
+            password = request.POST.get('confirm_password', '')
+            if not password or not user.check_password(password):
+                messages.error(request, "Incorrect password. Account not deleted.")
+                return redirect('accounts:dashboard')
+        else:
+            # ── OTP flow ───────────────────────────────────────────────────
+            submitted_code = request.POST.get('otp_code', '').strip()
+            try:
+                otp = DeletionOTP.objects.get(user=user, is_used=False)
+            except DeletionOTP.DoesNotExist:
+                messages.error(request, "No OTP found. Please request a new one.")
+                return redirect('accounts:dashboard')
+
+            if otp.is_expired():
+                otp.delete()
+                messages.error(request, "Your OTP has expired. Please request a new one.")
+                return redirect('accounts:dashboard')
+
+            if otp.code != submitted_code:
+                messages.error(request, "Incorrect code. Please try again.")
+                return redirect('accounts:dashboard')
+
+            otp.is_used = True
+            otp.save(update_fields=['is_used'])
+
         logout(request)
         user.delete()
         messages.success(request, "Your account has been permanently deleted.")
         return redirect('home:index')
+
+
+@method_decorator(
+    ratelimit(key='ip', rate='3/10m', method='POST', block=False),
+    name='dispatch'
+)
+class RequestDeletionOTPView(LoginRequiredMixin, View):
+    """
+    Sends a deletion OTP to the logged-in user's email.
+    Only meaningful for SSO users — password users never see this button.
+    """
+    login_url = '/accounts/login/'
+
+    def post(self, request):
+        if getattr(request, 'limited', False):
+            messages.error(request, "Too many requests. Please wait 10 minutes.")
+            return redirect('accounts:dashboard')
+
+        if request.user.has_usable_password():
+            # Shouldn't reach here normally — just a safety guard
+            return redirect('accounts:dashboard')
+
+        _run_async(send_deletion_otp_email, request.user)
+        messages.success(request, "A 6-digit code has been sent to your email. It expires in 10 minutes.")
+        return redirect('accounts:dashboard')

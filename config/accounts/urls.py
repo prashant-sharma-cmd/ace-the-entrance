@@ -13,6 +13,8 @@ urlpatterns = [
     path('onboarding/', views.OnboardingView.as_view(), name='onboarding'),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('delete-account/', views.DeleteAccountView.as_view(), name='delete_account'),
+    path('delete-account/request-otp/', views.RequestDeletionOTPView.as_view(), name='request_deletion_otp'),
+
 
     # SSO via allauth
     path('social/', include('allauth.urls')),

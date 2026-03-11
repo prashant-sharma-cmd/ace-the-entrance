@@ -29,9 +29,7 @@
       <div class="auth-card-inner">
 
         <div class="auth-card-header">
-          <div class="auth-icon-wrap">
-            <i class="fas fa-user-plus"></i>
-          </div>
+          <div class="auth-icon-wrap"><i class="fas fa-user-plus"></i></div>
           <h2>Create Account</h2>
           <p>Join us — it takes less than a minute</p>
         </div>
@@ -43,7 +41,6 @@
         </div>
         {% endif %}
 
-        <!-- Social signup -->
         {% load socialaccount %}
         <div class="social-row cols-3">
           <a href="{% provider_login_url 'google' %}" class="social-btn google">
@@ -56,19 +53,17 @@
         <form method="post" novalidate id="signup-form">
           {% csrf_token %}
 
-          <!-- First name + Last name -->
+          <!-- First + Last name -->
           <div class="auth-form-row">
             <div class="auth-form-group">
               <label class="auth-label" for="id_first_name">First Name</label>
               <div class="auth-input-wrap">
                 <i class="fas fa-user auth-input-icon"></i>
-                {# FIX: maxlength matches model max_length=30 #}
                 <input type="text" name="first_name" id="id_first_name"
                   class="auth-input {% if form.first_name.errors %}is-error{% endif %}"
                   placeholder="Rohan"
                   value="{{ form.first_name.value|default:'' }}"
-                  maxlength="30"
-                  autocomplete="given-name" />
+                  maxlength="30" autocomplete="given-name" />
               </div>
               {% if form.first_name.errors %}
               <div class="auth-field-error">
@@ -82,13 +77,11 @@
               <label class="auth-label" for="id_last_name">Last Name</label>
               <div class="auth-input-wrap">
                 <i class="fas fa-user auth-input-icon"></i>
-                {# FIX: maxlength matches model max_length=30 #}
                 <input type="text" name="last_name" id="id_last_name"
                   class="auth-input {% if form.last_name.errors %}is-error{% endif %}"
                   placeholder="Rai"
                   value="{{ form.last_name.value|default:'' }}"
-                  maxlength="30"
-                  autocomplete="family-name" />
+                  maxlength="30" autocomplete="family-name" />
               </div>
               {% if form.last_name.errors %}
               <div class="auth-field-error">
@@ -104,13 +97,11 @@
             <label class="auth-label" for="id_username">Username</label>
             <div class="auth-input-wrap">
               <i class="fas fa-at auth-input-icon"></i>
-              {# FIX: maxlength=150 matches Django's default AbstractUser.username #}
               <input type="text" name="username" id="id_username"
                 class="auth-input {% if form.username.errors %}is-error{% endif %}"
                 placeholder="your_handle"
                 value="{{ form.username.value|default:'' }}"
-                maxlength="150"
-                autocomplete="username" />
+                maxlength="150" autocomplete="username" />
             </div>
             {% if form.username.errors %}
             <div class="auth-field-error">
@@ -129,8 +120,7 @@
                 class="auth-input {% if form.email.errors %}is-error{% endif %}"
                 placeholder="you@example.com"
                 value="{{ form.email.value|default:'' }}"
-                maxlength="254"
-                autocomplete="email" />
+                maxlength="254" autocomplete="email" />
             </div>
             {% if form.email.errors %}
             <div class="auth-field-error">
@@ -140,28 +130,95 @@
             {% endif %}
           </div>
 
-          <!-- Phone number -->
+          <!-- ── Phone number ──────────────────────────────────────────────── -->
           <div class="auth-form-group">
-            <label class="auth-label" for="id_phone_number">
+            <label class="auth-label" for="id_phone_local">
               Phone Number
-              <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--auth-muted);">(optional)</span>
+              <span class="auth-label-optional">(optional)</span>
             </label>
-            <div class="auth-input-wrap">
-              <i class="fas fa-phone auth-input-icon"></i>
-              <input type="tel" name="phone_number" id="id_phone_number"
-                class="auth-input {% if form.phone_number.errors %}is-error{% endif %}"
-                placeholder="+977 9845680882"
-                value="{{ form.phone_number.value|default:'' }}"
-                maxlength="20"
+            <div class="phone-wrap {% if form.phone_number.errors %}has-error{% endif %}">
+
+              <!-- Country picker -->
+              <div class="phone-country" id="phoneCountry">
+                <button type="button" class="phone-country-trigger" id="phoneCountryBtn"
+                        aria-haspopup="listbox" aria-expanded="false">
+                  <span class="phone-flag" id="phoneFlag">🇳🇵</span>
+                  <span class="phone-dial" id="phoneDialCode">+977</span>
+                  <svg class="phone-caret" viewBox="0 0 10 6" fill="none">
+                    <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+
+                <div class="phone-dropdown" id="phoneDropdown" role="listbox">
+                  <div class="phone-option is-selected" role="option" data-dial="+977" data-flag="🇳🇵">
+                    <span class="phone-option-flag">🇳🇵</span>
+                    <span class="phone-option-name">Nepal</span>
+                    <span class="phone-option-dial">+977</span>
+                  </div>
+                  <div class="phone-option" role="option" data-dial="+91" data-flag="🇮🇳">
+                    <span class="phone-option-flag">🇮🇳</span>
+                    <span class="phone-option-name">India</span>
+                    <span class="phone-option-dial">+91</span>
+                  </div>
+                  <div class="phone-option" role="option" data-dial="+1" data-flag="🇺🇸">
+                    <span class="phone-option-flag">🇺🇸</span>
+                    <span class="phone-option-name">USA / Canada</span>
+                    <span class="phone-option-dial">+1</span>
+                  </div>
+                  <div class="phone-option" role="option" data-dial="+44" data-flag="🇬🇧">
+                    <span class="phone-option-flag">🇬🇧</span>
+                    <span class="phone-option-name">UK</span>
+                    <span class="phone-option-dial">+44</span>
+                  </div>
+                  <div class="phone-option" role="option" data-dial="+61" data-flag="🇦🇺">
+                    <span class="phone-option-flag">🇦🇺</span>
+                    <span class="phone-option-name">Australia</span>
+                    <span class="phone-option-dial">+61</span>
+                  </div>
+                  <div class="phone-option" role="option" data-dial="+971" data-flag="🇦🇪">
+                    <span class="phone-option-flag">🇦🇪</span>
+                    <span class="phone-option-name">UAE</span>
+                    <span class="phone-option-dial">+971</span>
+                  </div>
+                  <div class="phone-option" role="option" data-dial="+974" data-flag="🇶🇦">
+                    <span class="phone-option-flag">🇶🇦</span>
+                    <span class="phone-option-name">Qatar</span>
+                    <span class="phone-option-dial">+974</span>
+                  </div>
+                  <div class="phone-option" role="option" data-dial="+966" data-flag="🇸🇦">
+                    <span class="phone-option-flag">🇸🇦</span>
+                    <span class="phone-option-name">Saudi Arabia</span>
+                    <span class="phone-option-dial">+966</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Visible-only local input (not submitted) -->
+              <input type="tel" id="id_phone_local"
+                class="auth-input phone-local-input"
+                placeholder="98XXXXXXXX"
+                maxlength="15"
                 autocomplete="tel" />
+
+              <!-- Hidden field actually POSTed -->
+              <input type="hidden" name="phone_number" id="id_phone_number"
+                value="{{ form.phone_number.value|default:'' }}" />
             </div>
+
+            {# Live format hint — updated by JS when country changes #}
+            <div id="phone-format-hint" class="phone-hint">e.g. 9812345678  (starts with 98 or 97)</div>
+
             {% if form.phone_number.errors %}
             <div class="auth-field-error">
               <i class="fas fa-triangle-exclamation"></i>
-              {{ form.phone_number.errors|join:", " }}
+              {% with dial=form.phone_number.value|default:'' %}
+                {{ form.phone_number.errors|join:", " }}
+              {% endwith %}
             </div>
             {% endif %}
           </div>
+          <!-- ── end phone ─────────────────────────────────────────────────── -->
 
           <!-- Password -->
           <div class="auth-form-group">
@@ -237,10 +294,179 @@
 {% block extra_js %}
 <script src="{% static 'accounts/js/auth.js' %}"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    initStrengthMeter('id_password1', 'pw-strength-bar', 'pw-strength-label');
-    initPasswordMatch('id_password1', 'id_password2', 'pw-match-error', 'signup-btn');
-    initLoadingSubmit('signup-form', 'signup-btn', 'Creating account…');
+document.addEventListener('DOMContentLoaded', function () {
+
+  var btn         = document.getElementById('phoneCountryBtn');
+  var dropdown    = document.getElementById('phoneDropdown');
+  var flagEl      = document.getElementById('phoneFlag');
+  var dialEl      = document.getElementById('phoneDialCode');
+  var localInput  = document.getElementById('id_phone_local');
+  var hiddenInput = document.getElementById('id_phone_number');
+  var hintEl      = document.getElementById('phone-format-hint');
+  var phoneWrap   = document.querySelector('.phone-wrap');
+  var currentDial = '+977';
+
+  // ── Per-country validation rules ──────────────────────────────────────────
+  // pattern: regex for the LOCAL part (after dial code, no leading zero)
+  // hint:    shown below the input as a helper and in inline error
+  var COUNTRY_RULES = {
+    '+977': { pattern: /^[97][678]\d{8}$/,  hint: 'e.g. 9812345678  (starts with 98 or 97)' },
+    '+91' : { pattern: /^[6-9]\d{9}$/,       hint: 'e.g. 9876543210  (10 digits, starts with 6–9)' },
+    '+1'  : { pattern: /^[2-9]\d{9}$/,       hint: 'e.g. 2025551234  (10 digits)' },
+    '+44' : { pattern: /^7\d{9}$/,            hint: 'e.g. 7911123456  (10 digits, starts with 7)' },
+    '+61' : { pattern: /^4\d{8}$/,            hint: 'e.g. 412345678  (9 digits, starts with 4)' },
+    '+971': { pattern: /^5\d{8}$/,            hint: 'e.g. 501234567  (9 digits, starts with 5)' },
+    '+974': { pattern: /^[3567]\d{7}$/,       hint: 'e.g. 33123456  (8 digits)' },
+    '+966': { pattern: /^5\d{8}$/,            hint: 'e.g. 512345678  (9 digits, starts with 5)' },
+  };
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function getRule() {
+    return COUNTRY_RULES[currentDial] || null;
+  }
+
+  function updateHint() {
+    var rule = getRule();
+    hintEl.textContent = rule ? rule.hint : '';
+  }
+
+  function clearPhoneError() {
+    phoneWrap.classList.remove('has-error');
+    var existing = document.getElementById('phone-inline-error');
+    if (existing) existing.remove();
+  }
+
+  function showPhoneError(msg) {
+    phoneWrap.classList.add('has-error');
+    clearPhoneError();  // remove old one first
+    phoneWrap.classList.add('has-error');
+    var err = document.createElement('div');
+    err.id = 'phone-inline-error';
+    err.className = 'auth-field-error';
+    err.innerHTML = '<i class="fas fa-triangle-exclamation"></i> ' + msg;
+    phoneWrap.parentNode.insertBefore(err, phoneWrap.nextSibling);
+  }
+
+  // ── Seed local input on error re-render ───────────────────────────────────
+  (function seedLocalInput() {
+    var stored = (hiddenInput.value || '').trim();
+    if (!stored) { updateHint(); return; }
+
+    var options = dropdown.querySelectorAll('.phone-option');
+    var matched = false;
+    var sorted  = Array.prototype.slice.call(options).sort(function(a, b) {
+      return b.dataset.dial.length - a.dataset.dial.length;
+    });
+
+    sorted.forEach(function (opt) {
+      if (matched) return;
+      if (stored.startsWith(opt.dataset.dial)) {
+        currentDial = opt.dataset.dial;
+        flagEl.textContent = opt.dataset.flag;
+        dialEl.textContent = currentDial;
+        options.forEach(function(o) { o.classList.remove('is-selected'); });
+        opt.classList.add('is-selected');
+        localInput.value = stored.slice(opt.dataset.dial.length).replace(/^0+/, '');
+        matched = true;
+      }
+    });
+
+    if (!matched) {
+      localInput.value = stored.startsWith('+') ? stored.slice(1) : stored;
+    }
+    updateHint();
+  })();
+
+  // ── Open / close dropdown ─────────────────────────────────────────────────
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var isOpen = dropdown.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(isOpen));
   });
+
+  document.addEventListener('click', function () {
+    dropdown.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  });
+
+  // ── Select a country ──────────────────────────────────────────────────────
+  dropdown.querySelectorAll('.phone-option').forEach(function (opt) {
+    opt.addEventListener('click', function (e) {
+      e.stopPropagation();
+      currentDial = opt.dataset.dial;
+      flagEl.textContent = opt.dataset.flag;
+      dialEl.textContent = currentDial;
+
+      dropdown.querySelectorAll('.phone-option').forEach(function (o) {
+        o.classList.remove('is-selected');
+      });
+      opt.classList.add('is-selected');
+      dropdown.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+
+      // Update hint for new country and re-validate if user already typed something
+      updateHint();
+      if (localInput.value.trim()) validatePhone();
+      localInput.focus();
+    });
+  });
+
+  // ── Live inline validation on blur ────────────────────────────────────────
+  function validatePhone() {
+    var raw  = localInput.value.trim().replace(/^0+/, '').replace(/[\s\-()]/g, '');
+    if (!raw) { clearPhoneError(); return true; }   // empty = ok (optional field)
+
+    var rule = getRule();
+    if (rule && !rule.pattern.test(raw)) {
+      showPhoneError('Invalid number for this country. ' + rule.hint);
+      return false;
+    }
+    clearPhoneError();
+    return true;
+  }
+
+  localInput.addEventListener('blur',  validatePhone);
+  localInput.addEventListener('input', function () {
+    // Only clear error on input — don't re-show it while typing
+    if (phoneWrap.classList.contains('has-error')) {
+      var raw = localInput.value.trim().replace(/^0+/, '').replace(/[\s\-()]/g, '');
+      var rule = getRule();
+      if (!raw || (rule && rule.pattern.test(raw))) clearPhoneError();
+    }
+  });
+
+  // ── On submit: validate + build E.164 ────────────────────────────────────
+  document.getElementById('signup-form').addEventListener('submit', function (e) {
+    var raw = localInput.value.trim();
+
+    if (!raw) {
+      hiddenInput.value = '';
+      return;
+    }
+
+    if (raw.startsWith('+')) {
+      hiddenInput.value = raw;
+      return;
+    }
+
+    var cleaned = raw.replace(/^0+/, '').replace(/[\s\-()]/g, '');
+
+    // Block obviously invalid numbers before they reach the server
+    var rule = getRule();
+    if (rule && !rule.pattern.test(cleaned)) {
+      e.preventDefault();
+      showPhoneError('Invalid number for this country. ' + rule.hint);
+      localInput.focus();
+      return;
+    }
+
+    hiddenInput.value = currentDial + cleaned;
+  });
+
+  // ── Password helpers ──────────────────────────────────────────────────────
+  initStrengthMeter('id_password1', 'pw-strength-bar', 'pw-strength-label');
+  initPasswordMatch('id_password1', 'id_password2', 'pw-match-error', 'signup-btn');
+  initLoadingSubmit('signup-form', 'signup-btn', 'Creating account…');
+});
 </script>
 {% endblock %}

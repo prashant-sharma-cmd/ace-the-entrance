@@ -4,8 +4,6 @@
    Palette: inherits site navy/cyan variables from styles.css
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Nunito:wght@400;500;600;700;800&display=swap');
-
 /* ── Auth-specific tokens ─────────────────────────────── */
 :root {
   --auth-font-display : "Grand Hotel", cursive;;
