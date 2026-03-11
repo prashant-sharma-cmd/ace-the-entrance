@@ -56,16 +56,18 @@
         <form method="post" novalidate id="signup-form">
           {% csrf_token %}
 
-          <!-- First name + Last name (2 col) -->
+          <!-- First name + Last name -->
           <div class="auth-form-row">
             <div class="auth-form-group">
               <label class="auth-label" for="id_first_name">First Name</label>
               <div class="auth-input-wrap">
                 <i class="fas fa-user auth-input-icon"></i>
+                {# FIX: maxlength matches model max_length=30 #}
                 <input type="text" name="first_name" id="id_first_name"
                   class="auth-input {% if form.first_name.errors %}is-error{% endif %}"
                   placeholder="Rohan"
                   value="{{ form.first_name.value|default:'' }}"
+                  maxlength="30"
                   autocomplete="given-name" />
               </div>
               {% if form.first_name.errors %}
@@ -80,10 +82,12 @@
               <label class="auth-label" for="id_last_name">Last Name</label>
               <div class="auth-input-wrap">
                 <i class="fas fa-user auth-input-icon"></i>
+                {# FIX: maxlength matches model max_length=30 #}
                 <input type="text" name="last_name" id="id_last_name"
                   class="auth-input {% if form.last_name.errors %}is-error{% endif %}"
                   placeholder="Rai"
                   value="{{ form.last_name.value|default:'' }}"
+                  maxlength="30"
                   autocomplete="family-name" />
               </div>
               {% if form.last_name.errors %}
@@ -95,15 +99,17 @@
             </div>
           </div>
 
-          <!-- Username — full width -->
+          <!-- Username -->
           <div class="auth-form-group">
             <label class="auth-label" for="id_username">Username</label>
             <div class="auth-input-wrap">
               <i class="fas fa-at auth-input-icon"></i>
+              {# FIX: maxlength=150 matches Django's default AbstractUser.username #}
               <input type="text" name="username" id="id_username"
                 class="auth-input {% if form.username.errors %}is-error{% endif %}"
                 placeholder="your_handle"
                 value="{{ form.username.value|default:'' }}"
+                maxlength="150"
                 autocomplete="username" />
             </div>
             {% if form.username.errors %}
@@ -114,7 +120,7 @@
             {% endif %}
           </div>
 
-          <!-- Email — full width -->
+          <!-- Email -->
           <div class="auth-form-group">
             <label class="auth-label" for="id_email">Email Address</label>
             <div class="auth-input-wrap">
@@ -123,6 +129,7 @@
                 class="auth-input {% if form.email.errors %}is-error{% endif %}"
                 placeholder="you@example.com"
                 value="{{ form.email.value|default:'' }}"
+                maxlength="254"
                 autocomplete="email" />
             </div>
             {% if form.email.errors %}
@@ -133,15 +140,19 @@
             {% endif %}
           </div>
 
-          <!-- Phone number — full width -->
+          <!-- Phone number -->
           <div class="auth-form-group">
-            <label class="auth-label" for="id_phone_number">Phone Number <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--auth-muted);">(optional)</span></label>
+            <label class="auth-label" for="id_phone_number">
+              Phone Number
+              <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--auth-muted);">(optional)</span>
+            </label>
             <div class="auth-input-wrap">
               <i class="fas fa-phone auth-input-icon"></i>
               <input type="tel" name="phone_number" id="id_phone_number"
                 class="auth-input {% if form.phone_number.errors %}is-error{% endif %}"
                 placeholder="+977 9845680882"
                 value="{{ form.phone_number.value|default:'' }}"
+                maxlength="20"
                 autocomplete="tel" />
             </div>
             {% if form.phone_number.errors %}
@@ -166,7 +177,6 @@
                 <i class="fas fa-eye"></i>
               </button>
             </div>
-            <!-- Strength meter -->
             <div class="pw-strength-track">
               <div class="pw-strength-bar" id="pw-strength-bar"></div>
             </div>
@@ -210,7 +220,7 @@
 
           <p class="auth-terms">
             By signing up you agree to our
-            <a href="{% url 'tos:index' %}">Terms of Service and Privacy Policy</a>
+            <a href="{% url 'tos:index' %}" target="_blank">Terms of Service and Privacy Policy</a>
           </p>
         </form>
 

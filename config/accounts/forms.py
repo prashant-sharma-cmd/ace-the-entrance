@@ -38,7 +38,7 @@ class OnboardingForm(forms.ModelForm):
             'primary_purpose',
             'visit_frequency',
             'how_discovered',
-            'updates_opt_in',
+            'newsletter_opt_in',
         ]
         widgets = {
             'primary_purpose': forms.RadioSelect,

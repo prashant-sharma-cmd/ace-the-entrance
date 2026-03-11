@@ -43,6 +43,12 @@
         <form method="post" novalidate id="resend-form">
           {% csrf_token %}
 
+          {# FIX: honeypot — hidden from real users, bots fill this in #}
+          <div style="display:none;" aria-hidden="true">
+            <label>Leave this empty</label>
+            <input type="text" name="honeypot" tabindex="-1" autocomplete="off">
+          </div>
+
           <div class="auth-form-group">
             <label class="auth-label" for="id_resend_email">Email Address</label>
             <div class="auth-input-wrap">
@@ -50,6 +56,7 @@
               <input type="email" name="email" id="id_resend_email"
                 class="auth-input"
                 placeholder="you@example.com"
+                maxlength="254"
                 required autofocus autocomplete="email" />
             </div>
           </div>

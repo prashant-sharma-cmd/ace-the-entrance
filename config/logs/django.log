@@ -165,3 +165,214 @@ redis.exceptions.ConnectionError: Error 10061 connecting to 127.0.0.1:6379. No c
 ERROR 2026-03-10 20:04:55,098 log "POST /contact_us/ HTTP/1.1" 500 176860
 WARNING 2026-03-10 20:04:55,219 log Not Found: /favicon.ico
 WARNING 2026-03-10 20:04:55,220 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-10 20:50:52,679 log "GET /static/home/fonts/grand-hotel-400.woff2 HTTP/1.1" 404 1910
+WARNING 2026-03-10 20:51:15,934 log "GET /static/home/vendor/fonts/grand-hotel-400.woff2 HTTP/1.1" 404 1931
+WARNING 2026-03-10 20:51:20,119 log "GET /static/home/vendor/fonts/grand-hotel-400.woff2 HTTP/1.1" 404 1931
+WARNING 2026-03-10 20:52:21,854 log "GET /static/vendor/fontawesome/css/all.min.css HTTP/1.1" 404 1916
+WARNING 2026-03-10 21:08:12,671 log Not Found: /favicon.ico
+WARNING 2026-03-10 21:08:12,674 log "GET /favicon.ico HTTP/1.1" 404 5282
+ERROR 2026-03-10 22:50:12,271 log You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2026-03-10 22:50:12,273 log You're accessing the development server over HTTPS, but it only supports HTTP.
+WARNING 2026-03-10 22:52:04,043 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-10 22:52:04,046 log "GET /accounts/google/login/callback/?error=access_denied&state=xSQhlkAgOHm9pcJg HTTP/1.1" 401 1684
+WARNING 2026-03-10 22:52:04,260 log Not Found: /favicon.ico
+WARNING 2026-03-10 22:52:04,266 log "GET /favicon.ico HTTP/1.1" 404 5282
+ERROR 2026-03-10 23:15:09,660 log You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2026-03-10 23:15:09,664 log You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2026-03-10 23:15:55,149 log Internal Server Error: /accounts/login/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 998, in connect_check_health
+    sock = self._connect()
+           ^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 1512, in _connect
+    raise err
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 1496, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django_ratelimit\decorators.py", line 19, in _wrapped
+    ratelimited = is_ratelimited(request=request, group=group, fn=fn,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django_ratelimit\core.py", line 153, in is_ratelimited
+    usage = get_usage(request, group, fn, key, rate, method, increment)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django_ratelimit\core.py", line 231, in get_usage
+    added = cache.add(cache_key, initial_value, period + EXPIRATION_FUDGE)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\cache\backends\redis.py", line 184, in add
+    return self._cache.add(key, value, self.get_backend_timeout(timeout))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\cache\backends\redis.py", line 96, in add
+    return bool(client.set(key, value, ex=timeout, nx=True))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\utils.py", line 493, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\commands\core.py", line 2664, in set
+    return self.execute_command("SET", *pieces, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\client.py", line 722, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\utils.py", line 236, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 2958, in get_connection
+    connection.connect()
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 976, in connect
+    self.retry.call_with_retry(
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 977, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 1022, in connect_check_health
+    raise e
+redis.exceptions.ConnectionError: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2026-03-10 23:15:55,169 log "POST /accounts/login/ HTTP/1.1" 500 172090
+ERROR 2026-03-11 16:34:08,610 log You're accessing the development server over HTTPS, but it only supports HTTP.
+ERROR 2026-03-11 16:34:08,613 log You're accessing the development server over HTTPS, but it only supports HTTP.
+WARNING 2026-03-11 16:34:52,346 log Not Found: /favicon.ico
+WARNING 2026-03-11 16:34:52,347 log "GET /favicon.ico HTTP/1.1" 404 5282
+ERROR 2026-03-11 16:37:17,734 log Internal Server Error: /admin/accounts/emailverificationtoken/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\db\models\options.py", line 684, in get_field
+    return self.fields_map[field_name]
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'status_badge'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\utils.py", line 293, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\utils.py", line 333, in _get_non_gfk_field
+    field = opts.get_field(name)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\db\models\options.py", line 686, in get_field
+    raise FieldDoesNotExist(
+django.core.exceptions.FieldDoesNotExist: EmailVerificationToken has no field named 'status_badge'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 221, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\base.py", line 47, in render
+    return super().render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\library.py", line 363, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 357, in result_list
+    "results": list(results(cl)),
+               ^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 333, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 324, in __init__
+    super().__init__(*items)
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 221, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\utils.py", line 302, in lookup_field
+    value = attr(obj)
+            ^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\accounts\admin.py", line 88, in status_badge
+    if obj.is_expired(): return format_html('<span style="color:red;">Expired</span>')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\utils\html.py", line 137, in format_html
+    raise TypeError("args or kwargs must be provided.")
+TypeError: args or kwargs must be provided.
+ERROR 2026-03-11 16:37:17,746 log "GET /admin/accounts/emailverificationtoken/ HTTP/1.1" 500 409259
+WARNING 2026-03-11 16:39:21,116 log Forbidden (CSRF token from POST incorrect.): /accounts/delete-account/
+WARNING 2026-03-11 16:39:21,117 log "POST /accounts/delete-account/ HTTP/1.1" 403 2503

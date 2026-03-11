@@ -15,14 +15,14 @@
     <link rel="manifest" href="{% static 'home/images/favicons/site.webmanifest' %}">
 
     <!-- font-awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="{% static 'home/vendor/fontawesome/css/all.min.css' %}">
 
     <!-- custom css -->
     <link rel="stylesheet" href="{% static 'home/css/styles.css' %}" />
     {% block extra_css%} {% endblock %}
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="{% static 'home/vendor/katex/katex.min.css' %}">
+    <script defer src="{% static 'home/vendor/katex/katex.min.js' %}"></script>
 
   </head>
 
@@ -87,7 +87,7 @@
 
     {% block extra_js %} {% endblock %}
     <script type="text/javascript" src="{% static 'home/js/app.js' %}" ></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
+    <script defer src="{% static 'home/vendor/katex/contrib/auto-render.min.js' %}" onload="renderMathInElement(document.body, {
       delimiters: [
             {left: '$$', right: '$$', display: true},
             {left: '$', right: '$', display: false},

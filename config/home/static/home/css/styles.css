@@ -3,7 +3,38 @@
 FONTS
 ===========
 */
-@import url("https://fonts.googleapis.com/css?family=Catamaran:400,700|Grand+Hotel");
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../vendor/fonts/catamaran-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Catamaran';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../vendor/fonts/catamaran-700.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Grand Hotel';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../vendor/fonts/grand-hotel-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Nunito';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../vendor/fonts/nunito.woff2') format('woff2');
+}
+
 /*
 ===========
 VARIABLES

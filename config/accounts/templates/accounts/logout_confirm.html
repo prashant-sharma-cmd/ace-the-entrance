@@ -1,0 +1,50 @@
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block title %}Log Out – {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+
+  <div class="auth-topbar">
+    <a href="/" class="auth-brand">
+      {{ PROJECT_NAME }} <span class="auth-brand-dot"></span>
+    </a>
+  </div>
+
+  <div class="auth-wrapper">
+    <div class="auth-card" style="max-width:400px;">
+      <div class="auth-card-stripe"></div>
+      <div class="auth-card-inner" style="text-align:center;">
+
+        <div class="auth-icon-wrap" style="margin:0 auto 1rem;">
+          <i class="fas fa-right-from-bracket"></i>
+        </div>
+        <h2>Log Out?</h2>
+        <p style="color:var(--auth-muted);font-size:0.9rem;margin-bottom:1.5rem;">
+          Are you sure you want to sign out of your account?
+        </p>
+
+        <form method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="auth-btn" style="width:100%;">
+            <i class="fas fa-right-from-bracket"></i>&nbsp; Yes, Log Me Out
+          </button>
+        </form>
+
+        <div style="margin-top:1rem;">
+          <a href="{% url 'accounts:dashboard' %}" style="font-size:0.85rem;color:var(--auth-muted);">
+            Cancel — take me back
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

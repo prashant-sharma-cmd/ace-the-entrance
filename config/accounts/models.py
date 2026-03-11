@@ -2,8 +2,8 @@ import uuid
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
@@ -18,49 +18,53 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+
 class UserOnboarding(models.Model):
     PURPOSE_CHOICES = [
-        ('daily_quiz', 'Daily Questions'),
-        ('discussion', 'Engaging in Discussion'),
+        ('daily_quiz',    'Daily Questions'),
+        ('discussion',    'Engaging in Discussion'),
         ('sxc_model_set', 'Checking Model Set'),
-        ('book_info', 'Learn More About Book'),
-        ('all', 'Everything'),
-        ('other', 'Other')
+        ('book_info',     'Learn More About Book'),
+        ('all',           'Everything'),
+        ('other',         'Other'),
     ]
 
     FREQUENCY_CHOICES = [
-        ('daily', 'Daily'),
-        ('weekly', 'Weekly'),
+        ('daily',   'Daily'),
+        ('weekly',  'Weekly'),
         ('monthly', 'Monthly'),
-        ('rarely', 'Rarely'),
+        ('rarely',  'Rarely'),
     ]
 
     DISCOVERY_CHOICES = [
-        ('official', 'Official Book'),
-        ('google', 'Google Search'),
-        ('facebook', 'Facebook'),
+        ('official',  'Official Book'),
+        ('google',    'Google Search'),
+        ('facebook',  'Facebook'),
         ('instagram', 'Instagram'),
-        ('friend', 'Friend / Teacher'),
-        ('other', 'Other'),
+        ('friend',    'Friend / Teacher'),
+        ('other',     'Other'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE,
-                                related_name='onboarding')
-    primary_purpose = models.CharField(max_length=100, choices=PURPOSE_CHOICES)
-    visit_frequency = models.CharField(max_length=100, choices=FREQUENCY_CHOICES)
-    how_discovered = models.CharField(max_length=100, choices=DISCOVERY_CHOICES)
-    updates_opt_in = models.BooleanField(default=False)
-    completed = models.BooleanField(default=False)
-    complete_date = models.DateTimeField(auto_now_add=True)
+    user              = models.OneToOneField(User, on_delete=models.CASCADE, related_name='onboarding')
+    primary_purpose   = models.CharField(max_length=100, choices=PURPOSE_CHOICES)
+    visit_frequency   = models.CharField(max_length=100, choices=FREQUENCY_CHOICES)
+    how_discovered    = models.CharField(max_length=100, choices=DISCOVERY_CHOICES)
+
+    newsletter_opt_in = models.BooleanField(default=False)
+
+    completed         = models.BooleanField(default=False)
+
+    complete_date     = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Onboarding: {self.user}"
 
+
 class EmailVerificationToken(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='email_verification_token')
-    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    user       = models.OneToOneField(User, on_delete=models.CASCADE, related_name='email_verification_token')
+    token      = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    is_used = models.BooleanField(default=False)
+    is_used    = models.BooleanField(default=False)
 
     def is_expired(self):
         from django.utils import timezone
