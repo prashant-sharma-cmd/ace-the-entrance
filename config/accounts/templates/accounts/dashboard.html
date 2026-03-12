@@ -228,38 +228,51 @@
     </form>
 
     {% else %}
-    <!-- ── OTP flow for Google/SSO users ── -->
+    <!-- ── OTP flow for Google/SSO users ──
+         Both steps are always in the DOM.
+         dashboard.js toggles between them via fetch — no page reload needed.
+         The OTP URL is passed via data-url on the button so dashboard.js
+         stays free of Django template tags.
+    -->
+
+    <!-- Step 1: Request the code -->
     <div id="otp-step-1">
       <p style="font-size:0.85rem;color:#555;margin-bottom:1rem;">
-        Click the button below to receive your confirmation code.
+        Click the button below to receive your 6-digit confirmation code.
       </p>
-      <form method="post" action="{% url 'accounts:request_deletion_otp' %}">
-        {% csrf_token %}
-        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
-          <button type="button" onclick="hideDeleteModal()"
-                  style="padding:0.5rem 1.1rem;border:1px solid #ddd;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:0.9rem;">
-            Cancel
-          </button>
-          <button type="submit"
-                  style="padding:0.5rem 1.1rem;border:none;border-radius:6px;background:#01257D;color:#fff;font-weight:600;cursor:pointer;font-size:0.9rem;">
-            <i class="fas fa-paper-plane"></i> Send Code
-          </button>
-        </div>
-      </form>
+      <div id="otp-send-error"
+           style="display:none;background:#fff0f0;color:#d63031;border-left:3px solid #d63031;padding:0.7rem 1rem;border-radius:6px;font-size:0.83rem;margin-bottom:0.9rem;">
+      </div>
+      <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+        <button type="button" onclick="hideDeleteModal()"
+                style="padding:0.5rem 1.1rem;border:1px solid #ddd;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:0.9rem;">
+          Cancel
+        </button>
+        <button type="button"
+                id="send-otp-btn"
+                data-url="{% url 'accounts:request_deletion_otp' %}"
+                onclick="sendOtp()"
+                style="padding:0.5rem 1.1rem;border:none;border-radius:6px;background:#01257D;color:#fff;font-weight:600;cursor:pointer;font-size:0.9rem;">
+          <i class="fas fa-paper-plane"></i> Send Code
+        </button>
+      </div>
     </div>
 
-    <!-- OTP entry — shown after the user has requested a code via page reload -->
-    {% if otp_requested %}
-    <div id="otp-step-2" style="margin-top:1rem;border-top:1px solid #eee;padding-top:1rem;">
-      <p style="font-size:0.85rem;color:#555;margin-bottom:0.75rem;">
-        Enter the 6-digit code sent to <strong>{{ user.email }}</strong>:
+    <!-- Step 2: Enter the code (hidden until sendOtp() succeeds) -->
+    <div id="otp-step-2" style="display:none;">
+      <p style="font-size:0.85rem;color:#00b894;font-weight:600;margin-bottom:0.6rem;">
+        <i class="fas fa-circle-check"></i> Code sent to <strong>{{ user.email }}</strong>
+      </p>
+      <p style="font-size:0.83rem;color:#555;margin-bottom:0.75rem;">
+        Enter the 6-digit code below. It expires in 10 minutes.
       </p>
       <form method="post" action="{% url 'accounts:delete_account' %}" id="otp-delete-form">
         {% csrf_token %}
-        <input type="text" name="otp_code" inputmode="numeric" maxlength="6"
+        <input type="text" name="otp_code" id="otp-input"
+               inputmode="numeric" maxlength="6"
                placeholder="000000"
                style="width:100%;padding:0.65rem 0.85rem;border:1px solid #ddd;border-radius:6px;margin-bottom:1rem;font-size:1.1rem;letter-spacing:0.3em;text-align:center;box-sizing:border-box;"
-               required autofocus />
+               required />
         <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
           <button type="button" onclick="hideDeleteModal()"
                   style="padding:0.5rem 1.1rem;border:1px solid #ddd;border-radius:6px;background:#f5f5f5;cursor:pointer;font-size:0.9rem;">
@@ -267,12 +280,18 @@
           </button>
           <button type="submit"
                   style="padding:0.5rem 1.1rem;border:none;border-radius:6px;background:#dc2626;color:#fff;font-weight:600;cursor:pointer;font-size:0.9rem;">
-            Confirm & Delete
+            Confirm &amp; Delete
           </button>
         </div>
       </form>
+      <p style="font-size:0.78rem;color:#999;text-align:center;margin-top:0.75rem;">
+        Didn't receive it?
+        <button type="button" onclick="resendOtp()"
+                style="background:none;border:none;color:#01257D;font-size:0.78rem;cursor:pointer;text-decoration:underline;padding:0;">
+          Resend code
+        </button>
+      </p>
     </div>
-    {% endif %}
 
     {% endif %}
   </div>
@@ -281,28 +300,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  function showDeleteModal() {
-    var m = document.getElementById('delete-modal');
-    m.style.display = 'flex';
-    var pw = m.querySelector('input[type=password]');
-    if (pw) pw.focus();
-  }
-  function hideDeleteModal() {
-    var m = document.getElementById('delete-modal');
-    m.style.display = 'none';
-    var pw = m.querySelector('input[type=password]');
-    if (pw) pw.value = '';
-  }
-  document.getElementById('delete-modal').addEventListener('click', function(e) {
-    if (e.target === this) hideDeleteModal();
-  });
-
-  // Auto-open the modal on page load if the user just requested an OTP
-  // so they land straight on the code-entry step
-  {% if otp_requested %}
-  document.addEventListener('DOMContentLoaded', function() { showDeleteModal(); });
-  {% endif %}
-</script>
 <script src="{% static 'accounts/js/auth.js' %}"></script>
+<script src="{% static 'accounts/js/dashboard.js' %}"></script>
 {% endblock %}

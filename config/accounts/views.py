@@ -323,22 +323,38 @@ class RequestDeletionOTPView(LoginRequiredMixin, View):
     """
     Sends a deletion OTP to the logged-in user's email.
     Only meaningful for SSO users — password users never see this button.
+    Supports both normal POST (redirect) and AJAX fetch (JSON 200).
     """
     login_url = '/accounts/login/'
 
     def post(self, request):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
         if getattr(request, 'limited', False):
-            messages.error(request, "Too many requests. Please wait 10 minutes.")
+            if is_ajax:
+                from django.http import JsonResponse
+                return JsonResponse(
+                    {'error': 'Too many requests. Please wait 10 minutes.'},
+                    status=429)
+            messages.error(request,
+                           "Too many requests. Please wait 10 minutes.")
             return redirect('accounts:dashboard')
 
         if request.user.has_usable_password():
-            # Shouldn't reach here normally — just a safety guard
+            if is_ajax:
+                from django.http import JsonResponse
+                return JsonResponse({'error': 'Not allowed.'}, status=400)
             return redirect('accounts:dashboard')
 
         _run_async(send_deletion_otp_email, request.user)
-        messages.success(request, "A 6-digit code has been sent to your email. It expires in 10 minutes.")
-        return redirect('accounts:dashboard')
 
+        if is_ajax:
+            from django.http import JsonResponse
+            return JsonResponse({'ok': True})
+
+        messages.success(request,
+                         "A 6-digit code has been sent to your email. It expires in 10 minutes.")
+        return redirect('accounts:dashboard')
 
 # ── Forgot Password ───────────────────────────────────────────────────────────
 

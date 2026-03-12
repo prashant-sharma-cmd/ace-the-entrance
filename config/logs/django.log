@@ -1014,3 +1014,31 @@ WARNING 2026-03-12 11:29:34,683 log Not Found: /.well-known/appspecific/com.chro
 WARNING 2026-03-12 11:29:34,683 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
 WARNING 2026-03-12 11:29:51,405 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
 WARNING 2026-03-12 11:29:51,407 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-12 11:41:32,505 log Method Not Allowed (GET): /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:41:32,505 log "GET /accounts/delete-account/request-otp/ HTTP/1.1" 405 0
+WARNING 2026-03-12 11:46:00,556 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:46:00,556 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:46:02,321 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:46:02,322 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:46:03,083 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:46:03,084 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:46:03,570 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:46:03,571 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:46:29,545 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:46:29,546 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:51:01,686 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-12 11:51:01,688 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-12 11:51:07,645 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:51:07,646 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:51:13,946 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:51:13,947 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:51:14,430 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:51:14,430 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:51:14,608 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:51:14,609 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:51:14,771 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:51:14,773 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:51:14,943 log Too Many Requests: /accounts/delete-account/request-otp/
+WARNING 2026-03-12 11:51:14,944 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
+WARNING 2026-03-12 11:51:54,514 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-12 11:51:54,514 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
