@@ -1,0 +1,49 @@
+{% extends "base_template.html" %}
+{% load static %}
+
+{% block title %}Login Failed{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'accounts/css/auth.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-topbar">
+    <a href="/" class="auth-brand">
+      {{ PROJECT_NAME }} <span class="auth-brand-dot"></span>
+    </a>
+    <a href="/" class="auth-topbar-link">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+  </div>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-card-stripe"></div>
+      <div class="auth-card-inner">
+        <div class="auth-card-header">
+          <div class="auth-icon-wrap" style="background: linear-gradient(135deg, #d63031, #c0392b);">
+            <i class="fas fa-triangle-exclamation"></i>
+          </div>
+          <h2>Login Failed</h2>
+          <p>Something went wrong with your social login</p>
+        </div>
+        <div class="auth-alert error">
+          <i class="fas fa-circle-exclamation"></i>
+          <span>
+            {% for message in messages %}
+              {{ message }}
+            {% empty %}
+              An error occurred during sign in. Please try again.
+            {% endfor %}
+          </span>
+        </div>
+        <a href="{% url 'accounts:login' %}" class="auth-btn"
+           style="text-decoration:none;text-align:center;display:block;">
+          <i class="fas fa-arrow-left"></i>&nbsp; Back to Sign In
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

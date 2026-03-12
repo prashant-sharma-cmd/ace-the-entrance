@@ -74,10 +74,12 @@ class UserAdmin(BaseUserAdmin):
     def email_verified_badge(self, obj):
         if obj.email_verified:
             return format_html(
-                '<span style="color:#15803d;font-weight:700;">✓ Verified</span>'
+                '<span style="color:{};font-weight:700;">{}</span>',
+                '#15803d', '✓ Verified'
             )
         return format_html(
-            '<span style="color:#b91c1c;font-weight:700;">✗ Unverified</span>'
+            '<span style="color:{};font-weight:700;">{}</span>',
+            '#b91c1c', '✗ Unverified'
         )
 
     @admin.display(description='Onboarded')
@@ -85,10 +87,12 @@ class UserAdmin(BaseUserAdmin):
         onboarding = getattr(obj, 'onboarding', None)
         if onboarding and onboarding.completed:
             return format_html(
-                '<span style="color:#15803d;font-weight:700;">✓ Done</span>'
+                '<span style="color:{};font-weight:700;">{}</span>',
+                '#15803d', '✓ Done'
             )
         return format_html(
-            '<span style="color:#92400e;font-weight:700;">− Pending</span>'
+            '<span style="color:{};font-weight:700;">{}</span>',
+            '#92400e', '− Pending'
         )
 
     # ── Admin actions ─────────────────────────────────────────────────────────
@@ -144,10 +148,12 @@ class UserOnboardingAdmin(admin.ModelAdmin):
     def completed_badge(self, obj):
         if obj.completed:
             return format_html(
-                '<span style="color:#15803d;font-weight:700;">✓ Yes</span>'
+                '<span style="color:{};font-weight:700;">{}</span>',
+                '#15803d', '✓ Yes'
             )
         return format_html(
-            '<span style="color:#92400e;font-weight:700;">− No</span>'
+            '<span style="color:{};font-weight:700;">{}</span>',
+            '#92400e', '− No'
         )
 
 
@@ -175,10 +181,10 @@ class EmailVerificationTokenAdmin(admin.ModelAdmin):
     @admin.display(description='Status')
     def status_badge(self, obj):
         if obj.is_used:
-            return format_html('<span style="color:#6b7280;">Used</span>')
+            return format_html('<span style="color:{};">Used</span>', '#6b7280')
         if obj.is_expired():
-            return format_html('<span style="color:#b91c1c;font-weight:600;">Expired</span>')
-        return format_html('<span style="color:#15803d;font-weight:600;">Active</span>')
+            return format_html('<span style="color:{};font-weight:600;">Expired</span>', '#b91c1c')
+        return format_html('<span style="color:{};font-weight:600;">Active</span>', '#15803d')
 
     actions = ['revoke_tokens']
 
@@ -222,15 +228,18 @@ class DeletionOTPAdmin(admin.ModelAdmin):
     @admin.display(description='Status')
     def status_badge(self, obj):
         if obj.is_used:
-            return format_html('<span style="color:#6b7280;">Used</span>')
+            return format_html('<span style="color:{};">Used</span>', '#6b7280')
         if obj.is_locked():
-            return format_html('<span style="color:#b91c1c;font-weight:600;">Locked ({} attempts)</span>', obj.attempt_count)
+            return format_html(
+                '<span style="color:{};font-weight:600;">Locked ({} attempts)</span>',
+                '#b91c1c', obj.attempt_count
+            )
         if obj.is_expired():
-            return format_html('<span style="color:#b91c1c;font-weight:600;">Expired</span>')
+            return format_html('<span style="color:{};font-weight:600;">Expired</span>', '#b91c1c')
         remaining = obj.MAX_ATTEMPTS - obj.attempt_count
         return format_html(
-            '<span style="color:#15803d;font-weight:600;">Active ({} attempt(s) left)</span>',
-            remaining
+            '<span style="color:{};font-weight:600;">Active ({} attempt(s) left)</span>',
+            '#15803d', remaining
         )
 
     actions = ['revoke_otps']
@@ -265,17 +274,16 @@ class PasswordResetTokenAdmin(admin.ModelAdmin):
     @admin.display(description='Status')
     def status_badge(self, obj):
         if obj.is_used:
-            return format_html('<span style="color:#6b7280;">Used</span>')
+            return format_html('<span style="color:{};">Used</span>', '#6b7280')
         if obj.is_expired():
-            return format_html('<span style="color:#b91c1c;font-weight:600;">Expired</span>')
-        # Show time remaining
+            return format_html('<span style="color:{};font-weight:600;">Expired</span>', '#b91c1c')
         from datetime import timedelta
         expires_at = obj.created_at + timedelta(hours=1)
         remaining  = expires_at - timezone.now()
-        mins       = int(remaining.total_seconds() // 60)
+        mins       = max(0, int(remaining.total_seconds() // 60))
         return format_html(
-            '<span style="color:#15803d;font-weight:600;">Active (~{}m left)</span>',
-            mins
+            '<span style="color:{};font-weight:600;">Active (~{}m left)</span>',
+            '#15803d', mins
         )
 
     actions = ['revoke_tokens']

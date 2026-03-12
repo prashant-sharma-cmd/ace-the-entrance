@@ -9,7 +9,7 @@ CSV format expected:
     - image   : absolute/relative path to an image file, or FALSE if none
 
 Usage:
-    python manage.py import_questions path/to/questions.csv
+    python manage.py sxcmodel_import_questions path/to/questions.csv
 
 Options:
     --clear     Delete all existing questions before importing

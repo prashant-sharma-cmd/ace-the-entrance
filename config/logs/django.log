@@ -570,3 +570,447 @@ WARNING 2026-03-11 17:35:16,139 log Forbidden (CSRF token from POST incorrect.):
 WARNING 2026-03-11 17:35:16,141 log "POST /accounts/login/ HTTP/1.1" 403 2503
 WARNING 2026-03-11 17:35:16,250 log Not Found: /favicon.ico
 WARNING 2026-03-11 17:35:16,251 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-11 17:54:08,600 log Not Found: /favicon.ico
+WARNING 2026-03-11 17:54:08,602 log "GET /favicon.ico HTTP/1.1" 404 5282
+ERROR 2026-03-11 17:54:25,098 log Internal Server Error: /admin/accounts/user/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\db\models\options.py", line 684, in get_field
+    return self.fields_map[field_name]
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'email_verified_badge'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\utils.py", line 293, in lookup_field
+    f = _get_non_gfk_field(opts, name)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\utils.py", line 333, in _get_non_gfk_field
+    field = opts.get_field(name)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\db\models\options.py", line 686, in get_field
+    raise FieldDoesNotExist(
+django.core.exceptions.FieldDoesNotExist: User has no field named 'email_verified_badge'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 221, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 174, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\loader_tags.py", line 160, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 166, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\loader_tags.py", line 66, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1091, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\base.py", line 1052, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\base.py", line 47, in render
+    return super().render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\template\library.py", line 363, in render
+    _dict = self.func(*resolved_args, **resolved_kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 357, in result_list
+    "results": list(results(cl)),
+               ^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 333, in results
+    yield ResultList(None, items_for_result(cl, res, None))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 324, in __init__
+    super().__init__(*items)
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\templatetags\admin_list.py", line 221, in items_for_result
+    f, attr, value = lookup_field(field_name, result, cl.model_admin)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\contrib\admin\utils.py", line 302, in lookup_field
+    value = attr(obj)
+            ^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\accounts\admin.py", line 76, in email_verified_badge
+    return format_html(
+           ^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\utils\html.py", line 137, in format_html
+    raise TypeError("args or kwargs must be provided.")
+TypeError: args or kwargs must be provided.
+ERROR 2026-03-11 17:54:25,109 log "GET /admin/accounts/user/ HTTP/1.1" 500 408540
+ERROR 2026-03-11 18:01:05,865 log Internal Server Error: /daily/quiz/api/questions/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\daily\views.py", line 35, in get
+    questions = list(quiz.questions.all())
+                     ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'questions'
+ERROR 2026-03-11 18:01:05,869 log "GET /daily/quiz/api/questions/ HTTP/1.1" 500 82757
+ERROR 2026-03-11 18:01:11,529 log Internal Server Error: /daily/quiz/api/questions/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\daily\views.py", line 35, in get
+    questions = list(quiz.questions.all())
+                     ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'questions'
+ERROR 2026-03-11 18:01:11,531 log "GET /daily/quiz/api/questions/ HTTP/1.1" 500 82757
+ERROR 2026-03-11 18:05:18,487 log Internal Server Error: /daily/quiz/api/questions/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\daily\views.py", line 35, in get
+    questions = list(quiz.questions.all())
+                     ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'questions'
+ERROR 2026-03-11 18:05:18,490 log "GET /daily/quiz/api/questions/ HTTP/1.1" 500 82757
+ERROR 2026-03-11 18:06:09,536 log Internal Server Error: /daily/quiz/api/questions/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\daily\views.py", line 35, in get
+    questions = list(quiz.questions.all())
+                     ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'questions'
+ERROR 2026-03-11 18:06:09,541 log "GET /daily/quiz/api/questions/ HTTP/1.1" 500 82757
+ERROR 2026-03-11 18:19:21,360 log Internal Server Error: /daily/quiz/api/questions/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\daily\views.py", line 34, in get
+    questions = list(quiz.questions.all())
+                     ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'questions'
+ERROR 2026-03-11 18:19:21,363 log "GET /daily/quiz/api/questions/ HTTP/1.1" 500 82757
+ERROR 2026-03-11 18:32:00,508 log Internal Server Error: /daily/quiz/api/questions/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 145, in dispatch
+    return handler(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\daily\views.py", line 34, in get
+    questions = list(quiz.questions.all())
+                     ^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'questions'
+ERROR 2026-03-11 18:32:00,515 log "GET /daily/quiz/api/questions/ HTTP/1.1" 500 82757
+WARNING 2026-03-11 18:33:11,146 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-11 18:33:11,146 log "GET /accounts/google/login/callback/?state=9JTkIFAbdrDPBiuC&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepBVzg_p72bTCVKjafOuRfz6geg7jtivg1lov7WjB9ZcWFjY4Yo9XSdp6lmuapIJyw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=3&prompt=none HTTP/1.1" 401 1684
+WARNING 2026-03-11 18:33:11,332 log Not Found: /favicon.ico
+WARNING 2026-03-11 18:33:11,333 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-11 18:34:36,155 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-11 18:34:36,155 log "GET /accounts/google/login/callback/?state=XboM5N5LNuHe031j&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepCo1F8KoFnMhTnzd4ntfnuSfDMDMdElk-uChFGD3-JbF1cQXTwnpTyJwT8UAR3qaA&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=3&prompt=none HTTP/1.1" 401 1684
+WARNING 2026-03-11 18:53:47,700 log Not Found: /sxcmodel/exam
+WARNING 2026-03-11 18:53:47,701 log "GET /sxcmodel/exam HTTP/1.1" 404 7432
+WARNING 2026-03-11 19:04:28,854 log Not Found: /favicon.ico
+WARNING 2026-03-11 19:04:28,860 log "GET /favicon.ico HTTP/1.1" 404 5282
+ERROR 2026-03-12 10:29:54,023 log Internal Server Error: /accounts/google/login/callback/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 998, in connect_check_health
+    sock = self._connect()
+           ^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 1512, in _connect
+    raise err
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 1496, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\socialaccount\providers\oauth2\views.py", line 102, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\socialaccount\providers\oauth2\views.py", line 151, in dispatch
+    return complete_social_login(request, login)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\socialaccount\helpers.py", line 70, in complete_social_login
+    return flows.login.complete_login(request, sociallogin)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\socialaccount\internal\flows\login.py", line 53, in complete_login
+    return _authenticate(request, sociallogin)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\socialaccount\internal\flows\login.py", line 80, in _authenticate
+    ret = process_signup(request, sociallogin)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\socialaccount\internal\flows\signup.py", line 111, in process_signup
+    auto_signup, resp = process_auto_signup(request, sociallogin)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\socialaccount\internal\flows\signup.py", line 47, in process_auto_signup
+    auto_signup, resp = process_auto_signup_email(request, sociallogin)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\socialaccount\internal\flows\signup.py", line 83, in process_auto_signup_email
+    resp = prevent_enumeration(request, email=email)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\internal\flows\signup.py", line 70, in prevent_enumeration
+    return perform_login(context.request, login)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\internal\flows\login.py", line 93, in perform_login
+    return resume_login(request, login)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\internal\flows\login.py", line 102, in resume_login
+    response = ctrl.handle()
+               ^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\stages.py", line 122, in handle
+    response, cont = stage.handle()
+                     ^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\stages.py", line 160, in handle
+    send_verification_email_at_login(self.request, login)
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\internal\flows\email_verification.py", line 292, in send_verification_email_at_login
+    sent = send_verification_email_at_fake_login(request, login)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\internal\flows\email_verification.py", line 321, in send_verification_email_at_fake_login
+    return send_verification_email_to_address(request, address, signup=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\internal\flows\email_verification.py", line 250, in send_verification_email_to_address
+    send = handle_verification_email_rate_limit(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\internal\flows\email_verification.py", line 182, in handle_verification_email_rate_limit
+    rl_ok = consume_email_verification_rate_limit(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\account\internal\flows\email_verification.py", line 157, in consume_email_verification_rate_limit
+    ratelimit.consume(
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\core\internal\ratelimit.py", line 169, in consume
+    single_usage = _consume_single_rate(
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\allauth\core\internal\ratelimit.py", line 131, in _consume_single_rate
+    history = cache.get(cache_key, [])
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\cache\backends\redis.py", line 188, in get
+    return self._cache.get(key, default)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\cache\backends\redis.py", line 100, in get
+    value = client.get(key)
+            ^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\commands\core.py", line 2069, in get
+    return self.execute_command("GET", name, keys=[name])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\client.py", line 716, in execute_command
+    return self._execute_command(*args, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\client.py", line 722, in _execute_command
+    conn = self.connection or pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\utils.py", line 236, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 2958, in get_connection
+    connection.connect()
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 976, in connect
+    self.retry.call_with_retry(
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\retry.py", line 132, in call_with_retry
+    raise error
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\retry.py", line 120, in call_with_retry
+    return do()
+           ^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 977, in <lambda>
+    lambda: self.connect_check_health(
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\redis\connection.py", line 1022, in connect_check_health
+    raise e
+redis.exceptions.ConnectionError: Error 10061 connecting to 127.0.0.1:6379. No connection could be made because the target machine actively refused it.
+ERROR 2026-03-12 10:29:54,030 log "GET /accounts/google/login/callback/?state=9dt0JX03UVBafzQz&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDUV0yZh93mOoiVTAgB5ZeLm31ANG9bOaduwstQ-MgJQrho2ZOvxp7rK-4oBwJOSw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&prompt=none HTTP/1.1" 500 239919
+WARNING 2026-03-12 10:29:54,282 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:29:54,283 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:30:36,409 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 10:30:36,409 log "GET /accounts/google/login/callback/?state=9dt0JX03UVBafzQz&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDUV0yZh93mOoiVTAgB5ZeLm31ANG9bOaduwstQ-MgJQrho2ZOvxp7rK-4oBwJOSw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&prompt=none HTTP/1.1" 401 1119
+WARNING 2026-03-12 10:30:44,404 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 10:30:44,406 log "GET /accounts/google/login/callback/?state=9dt0JX03UVBafzQz&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDUV0yZh93mOoiVTAgB5ZeLm31ANG9bOaduwstQ-MgJQrho2ZOvxp7rK-4oBwJOSw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&prompt=none HTTP/1.1" 401 1119
+WARNING 2026-03-12 10:30:47,220 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 10:30:47,222 log "GET /accounts/google/login/callback/?state=9dt0JX03UVBafzQz&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDUV0yZh93mOoiVTAgB5ZeLm31ANG9bOaduwstQ-MgJQrho2ZOvxp7rK-4oBwJOSw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&prompt=none HTTP/1.1" 401 1119
+WARNING 2026-03-12 10:46:00,542 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 10:46:00,543 log "GET /accounts/google/login/callback/?state=9dt0JX03UVBafzQz&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDUV0yZh93mOoiVTAgB5ZeLm31ANG9bOaduwstQ-MgJQrho2ZOvxp7rK-4oBwJOSw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&prompt=none HTTP/1.1" 401 1119
+WARNING 2026-03-12 10:46:02,461 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 10:46:02,462 log "GET /accounts/google/login/callback/?state=9dt0JX03UVBafzQz&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDUV0yZh93mOoiVTAgB5ZeLm31ANG9bOaduwstQ-MgJQrho2ZOvxp7rK-4oBwJOSw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&prompt=none HTTP/1.1" 401 1119
+WARNING 2026-03-12 10:46:07,480 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 10:46:07,482 log "GET /accounts/google/login/callback/?state=9dt0JX03UVBafzQz&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDVkAcZYAnV7b4X85G4RAX50-QJXByrg6ANQLrbGxuTJ2Kt6EMo_oyMVewm1gug1A&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&prompt=none HTTP/1.1" 401 1119
+WARNING 2026-03-12 10:46:34,528 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:34,529 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:35,388 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:35,390 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:35,941 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:35,943 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:36,628 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:36,628 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:37,225 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:37,227 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:37,682 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:37,683 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:38,071 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:38,072 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:38,350 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:38,352 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:38,571 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:38,572 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:52,899 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:52,900 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:53,783 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:53,785 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:54,281 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:54,283 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:54,952 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:54,952 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:55,414 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:55,416 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:46:55,709 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:46:55,710 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 10:49:28,612 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 10:49:28,613 log "GET /accounts/google/login/callback/?state=MX7OqAPwFRK92H5n&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDFvuLVjV_3tphalQEk3dO-2kY5CTZJTRKNR1Ae9qYbYcln3TePLPdVZb4hfbkLcA&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=1&prompt=none HTTP/1.1" 401 1119
+WARNING 2026-03-12 10:50:12,470 log Not Found: /favicon.ico
+WARNING 2026-03-12 10:50:12,471 log "GET /favicon.ico HTTP/1.1" 404 5282
+WARNING 2026-03-12 11:00:22,244 log Not Found: /favicon.ico
+WARNING 2026-03-12 11:00:22,245 log "GET /favicon.ico HTTP/1.1" 404 5285
+ERROR 2026-03-12 11:03:34,121 log Internal Server Error: /accounts/dashboard/
+Traceback (most recent call last):
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\.venv\Lib\site-packages\django\views\generic\base.py", line 106, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\accounts\mixins.py", line 42, in dispatch
+    result = super().dispatch(request, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Projects\Web Projects\ace-the-entrance\config\accounts\mixins.py", line 24, in dispatch
+    has_social = SocialAccount.objects.filter(user=user).exists()
+                 ^^^^^^^^^^^^^
+NameError: name 'SocialAccount' is not defined
+ERROR 2026-03-12 11:03:34,129 log "GET /accounts/dashboard/ HTTP/1.1" 500 85308
+WARNING 2026-03-12 11:05:46,674 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 11:05:46,674 log "GET /accounts/google/login/callback/?state=ydEmVkdsuHiPTgP3&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepC-iZc4F7BotGsPkMRoNOKssCYtWIpegd_0RJxXSdIu7r6hKudcAvMwn_nbm-ZCOQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=1&prompt=none HTTP/1.1" 401 1684
+WARNING 2026-03-12 11:11:19,947 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 11:11:19,947 log "GET /accounts/google/login/callback/?state=ydEmVkdsuHiPTgP3&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepC-iZc4F7BotGsPkMRoNOKssCYtWIpegd_0RJxXSdIu7r6hKudcAvMwn_nbm-ZCOQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=1&prompt=none HTTP/1.1" 401 1919
+WARNING 2026-03-12 11:11:27,219 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 11:11:27,220 log "GET /accounts/google/login/callback/?state=ydEmVkdsuHiPTgP3&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDBF42sWAafwfGKIPySN7Ifd15prwrTW96wtgwKUL-eiT6w4KYBUGlAWkp9R-EjCA&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=1&prompt=none HTTP/1.1" 401 1919
+WARNING 2026-03-12 11:12:03,227 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 11:12:03,228 log "GET /accounts/google/login/callback/?state=Idv1WjZc9MyJta3h&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepAFMFtvkxjiJtKDxeKqTtCrFWtW9Gb-yjMRj1L4EGKlgmjcZaZI9w79I7FsVuzjSQ&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&authuser=1&prompt=none HTTP/1.1" 401 1919
+WARNING 2026-03-12 11:15:19,874 log Unauthorized: /accounts/google/login/callback/
+WARNING 2026-03-12 11:15:19,875 log "GET /accounts/google/login/callback/?state=Z1XsB4xD8pSvcIaF&iss=https%3A%2F%2Faccounts.google.com&code=4%2F0AfrIepDp9zjEcRDpjomFoUhMRfRovxcJRxz9KsRChgHP8axuQxV2N1oCTW7ZZtTA1hu7Bg&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email&authuser=1&prompt=none HTTP/1.1" 401 1919
+WARNING 2026-03-12 11:28:47,792 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-12 11:28:47,793 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-12 11:29:21,983 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-12 11:29:21,984 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-12 11:29:34,683 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-12 11:29:34,683 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-12 11:29:51,405 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-12 11:29:51,407 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396

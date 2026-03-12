@@ -1,9 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse
+from allauth.socialaccount.models import SocialAccount
 
-# FIX: exact paths only — startswith prefix matching could accidentally exempt
-# unintended URLs (e.g. a future /accounts/socialdata/ would be exempt under
-# the old /accounts/social/ prefix rule).
 EXEMPT_URLS = {
     '/accounts/login/',
     '/accounts/signup/',
@@ -15,14 +13,9 @@ EXEMPT_URLS = {
     '/accounts/reset/done/',
 }
 
-# Kept as a prefix since verify links include a UUID segment
-VERIFY_PREFIX = '/accounts/verify/'
-
-# Password reset confirm links include a UUID segment
-RESET_PREFIX = '/accounts/reset/'
-
-# SSO callbacks use a dynamic prefix — kept as prefix match
-SOCIAL_PREFIX = '/accounts/social/'
+VERIFY_PREFIX  = '/accounts/verify/'
+RESET_PREFIX   = '/accounts/reset/'
+SOCIAL_PREFIX  = '/accounts/social/'
 
 
 class EmailVerificationMiddleware:
@@ -33,7 +26,6 @@ class EmailVerificationMiddleware:
         if request.user.is_authenticated:
             path = request.path_info
 
-            # FIX: exact set lookup for known exempt paths
             is_exempt = (
                 path in EXEMPT_URLS
                 or path.startswith(VERIFY_PREFIX)
@@ -42,6 +34,11 @@ class EmailVerificationMiddleware:
             )
 
             if not request.user.email_verified and not is_exempt:
-                return redirect(reverse('accounts:email_sent'))
+                # Social auth users are always considered verified
+                has_social = SocialAccount.objects.filter(
+                    user=request.user
+                ).exists()
+                if not has_social:
+                    return redirect(reverse('accounts:email_sent'))
 
         return self.get_response(request)
