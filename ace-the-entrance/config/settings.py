@@ -35,6 +35,10 @@ if ENVIRONMENT == "production":
     SECURE_CONTENT_TYPE_NOSNIFF    = True
     SESSION_COOKIE_SECURE          = True
     CSRF_COOKIE_SECURE             = True
+    CSRF_TRUSTED_ORIGINS = [
+        "https://acetheentrance.com",
+        "https://www.acetheentrance.com"
+    ]
     X_FRAME_OPTIONS                = "DENY"
 else:
     # Explicitly off in development — prevents browser HSTS cache issues
@@ -79,6 +83,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -184,7 +189,6 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 ACCOUNT_ADAPTER       = 'accounts.adapter.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'accounts.adapter.SocialAccountAdapter'
 
 # ── Internationalisation ───────────────────────────────────────────────────────
 
@@ -195,8 +199,8 @@ USE_TZ        = True
 
 # ── Static & media ────────────────────────────────────────────────────────────
 
-STATIC_URL  = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # ── Logging ───────────────────────────────────────────────────────────────────
 

@@ -1,4 +1,6 @@
-/config/.env
-/config/data/
+/ace-the-entrance/.env
+/ace-the-entrance/data/
 /todo.md
 /.venv/
+/ace-the-entrance/media/
+/ace-the-entrance/home/static/home/vendor/
