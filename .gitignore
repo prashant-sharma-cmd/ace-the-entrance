@@ -5,7 +5,6 @@
 !/ace-the-entrance/data/sample-sxc-model-set.csv
 /todo.md
 /.venv/
-/ace-the-entrance/media/
 /ace-the-entrance/home/static/home/vendor/
 ace-the-entrance/logs/*
 !ace-the-entrance/logs/.gitkeep
