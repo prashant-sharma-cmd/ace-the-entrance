@@ -5,7 +5,7 @@
 [![Python Version](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Ace The Entrance** is an open-source web platform designed to help students in Nepal prepare for competitive +2 entrance exams (Science, Management, etc.) for prestigious institutions like **St. Xavier's College (Maitighar)**, KMC, SOS, and Budhanilkantha.
+**Ace The Entrance** is an open-source web platform designed to help students in Nepal prepare for competitive +2 entrance exams for prestigious institutions like **St. Xavier's College (Maitighar)**, KMC, SOS, and Budhanilkantha.
 
 This application is the digital companion to the "Ace The Entrance" book, providing interactive tools to supplement traditional study methods.
 
@@ -49,8 +49,7 @@ ace-the-entrance/
 │   ├── updates/            # News and announcements for students
 │   ├── manage.py           # Django CLI
 │   └── .env                # Secrets and environment variables
-├── requirements.txt        # Python dependencies
-└── todo.md                 # Development roadmap
+└── requirements.txt        # Python dependencies
 ```
 
 ---
@@ -65,6 +64,7 @@ ace-the-entrance/
 ### 2. Setup Environment
 ```bash
 git clone https://github.com/prashant-sharma-cmd/ace-the-entrance.git
+cd ace-the-entrance
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
