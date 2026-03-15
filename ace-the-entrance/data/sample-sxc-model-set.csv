@@ -1,0 +1,101 @@
+subject;question;option1;option2;option3;option4;answer;image
+PHY;Which of the following is a fundamental quantity?;Mass;Velocity;Force;Volume;a;FALSE
+PHY;The rate of change of momentum is equal to?;Velocity;Acceleration;Force;Work;c;FALSE
+PHY;A body is dropped from a height. Its kinetic energy is maximum at?;The starting point;The midpoint;Just before hitting ground;After hitting ground;c;FALSE
+PHY;What is the value of 'G' (Universal Gravitational Constant)?;6.67 x 10^-11;9.8;1.6 x 10^-19;3 x 10^8;a;FALSE
+PHY;Hydraulic brakes work on the principle of?;Archimedes principle;Pascal law;Bernoulli principle;Newton law;b;FALSE
+PHY;Specific heat capacity of water is?;4200 J/kgC;2100 J/kgC;1000 J/kgC;420 J/kgC;a;FALSE
+PHY;A real and inverted image of the same size is formed by a convex lens when object is at?;Infinity;Focus;2F;Between F and 2F;c;FALSE
+PHY;The power of a lens is -2D. Its focal length is?;50 cm;-50 cm;20 cm;-20 cm;b;FALSE
+PHY;Which color of light deviates the most in a prism?;Red;Yellow;Green;Violet;d;FALSE
+PHY;The velocity of sound is maximum in?;Vacuum;Air;Water;Steel;d;FALSE
+PHY;1 Horse Power (HP) is equal to?;500 Watts;746 Watts;1000 Watts;750 Watts;b;FALSE
+PHY;The resistance of an ideal ammeter is?;Zero;Infinite;100 Ohm;1 Ohm;a;FALSE
+PHY;Domestic electricity supply in Nepal is?;220V 50Hz;110V 60Hz;220V 60Hz;440V 50Hz;a;FALSE
+PHY;The nucleus of an atom consists of?;Protons only;Neutrons only;Protons and Neutrons;Protons and Electrons;c;FALSE
+PHY;Which mirror is used as a shaving mirror?;Plane;Concave;Convex;Cylindrical;b;FALSE
+PHY;Upthrust depends on?;Volume of body;Density of liquid;Value of g;All of the above;d;FALSE
+PHY;Energy possessed by a stretched spring is?;Kinetic;Potential;Chemical;Electrical;b;FALSE
+PHY;Melting point of ice decreases when?;Pressure increases;Pressure decreases;Temperature increases;None;a;FALSE
+PHY;The instrument used to measure potential difference is?;Ammeter;Voltmeter;Galvanometer;Thermometer;b;FALSE
+PHY;The escape velocity on earth is?;11.2 km/s;9.8 km/s;7.9 km/s;5.0 km/s;a;FALSE
+CHE;The atomic number of an element is equal to?;Number of neutrons;Number of protons;Mass number;Number of nucleons;b;FALSE
+CHE;Valency of Carbon is?;2;3;4;6;c;FALSE
+CHE;The bond formed by sharing of electrons is?;Ionic;Covalent;Metallic;Hydrogen;b;FALSE
+CHE;Which is the most electronegative element?;Oxygen;Chlorine;Fluorine;Nitrogen;c;FALSE
+CHE;The pH of an acidic solution is?;7;Greater than 7;Less than 7;14;c;FALSE
+CHE;Formula of Blue Vitriol is?;CuSO4.5H2O;FeSO4.7H2O;ZnSO4.7H2O;Na2CO3;a;FALSE
+CHE;Temporary hardness of water is due to?;Calcium Chloride;Magnesium Sulfate;Calcium Bicarbonate;Sodium Chloride;c;FALSE
+CHE;Main ore of Aluminum is?;Haematite;Bauxite;Cuprite;Galena;b;FALSE
+CHE;Ammonia gas is collected by?;Upward displacement of air;Downward displacement of air;Downward displacement of water;None;b;FALSE
+CHE;Organic compounds must contain?;Nitrogen;Oxygen;Carbon;Sulfur;c;FALSE
+CHE;General formula of Alkanes is?;CnH2n+2;CnH2n;CnH2n-2;CnHn;a;FALSE
+CHE;The gas used in dry ice is?;Oxygen;Nitrogen;Carbon Dioxide;Hydrogen;c;FALSE
+CHE;Which acid is found in Ants?;Citric acid;Acetic acid;Formic acid;Tartaric acid;c;FALSE
+CHE;Bronze is an alloy of?;Copper and Zinc;Copper and Tin;Iron and Carbon;Lead and Tin;b;FALSE
+CHE;Father of modern chemistry is?;Lavoisier;Dalton;Mendeleev;Boyle;a;FALSE
+CHE;Modern periodic law is based on?;Atomic weight;Atomic volume;Atomic number;Mass number;c;FALSE
+CHE;A catalyst that slows down a reaction is?;Positive;Negative;Bio-catalyst;Promoter;b;FALSE
+CHE;Chemical name of Baking Soda is?;Sodium Carbonate;Sodium Bicarbonate;Sodium Chloride;Sodium Hydroxide;b;FALSE
+CHE;Which gas smells like rotten eggs?;CO2;NH3;H2S;SO2;c;FALSE
+CHE;Isotopes have same?;Mass number;Atomic number;Number of neutrons;None;b;FALSE
+BIO;Basic unit of life is?;Tissue;Organ;Cell;Organism;c;FALSE
+BIO;Kitchen of the cell is?;Mitochondria;Chloroplast;Ribosome;Lysosome;b;FALSE
+BIO;Which phylum has jointed legs?;Annelida;Mollusca;Arthropoda;Echinodermata;c;FALSE
+BIO;Binary fission is found in?;Hydra;Amoeba;Yeast;Spirogyra;b;FALSE
+BIO;Pollen grains are produced in?;Anther;Stigma;Style;Ovary;a;FALSE
+BIO;Double circulation is found in?;Fish;Amphibian;Reptile;Mammal;d;FALSE
+BIO;Master gland of human body is?;Thyroid;Adrenal;Pituitary;Pancreas;c;FALSE
+BIO;Vitamin C deficiency causes?;Rickets;Scurvy;Beriberi;Night blindness;b;FALSE
+BIO;Xylem helps in transport of?;Food;Water;Oxygen;Hormones;b;FALSE
+BIO;The phenotypic ratio of Monohybrid cross is?;1:2:1;3:1;9:3:3:1;1:1;b;FALSE
+BIO;Blood group known as universal donor is?;A;B;AB;O;d;FALSE
+BIO;Study of fossils is?;Paleontology;Ecology;Genetics;Cytology;a;FALSE
+BIO;Bile is secreted by?;Stomach;Pancreas;Liver;Gall bladder;c;FALSE
+BIO;Total number of ribs in human body?;12;24;33;20;b;FALSE
+BIO;The long extension of a neuron is?;Dendrite;Cyton;Axon;Synapse;c;FALSE
+BIO;Respiration in absence of oxygen is?;Aerobic;Anaerobic;Internal;External;b;FALSE
+BIO;World Environment Day is?;June 5;April 22;Dec 1;July 11;a;FALSE
+BIO;Non-flowering plants are?;Angiosperms;Gymnosperms;Cryptogams;Phanerogams;c;FALSE
+BIO;Malaria is caused by?;Bacteria;Virus;Plasmodium;Fungi;c;FALSE
+BIO;Protein factory of cell is?;Lysosome;Ribosome;Centrosome;Vacuole;b;FALSE
+MAT;If A={1,2} and B={3,4}, then A intersection B is?;{1,2,3,4};{0};Empty Set;{1,3};c;FALSE
+MAT;Value of log(10) to the base 10 is?;0;1;10;Infinity;b;FALSE
+MAT;If 2^x = 32, then x is?;4;5;6;10;b;FALSE
+MAT;Discriminant of x^2 + 5x + 6 = 0 is?;1;5;25;0;a;FALSE
+MAT;Sum of first n natural numbers is?;n(n+1)/2;n^2;n(n-1)/2;2n;a;FALSE
+MAT;Derivative of x^2 with respect to x is?;x;2x;2;x^3;b;FALSE
+MAT;Sin(60) * Cos(30) + Cos(60) * Sin(30) equals?;0;1;0.5;2;b;FALSE
+MAT;Distance between (0,0) and (3,4) is?;7;1;5;25;c;FALSE
+MAT;Area of triangle with sides 3, 4, 5 is?;6;12;7;10;a;FALSE
+MAT;If tan A = 1, then A is?;30;45;60;90;b;FALSE
+MAT;Slope of line parallel to X-axis is?;0;1;Infinite;-1;a;FALSE
+MAT;Median of 1, 3, 5, 7, 9 is?;3;5;7;9;b;FALSE
+MAT;Probability of getting a prime number in a single throw of die?;1/2;1/3;1/6;2/3;a;FALSE
+MAT;Volume of cylinder is?;pi*r^2*h;2*pi*r*h;1/3*pi*r^2*h;4/3*pi*r^3;a;FALSE
+MAT;The number of subsets of a set with 3 elements is?;3;6;8;9;c;FALSE
+MAT;In a right-angled triangle, h^2 equals?;p^2-b^2;p^2+b^2;p+b;2p+2b;b;FALSE
+MAT;If 3x + 4 = 19, then x is?;3;5;7;4;b;FALSE
+MAT;Limit of (sin x)/x as x approaches 0 is?;0;1;Infinite;Does not exist;b;FALSE
+MAT;Matrix A multiplied by Identity matrix I is?;I;0;A;A^2;c;FALSE
+MAT;Sum of interior angles of a pentagon?;360;540;720;180;b;FALSE
+ENG;He went to the market ___ buy vegetables.;to;for;by;in;a;FALSE
+ENG;Choose the correct spelling.;Receive;recieve;receve;resieve;a;FALSE
+ENG;I have been living here ___ 2010.;for;since;from;in;b;FALSE
+ENG;She is ___ M.A. in English.;a;an;the;no article;b;FALSE
+ENG;If I ___ a bird, I would fly.;am;was;were;will be;c;FALSE
+ENG;The passive voice of 'He sings a song' is?;A song is sung by him;A song was sung by him;A song is being sung;He is sung a song;a;FALSE
+ENG;Antonym of 'Humble' is?;Modest;Proud;Polite;Kind;b;FALSE
+ENG;He is tired ___ working.;with;of;by;from;b;FALSE
+ENG;___ you like a cup of tea?;Will;Would;Shall;Can;b;FALSE
+ENG;Neither of the boys ___ present.;is;are;were;have;a;FALSE
+IQ_GK;If Kathmandu is to Nepal, then Thimphu is to?;India;China;Bhutan;Pakistan;c;FALSE
+IQ_GK;Which number comes next: 2, 6, 12, 20, ?;24;26;30;32;c;FALSE
+IQ_GK;Who is the current Prime Minister of Nepal?;KP Sharma Oli;Sher Bahadur Deuba;Pushpa Kamal Dahal;Baburam Bhattarai;a;FALSE
+IQ_GK;Largest district of Nepal by area is?;Dolpa;Humla;Mugu;Mustang;a;FALSE
+IQ_GK;If 1=5, 2=10, 3=15, then 5=?;20;25;1;50;b;FALSE
+IQ_GK;Which planet is nearest to the sun?;Venus;Mars;Mercury;Earth;c;FALSE
+IQ_GK;The bridge over the Mahakali river connects Nepal with?;India;China;Bhutan;Bangladesh;a;FALSE
+IQ_GK;Find the odd one out: Cow, Dog, Cat, Fish;Cow;Dog;Cat;Fish;d;FALSE
+IQ_GK;How many provinces are there in Nepal?;5;6;7;8;c;FALSE
+IQ_GK;Which city is known as the 'Gateway to Everest'?;Namche Bazaar;Lukla;Kathmandu;Jiri;b;FALSE

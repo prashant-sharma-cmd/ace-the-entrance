@@ -1,0 +1,61 @@
+subject,topic,question_text,choice1,choice2,choice3,choice4,correct_answer
+physics,UnitsDimensions,What is the SI unit of pressure?,Pascal,Newton,Joule,Watt,Pascal
+physics,Dynamics,Every action has an equal and opposite reaction is which law?,First Law,Second Law,Third Law,Law of Inertia,Third Law
+physics,Simple Machine,Which of the following is a first-class lever?,Scissors,Bottle Opener,Tweezers,Wheelbarrow,Scissors
+physics,Pressure,What happens to atmospheric pressure as altitude increases?,Increases,Decreases,Remains Same,Fluctuates,Decreases
+physics,Gravitation,What is the value of 'g' at the center of the Earth?,9.8 m/s^2,10 m/s^2,0,1.6 m/s^2,0
+physics,Heat,Which method of heat transfer does not require a medium?,Conduction,Convection,Radiation,Evaporation,Radiation
+physics,WorkEnergyPower,What is the formula for Kinetic Energy?,mgh,1/2 mv^2,Fxd,P/t,1/2 mv^2
+physics,Optics,A concave lens always forms which type of image?,Real and Inverted,Virtual and Erect,Real and Erect,Magnified,Virtual and Erect
+physics,WaveSound,What is the audible range for human ears?,20Hz-20kHz,5Hz-50Hz,100kHz,20Hz-200kHz,20Hz-20kHz
+physics,Universe,Which planet is known as the Red Planet?,Venus,Mars,Jupiter,Saturn,Mars
+chemistry,AtomsMolecules,Who discovered the Electron?,Dalton,Rutherford,J.J. Thomson,Chadwick,J.J. Thomson
+chemistry,PeriodicTable,What is the atomic number of Carbon?,4,5,6,12,6
+chemistry,ChemicalReaction,A reaction that releases heat is called?,Endothermic,Exothermic,Catalytic,Reversible,Exothermic
+chemistry,StateOfMatter,The process of a solid turning directly into gas is?,Melting,Boiling,Sublimation,Freezing,Sublimation
+chemistry,MetalsNonMetals,Which metal is found in liquid state at room temperature?,Iron,Gold,Mercury,Sodium,Mercury
+chemistry,AcidBaseSalt,What is the pH of a neutral solution?,1,5,7,14,7
+chemistry,Water,What is the chemical formula for heavy water?,H2O,D2O,H2O2,CO2,D2O
+chemistry,OrganicChemistry,What is the main component of Natural Gas?,Ethane,Methane,Propane,Butane,Methane
+chemistry,MaterialsUsedDaily,Which polymer is used to make non-stick cookware?,PVC,Nylon,Teflon,Polystyrene,Teflon
+chemistry,SomeGases,Which gas is used in fire extinguishers?,Oxygen,Hydrogen,Carbon Dioxide,Nitrogen,Carbon Dioxide
+biology,CellBiology,Which of the following is the 'control center' of the cell?,Mitochondria,Nucleus,Ribosome,Cytoplasm,Nucleus
+biology,AnimalClassification,To which phylum do sponges belong?,Protozoa,Porifera,Coelenterata,Annelida,Porifera
+biology,HumanSystem,How many chambers does a human heart have?,2,3,4,1,4
+biology,PlantDiversity,Which part of the plant is responsible for photosynthesis?,Root,Stem,Leaf,Flower,Leaf
+biology,Genetics,Who is known as the Father of Genetics?,Darwin,Mendel,Lamarck,Watson,Mendel
+biology,Ecology,What is a group of populations living in the same area called?,Species,Ecosystem,Community,Biome,Community
+biology,OriginEvolution,Who proposed the theory of Natural Selection?,Lamarck,Charles Darwin,Aristotle,Linnaeus,Charles Darwin
+biology,AnimalAdaptation,Which organ helps a fish to breathe underwater?,Lungs,Skin,Gills,Trachea,Gills
+biology,IntroductionToBiology,What is the study of fungi called?,Phycology,Mycology,Virology,Bacteriology,Mycology
+biology,HumanSystem,What is the largest organ in the human body?,Liver,Heart,Skin,Brain,Skin
+maths,Set,If A = {1; 2} and B = {2; 3}; what is A intersection B?,{1; 2; 3},{2},{1; 3},{ }, {2}
+maths,Algebra,Solve for x: 2x + 10 = 20,5,10,15,20,5
+maths,Trigonometry,What is the value of sin 90 degrees?,0,0.5,1,0.866,1
+maths,MatrixDeterminant,A matrix with equal number of rows and columns is called?,Identity,Square,Null,Scalar,Square
+maths,Probability,What is the probability of getting a head in a coin toss?,0,0.5,1,2,0.5
+maths,Indices,What is the value of any non-zero number raised to the power 0?,0,1,The number itself,-1,1
+maths,Arithmetic,What is 15% of 200?,20,30,40,50,30
+maths,Geometry,The sum of angles in a triangle is?,90,180,270,360,180
+maths,Mensuration,What is the area of a circle?,2*pi*r,pi*r^2,pi*d,4/3*pi*r^3,pi*r^2
+maths,QuadraticEquation,What is the maximum number of roots for a quadratic equation?,1,2,3,Infinite,2
+english,Articles,I saw ___ elephant at the zoo.,a,an,the,no article,an
+english,Prepositions,She is interested ___ learning music.,on,at,in,with,in
+english,Tense,Choose the correct form: He ___ to school every day.,go,goes,going,gone,goes
+english,QuestionTag,You are a student; ___?,are you,aren't you,do you,don't you,aren't you
+english,Voice,Change to passive: 'He opens the door.',The door opened by him,The door is opened by him,The door was open by him,The door is open,The door is opened by him
+english,ReportedSpeech,He said; 'I am happy.',He said that he is happy,He said that he was happy,He said he happy,He told he was happy,He said that he was happy
+english,Conditionals,If it rains; I ___ stay at home.,would,will,shall,might,will
+english,SubjectVerbAgreement,Either the cat or the dogs ___ outside.,is,are,was,has,are
+english,Connectives,He is poor ___ honest.,and,but,because,so,but
+english,CausativeVerbs,I had my hair ___.,cut,cutting,to cut,cuts,cut
+gkiq,gk,Who was the first Prime Minister of Nepal?,B.P. Koirala,Bhimsen Thapa,Junga Bahadur Rana,Girija Prasad Koirala,Bhimsen Thapa
+gkiq,gk,Which is the deepest river in Nepal?,Koshi,Gandaki,Karnali,Bagmati,Gandaki
+gkiq,gk,In which district is Mt. Everest located?,Solukhumbu,Taplejung,Mustang,Manang,Solukhumbu
+gkiq,gk,What is the capital city of Nepal?,Lalitpur,Bhaktapur,Kathmandu,Pokhara,Kathmandu
+gkiq,gk,When is Earth Day celebrated?,April 22,June 5,January 1,December 25,April 22
+gkiq,iq,"Find the odd one out: Apple, Mango, Potato, Orange",Apple,Mango,Potato,Orange,Potato
+gkiq,iq,"If COLD is coded as DPME; what is HEAT coded as?",Iebv,Ifbu,Ifbv,Jgbv,Ifbu
+gkiq,iq,"Which number comes next: 1, 3, 9, 27, ?",36,45,81,90,81
+gkiq,iq,"If Brother is to Sister; then Nephew is to ___?",Niece,Aunt,Cousin,Mother,Niece
+gkiq,iq,"How many months have 28 days?",1,6,12,0,12
