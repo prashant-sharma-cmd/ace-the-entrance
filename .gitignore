@@ -8,3 +8,11 @@
 /ace-the-entrance/home/static/home/vendor/
 ace-the-entrance/logs/*
 !ace-the-entrance/logs/.gitkeep
+/ace-the-entrance/media/discussion/thread/*
+!ace-the-entrance/media/discussion/thread/.gitkeep
+/ace-the-entrance/media/discussion/replies/*
+!ace-the-entrance/media/discussion/replies/.gitkeep
+/ace-the-entrance/media/discussion/sxcmodelset/*
+!ace-the-entrance/media/discussion/sxcmodelset/.gitkeep
+/ace-the-entrance/media/updates/images/*
+!ace-the-entrance/media/updates/images/.gitkeep

@@ -70,15 +70,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Directory Preparation
-The application requires specific folders for logs and media. Create them manually:
-```bash
-cd ace-the-entrance
-mkdir logs data media
-mkdir -p media/forum media/questions media/updates media/profiles
-```
-
-### 4. Configuration
+### 3. Configuration
 Create a `.env` file in the `ace-the-entrance/` source root:
 ```env
 DJANGO_SECRET_KEY='your-secret-key'
