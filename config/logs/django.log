@@ -1042,3 +1042,23 @@ WARNING 2026-03-12 11:51:14,943 log Too Many Requests: /accounts/delete-account/
 WARNING 2026-03-12 11:51:14,944 log "POST /accounts/delete-account/request-otp/ HTTP/1.1" 429 55
 WARNING 2026-03-12 11:51:54,514 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
 WARNING 2026-03-12 11:51:54,514 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-15 14:33:01,838 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:33:01,840 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-15 14:42:15,655 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:42:15,657 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-15 14:42:18,825 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:42:18,826 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-15 14:42:20,465 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:42:20,466 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-15 14:42:24,089 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:42:24,089 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-15 14:42:45,101 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:42:45,102 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 5396
+WARNING 2026-03-15 14:44:57,453 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:44:57,453 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 0
+WARNING 2026-03-15 14:45:10,943 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:45:10,944 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 0
+WARNING 2026-03-15 14:47:33,327 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:47:33,328 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 0
+WARNING 2026-03-15 14:47:53,308 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2026-03-15 14:47:53,309 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 0

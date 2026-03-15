@@ -31,7 +31,7 @@
 {% block content %}
   <div class="page-wrapper">
 
-    <!-- SIDEBAR -->
+    <!-- SIDEBAR (desktop only — hidden on mobile via CSS) -->
     <aside class="sidebar" id="sidebar">
       <p class="sidebar-title">On This Page</p>
       <ul class="sidebar-nav" id="sidebar-nav">
@@ -45,6 +45,18 @@
 
     <!-- CONTENT -->
     <main>
+
+      <!-- MOBILE TOC TOGGLE (shown only on tablet/mobile via CSS) -->
+      <button class="toc-toggle" id="toc-toggle" onclick="toggleMobileToc()" aria-expanded="false">
+        <i class="fa-solid fa-list"></i>
+        On This Page
+        <i class="fa-solid fa-chevron-down chevron"></i>
+      </button>
+      <div class="mobile-toc" id="mobile-toc" aria-hidden="true">
+        <ul id="mobile-toc-nav">
+          <!-- Populated by JS -->
+        </ul>
+      </div>
 
       <!-- ── TERMS OF SERVICE ── -->
       <div class="tab-panel active" id="tos" role="tabpanel">
@@ -317,4 +329,16 @@
 
 {% block extra_js %}
 <script src="{% static 'tos/js/app.js' %}"></script>
+<script>
+  /* Mobile TOC toggle — thin wrapper, main logic stays in app.js */
+  function toggleMobileToc() {
+    var btn = document.getElementById('toc-toggle');
+    var toc = document.getElementById('mobile-toc');
+    var isOpen = toc.classList.contains('visible');
+    toc.classList.toggle('visible', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    toc.setAttribute('aria-hidden', String(isOpen));
+  }
+</script>
 {% endblock %}
