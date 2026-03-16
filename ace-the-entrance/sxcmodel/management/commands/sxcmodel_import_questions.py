@@ -90,13 +90,19 @@ def resolve_image(raw: str, csv_dir: Path, row_num: int):
     src = Path(clean)
 
     if src.is_absolute():
-        candidates = [src]
+        candidates = [
+            src,                                            # 1. as-is
+            Path(settings.MEDIA_ROOT) / src.name,          # 2. filename only inside MEDIA_ROOT
+            Path(settings.MEDIA_ROOT) / 'sxcmodelset' / src.name,  # 3. inside sxcmodelset/
+        ]
     else:
         # Build a prioritised list of candidate locations for relative paths
         candidates = [
-            csv_dir / src,                          # 1. next to the CSV
-            Path(settings.BASE_DIR) / src,          # 2. project root
-            Path(settings.MEDIA_ROOT) / src,        # 3. inside MEDIA_ROOT
+            csv_dir / src,                                  # 1. next to the CSV
+            Path(settings.BASE_DIR) / src,                  # 2. project root
+            Path(settings.MEDIA_ROOT) / src,                # 3. inside MEDIA_ROOT
+            Path(settings.MEDIA_ROOT) / src.name,           # 4. filename only inside MEDIA_ROOT
+            Path(settings.MEDIA_ROOT) / 'sxcmodelset' / src.name,  # 5. inside sxcmodelset/
         ]
 
     resolved = next((c for c in candidates if c.exists()), None)
