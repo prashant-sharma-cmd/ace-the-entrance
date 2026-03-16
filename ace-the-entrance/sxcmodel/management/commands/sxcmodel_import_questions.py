@@ -6,7 +6,8 @@ CSV format expected:
 
     - subject : must match one of PHY, CHE, BIO, MAT, ENG, IQ_GK
     - answer  : a / b / c / d  (case-insensitive)
-    - image   : absolute/relative path to an image file, or FALSE if none
+    - image   : path to an image file (absolute, relative to CSV, or relative to
+                project root), or FALSE / blank if none
 
 Usage:
     python manage.py sxcmodel_import_questions path/to/questions.csv
@@ -75,30 +76,47 @@ def resolve_image(raw: str, csv_dir: Path, row_num: int):
     """
     Return a relative path (str) suitable for ImageField, or None.
     Copies the source image into MEDIA_ROOT/sxcmodelset/ if needed.
+
+    Image path resolution order (first match wins):
+        1. Absolute path — used as-is.
+        2. Relative to the CSV file's directory.
+        3. Relative to the Django project root (BASE_DIR).
+        4. Relative to MEDIA_ROOT (in case images are already inside media/).
     """
     clean = raw.strip()
     if not clean or clean.upper() == 'FALSE':
         return None
 
-    # Resolve source path: absolute OR relative to the CSV's directory
     src = Path(clean)
-    if not src.is_absolute():
-        src = csv_dir / src
 
-    if not src.exists():
+    if src.is_absolute():
+        candidates = [src]
+    else:
+        # Build a prioritised list of candidate locations for relative paths
+        candidates = [
+            csv_dir / src,                          # 1. next to the CSV
+            Path(settings.BASE_DIR) / src,          # 2. project root
+            Path(settings.MEDIA_ROOT) / src,        # 3. inside MEDIA_ROOT
+        ]
+
+    resolved = next((c for c in candidates if c.exists()), None)
+
+    if resolved is None:
+        searched = '\n    '.join(str(c) for c in candidates)
         raise FileNotFoundError(
-            f"Image not found: '{clean}' (resolved to '{src}')"
+            f"Image not found: '{clean}'\n"
+            f"  Searched in:\n    {searched}"
         )
 
     dest_dir = Path(settings.MEDIA_ROOT) / 'sxcmodelset'
     dest_dir.mkdir(parents=True, exist_ok=True)
-    dest = dest_dir / src.name
+    dest = dest_dir / resolved.name
 
-    # Copy only if not already there (or sizes differ)
-    if not dest.exists() or dest.stat().st_size != src.stat().st_size:
-        shutil.copy2(src, dest)
+    # Copy only if not already there or file size differs
+    if not dest.exists() or dest.stat().st_size != resolved.stat().st_size:
+        shutil.copy2(resolved, dest)
 
-    return f'sxcmodelset/{src.name}'
+    return f'sxcmodelset/{resolved.name}'
 
 
 class Command(BaseCommand):
