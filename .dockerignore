@@ -1,13 +1,23 @@
+# Python
 .venv/
-.git/
-.gitignore
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-env/
-venv/
-ace-the-entrance/logs/
-ace-the-entrance/media/
+
+# Django
+ace-the-entrance/logs/*
+ace-the-entrance/media/discussion/replies/*
+ace-the-entrance/media/discussion/threads/*
+ace-the-entrance/media/sxcmodelset/*
+ace-the-entrance/media/updates/*
+
+# IDE
 .idea/
+
+# Git
+.git/
+.gitignore
+
+# Environment
+ace-the-entrance/.env
