@@ -1,6 +1,3 @@
-#!/bin/bash
-# entrypoint.sh
-
 set -e
 
 echo "Waiting for the PostgreSQL database to be ready..."
@@ -11,10 +8,6 @@ done
 
 echo "Database is up! Running migrations..."
 python manage.py migrate --noinput
-
-echo "Importing default data..."
-python manage.py daily_import_questions data/sample-daily-questions.csv || true
-python manage.py sxcmodel_import_questions data/sample-sxc-model-set.csv || true
 
 echo "Creating superuser if not exists..."
 python manage.py shell -c "
