@@ -66,12 +66,12 @@ class BuyPageView(View):
 
         # 1. IP rate limit
         if getattr(request, 'limited', False):
-            messages.error(request, 'rate_limited')
+            messages.error(request, 'Please wait 5 minutes before placing another order!')
             return redirect('buy:index')
 
         # 2. Honeypot — bots fill hidden fields, real users never do
         if request.POST.get('honeypot'):
-            messages.success(request, 'order_sent')   # fake success so bots think it worked
+            messages.success(request, 'Order Sent Successfully!')   # fake success so bots think it worked
             return redirect('buy:index')
 
         # 3. Collect and sanitise (strips newlines — prevents email body injection)
@@ -85,7 +85,7 @@ class BuyPageView(View):
 
         # 4. Required fields
         if not all([full_name, phone, address, city, quantity]):
-            messages.error(request, 'validation_error')
+            messages.error(request, 'Please enter correct details!')
             return redirect('buy:index')
 
         # 5. Length limits — prevents memory/log exhaustion
@@ -99,12 +99,12 @@ class BuyPageView(View):
         }
         for field, max_len in MAX_LENGTHS.items():
             if len(field_values[field]) > max_len:
-                messages.error(request, 'validation_error')
+                messages.error(request, 'Please enter correct details!')
                 return redirect('buy:index')
 
         # 6. Phone format — Nepal numbers: 96XXXXXXXX to 99XXXXXXXX
         if not re.fullmatch(r'9[6-9]\d{8}', phone):
-            messages.error(request, 'validation_error')
+            messages.error(request, 'Please enter correct details!')
             return redirect('buy:index')
 
         # 7. Email format (optional field)
@@ -112,18 +112,18 @@ class BuyPageView(View):
             try:
                 validate_email(email)
             except ValidationError:
-                messages.error(request, 'validation_error')
+                messages.error(request, 'Please enter correct details!')
                 return redirect('buy:index')
 
         # 8. Quantity whitelist — prevents POST tampering (e.g. quantity=9999)
         if quantity not in VALID_QUANTITIES:
-            messages.error(request, 'validation_error')
+            messages.error(request, 'Please enter correct details')
             return redirect('buy:index')
 
         # 9. Per-phone rate limit — catches VPN/proxy IP bypass
         phone_key = f"order_rate:{phone}"
         if cache.get(phone_key):
-            messages.error(request, 'rate_limited')
+            messages.error(request, 'Please wait 5 minutes before placing another order!')
             return redirect('buy:index')
         cache.set(phone_key, 1, timeout=300)   # block same phone for 5 minutes
 
@@ -156,6 +156,6 @@ Additional Notes : {notes or 'N/A'}
             messages.success(request, 'order_sent')
         except Exception as e:
             logger.error(f"Failed to start email thread: {e}", exc_info=True)
-            messages.error(request, 'order_failed')
+            messages.error(request, 'Failed to place order! Please contact us if issue persists.')
 
         return redirect('buy:index')

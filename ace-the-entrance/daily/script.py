@@ -14,9 +14,9 @@ def generate_daily_quiz():
 
     # 1. Added Saturday (5) to prevent crashes
     day_map = {
-        0: "Chemistry", 1: "Biology", 2: "Maths",
-        3: "English", 4: "GKIQ", 5: "GKIQ",  # Fallback for Saturday
-        6: "Physics"
+        0: "CHE", 1: "BIO", 2: "MAT",
+        3: "ENG", 4: "IQ_GK", 5: "IQ_GK",  # Fallback for Saturday
+        6: "PHY"
     }
 
     subject_name = day_map.get(today_date.weekday())

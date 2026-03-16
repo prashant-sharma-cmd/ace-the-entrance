@@ -171,8 +171,9 @@ SOCIALACCOUNT_LOGIN_ON_EMAIL_VERIFICATION = True
 ACCOUNT_UNIQUE_EMAIL = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_EMAIL_REQUIRED = False
-SOCIALACCOUNT_ADAPTER = 'accounts.adapters.SocialAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'accounts.adapter.SocialAccountAdapter'
 SOCIALACCOUNT_DISCONNECT_REDIRECT_URL = '/accounts/dashboard/'
+ACCOUNT_ADAPTER = 'accounts.adapter.AccountAdapter'
 SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE    = 'Lax'
 SOCIALACCOUNT_STORE_TOKENS = True
@@ -188,7 +189,6 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-ACCOUNT_ADAPTER       = 'accounts.adapter.AccountAdapter'
 
 # ── Internationalisation ───────────────────────────────────────────────────────
 

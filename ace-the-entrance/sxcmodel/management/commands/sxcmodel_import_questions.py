@@ -18,12 +18,12 @@ Options:
 """
 
 import csv
-import os
 import shutil
 from pathlib import Path
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 
 from sxcmodel.models import Question
 
@@ -74,7 +74,7 @@ def resolve_answer(raw: str) -> int:
 def resolve_image(raw: str, csv_dir: Path, row_num: int):
     """
     Return a relative path (str) suitable for ImageField, or None.
-    Copies the source image into MEDIA_ROOT/question_diagrams/ if needed.
+    Copies the source image into MEDIA_ROOT/sxcmodelset/ if needed.
     """
     clean = raw.strip()
     if not clean or clean.upper() == 'FALSE':
@@ -98,7 +98,6 @@ def resolve_image(raw: str, csv_dir: Path, row_num: int):
     if not dest.exists() or dest.stat().st_size != src.stat().st_size:
         shutil.copy2(src, dest)
 
-    # Return the relative path stored in ImageField  e.g. question_diagrams/img.png
     return f'sxcmodelset/{src.name}'
 
 
@@ -168,83 +167,108 @@ class Command(BaseCommand):
         REQUIRED_COLS = {'subject', 'question', 'option1', 'option2', 'option3', 'option4', 'answer', 'image'}
 
         created = 0
+        duplicates = 0
         skipped = 0
         errors = []
 
-        with open(csv_path, newline='', encoding='utf-8-sig') as f:
-            reader = csv.DictReader(f, **dialect_kwargs)
+        try:
+            with transaction.atomic():
+                with open(csv_path, newline='', encoding='utf-8-sig') as f:
+                    reader = csv.DictReader(f, **dialect_kwargs)
 
-            # Normalise header names to lowercase & strip whitespace
-            if reader.fieldnames is None:
-                raise CommandError("CSV file appears to be empty or has no header row.")
+                    # Normalise header names to lowercase & strip whitespace
+                    if reader.fieldnames is None:
+                        raise CommandError("CSV file appears to be empty or has no header row.")
 
-            reader.fieldnames = [name.strip().lower() for name in reader.fieldnames]
+                    reader.fieldnames = [name.strip().lower() for name in reader.fieldnames]
 
-            missing = REQUIRED_COLS - set(reader.fieldnames)
-            if missing:
-                raise CommandError(
-                    f"Missing required columns: {', '.join(sorted(missing))}\n"
-                    f"Found columns: {', '.join(reader.fieldnames)}"
-                )
-
-            self.stdout.write(f"\n📂 Importing from: {csv_path}")
-            self.stdout.write(f"   Columns detected: {', '.join(reader.fieldnames)}\n")
-
-            for row_num, row in enumerate(reader, start=2):  # row 1 = header
-                # Strip whitespace from all values
-                row = {k: (v.strip() if v else '') for k, v in row.items()}
-
-                try:
-                    subject = resolve_subject(row['subject'])
-                    correct_option = resolve_answer(row['answer'])
-                    image_path = resolve_image(row['image'], csv_dir, row_num)
-
-                    text = row['question']
-                    if not text:
-                        raise ValueError("Question text cannot be empty.")
-
-                    o1 = row['option1']
-                    o2 = row['option2']
-                    o3 = row['option3']
-                    o4 = row['option4']
-
-                    if not all([o1, o2, o3, o4]):
-                        raise ValueError("All four options must be non-empty.")
-
-                    Question.objects.create(
-                        subject=subject,
-                        text=text,
-                        option_1=o1,
-                        option_2=o2,
-                        option_3=o3,
-                        option_4=o4,
-                        correct_option=correct_option,
-                        image=image_path or '',
-                    )
-                    created += 1
-
-                    if created % 10 == 0:
-                        self.stdout.write(f'   ✓ {created} questions imported…', ending='\r')
-                        self.stdout.flush()
-
-                except (ValueError, FileNotFoundError) as e:
-                    msg = f"Row {row_num}: {e}"
-                    if options['skip_bad']:
-                        errors.append(msg)
-                        skipped += 1
-                        self.stdout.write(self.style.WARNING(f'   ⚠  Skipping — {msg}'))
-                    else:
+                    missing = REQUIRED_COLS - set(reader.fieldnames)
+                    if missing:
                         raise CommandError(
-                            f"\n❌ Error on {msg}\n\n"
-                            f"Row data: {dict(row)}\n\n"
-                            f"Use --skip-bad to skip problematic rows and continue."
+                            f"Missing required columns: {', '.join(sorted(missing))}\n"
+                            f"Found columns: {', '.join(reader.fieldnames)}"
                         )
+
+                    self.stdout.write(f"\n Importing from: {csv_path}")
+                    self.stdout.write(f"   Columns detected: {', '.join(reader.fieldnames)}\n")
+
+                    for row_num, row in enumerate(reader, start=2):  # row 1 = header
+                        # Strip whitespace from all values
+                        row = {k: (v.strip() if v else '') for k, v in row.items()}
+
+                        try:
+                            subject = resolve_subject(row['subject'])
+                            correct_option = resolve_answer(row['answer'])
+                            image_path = resolve_image(row['image'], csv_dir, row_num)
+
+                            text = row['question']
+                            if not text:
+                                raise ValueError("Question text cannot be empty.")
+
+                            o1 = row['option1']
+                            o2 = row['option2']
+                            o3 = row['option3']
+                            o4 = row['option4']
+
+                            if not all([o1, o2, o3, o4]):
+                                raise ValueError("All four options must be non-empty.")
+
+                            # ── get_or_create: insert only if not a duplicate ──────
+                            # Lookup fields (subject + text + options) uniquely identify
+                            # a question. correct_option and image are only applied on
+                            # first creation via `defaults`.
+                            _, question_created = Question.objects.get_or_create(
+                                subject=subject,
+                                text=text,
+                                option_1=o1,
+                                option_2=o2,
+                                option_3=o3,
+                                option_4=o4,
+                                defaults={
+                                    'correct_option': correct_option,
+                                    'image': image_path or '',
+                                },
+                            )
+
+                            if question_created:
+                                created += 1
+                                if created % 10 == 0:
+                                    self.stdout.write(f'   ✓ {created} questions imported…', ending='\r')
+                                    self.stdout.flush()
+                            else:
+                                duplicates += 1
+                                self.stdout.write(self.style.WARNING(
+                                    f'Row {row_num}: Duplicate skipped — '
+                                    f'"{text[:60]}{"…" if len(text) > 60 else ""}"'
+                                ))
+
+                        except (ValueError, FileNotFoundError) as e:
+                            msg = f"Row {row_num}: {e}"
+                            if options['skip_bad']:
+                                errors.append(msg)
+                                skipped += 1
+                                self.stdout.write(self.style.WARNING(f'   ⚠  Skipping — {msg}'))
+                            else:
+                                raise CommandError(
+                                    f"\n Error on {msg}\n\n"
+                                    f"Row data: {dict(row)}\n\n"
+                                    f"Use --skip-bad to skip problematic rows and continue."
+                                )
+
+        except CommandError:
+            raise
+        except Exception as e:
+            raise CommandError(f"An unexpected error occurred: {e}")
 
         # ── Summary ─────────────────────────────────────────────────────────
         self.stdout.write('')
         self.stdout.write(self.style.SUCCESS(
-            f'✅ Done! {created} questions imported successfully.'
+            f' Done! {created} questions imported successfully.'
         ))
+        if duplicates:
+            self.stdout.write(self.style.WARNING(
+                f'⏭  {duplicates} duplicate question(s) skipped.'
+            ))
         if skipped:
             self.stdout.write(self.style.WARNING(
                 f'⚠  {skipped} rows skipped due to errors:'
@@ -253,4 +277,4 @@ class Command(BaseCommand):
                 self.stdout.write(f'   • {err}')
 
         total = Question.objects.count()
-        self.stdout.write(f'\n📊 Total questions in database: {total}\n')
+        self.stdout.write(f'\n Total questions in database: {total}\n')

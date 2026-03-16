@@ -1,0 +1,43 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ace-the-entrance/Dockerfile
+    command: >
+      sh -c "echo '----------------------------------------------------------------' &&
+          echo 'Django is running inside Docker!' &&
+          echo 'Access the site at: http://lvh.me:8000' &&
+          echo '----------------------------------------------------------------' &&
+          python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./ace-the-entrance/.env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - REDIS_URL=redis://redis:6379/1
+    depends_on:
+      db:
+        condition: service_started
+      redis:
+        condition: service_started
+
+  db:
+    image: postgres:16
+    env_file:
+      - ./ace-the-entrance/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:

@@ -61,7 +61,7 @@ class ContactUsView(View):
 
         # 1. IP rate limit
         if getattr(request, 'limited', False):
-            messages.error(request, 'You are sending multiple requests too quickly.!')
+            messages.error(request, 'Please wait 5 minutes before sending another request!')
             return redirect('home:index')
 
         # 2. Honeypot
@@ -96,7 +96,7 @@ class ContactUsView(View):
         # 7. Per-email rate limit (catches VPN/proxy IP bypass)
         email_key = f"contact_rate:{email.lower()}"
         if cache.get(email_key):
-            messages.error(request, 'contact_rate_limited')
+            messages.error(request, 'Please wait 5 minutes before sending another request!')
             return redirect('home:index')
         cache.set(email_key, 1, timeout=300)   # block same email for 5 minutes
 
@@ -116,7 +116,7 @@ class ContactUsView(View):
             )
             email_thread.daemon = True
             email_thread.start()
-            messages.success(request, 'contact_sent')
+            messages.success(request, 'Email Sent Successfully!')
         except Exception as e:
             logger.error(f"Failed to start contact email thread: {e}", exc_info=True)
             messages.error(request, 'Failed to send the contact email.')
