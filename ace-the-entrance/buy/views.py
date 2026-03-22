@@ -153,7 +153,7 @@ Additional Notes : {notes or 'N/A'}
             )
             email_thread.daemon = True
             email_thread.start()
-            messages.success(request, 'order_sent')
+            messages.success(request, 'Order Sent Successfully!')
         except Exception as e:
             logger.error(f"Failed to start email thread: {e}", exc_info=True)
             messages.error(request, 'Failed to place order! Please contact us if issue persists.')
