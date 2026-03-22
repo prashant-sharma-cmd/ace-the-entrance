@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       // Show next
       authors[current].classList.add('active');
-    }, 4000); // Switches every 4 seconds
+    }, 10000); // Switches every 10 seconds
   }
 });
 
