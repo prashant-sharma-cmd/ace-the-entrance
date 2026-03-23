@@ -1,413 +1,427 @@
 {% extends 'footer.html' %}
 {% load static %}
 
-{% block title %}
-About Us –
-{% endblock %}
+{% block title %}About Us –{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'about/css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'about/css/styles.css' %}">
 {% endblock %}
-
 
 {% block content %}
 
-<!-- ══ HERO ══ -->
-<header class="about-hero">
-  <div class="hero-inner">
-    <span class="hero-eyebrow">Discover More About</span>
-    <h1>Ace The Entrance</h1>
-    <p class="hero-desc">
-      A comprehensive academic resource designed to guide students through rigorous study,
-      built with care by an educator passionate about making learning accessible and effective.
-    </p>
-    <div class="hero-cta-group">
-      <a href="#about-book" class="btn">About the Book</a>
-      <a href="#about-author" class="btn-outline">Meet the Author</a>
-    </div>
-  </div>
-</header>
-
-<div class="content-divider"></div>
-
-<!-- ══ MISSION STRIP ══ -->
-<section class="mission-strip">
-  <div class="mission-grid">
-    <div class="mission-item reveal">
-      <i class="fa-solid fa-bullseye"></i>
-      <h4>Our Mission</h4>
-      <p>To equip every student with the knowledge and confidence to excel in their academic journey.</p>
-    </div>
-    <div class="mission-item reveal" style="transition-delay:.1s">
-      <i class="fa-solid fa-eye"></i>
-      <h4>Our Vision</h4>
-      <p>A world where quality academic resources are accessible to every learner, regardless of background.</p>
-    </div>
-    <div class="mission-item reveal" style="transition-delay:.2s">
-      <i class="fa-solid fa-heart"></i>
-      <h4>Our Values</h4>
-      <p>Clarity, rigor, and inclusivity drive every decision we make in curating this resource.</p>
-    </div>
-    <div class="mission-item reveal" style="transition-delay:.3s">
-      <i class="fa-solid fa-users"></i>
-      <h4>Our Community</h4>
-      <p>A growing network of students, educators, and lifelong learners pushing each other forward.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ══ ABOUT THE BOOK ══ -->
-<section class="about-book-section" id="about-book">
-  <div class="about-book-inner">
-    <div class="book-mockup reveal">
-      <div class="book-card">
-        <!-- The Spine and Badge stay outside the image wrapper -->
-        <div class="book-spine"></div>
-        <div class="book-badge">New<br>Edition</div>
-
-        <!-- This wrapper forces the crop -->
-        <div class="book-img-container">
-          <img src="{% static 'about/images/about-book.png' %}" alt="Book Title" class="book-cover-img">
-        </div>
-      </div>
-    </div>
-    <div class="book-info reveal" style="transition-delay:.15s">
-      <div class="section-title">
-        <h3>About the Book</h3>
-        <h2>A Resource Built for Results</h2>
-      </div>
-      <p>
-        This guide is a high-impact preparation tool specifically engineered to
-        be the ultimate roadmap for students aiming for top-tier colleges. It
-        cuts through the noise to strengthen the core concepts you actually
-        need to ace the exam and build a competitive edge.
+  <!-- ══ HERO ══ -->
+  <header class="page-hero page-hero--about">
+    <div class="hero-inner">
+      <span class="eyebrow eyebrow--hero">Discover More About</span>
+      <h1>Ace The Entrance</h1>
+      <p class="hero-desc">
+        A comprehensive academic resource designed to guide students through rigorous study,
+        built with care by an educator passionate about making learning accessible and effective.
       </p>
-      <p>
-        From mastering SEE-level fundamentals to cracking advanced MCQ
-        problem-solving strategies, every chapter is designed to boost
-        your speed and accuracy.
-      </p>
-      <p>
-        Whether you’re starting your prep or doing a final marathon review,
-        you’ll find crystal-clear shortcuts, solved model questions, and practice
-        sets that mirror the actual difficulty of exams at St. Xavier’s,
-        Budhanilkantha, and SOS.
-      </p>
-      <div class="book-tags">
-        <span class="tag">+2 Entrance</span>
-        <span class="tag">Tips & Tricks</span>
-        <span class="tag">Detailed Concepts</span>
-        <span class="tag">3000+ Questions</span>
+      <div class="hero-cta-group">
+        <a href="#about-book" class="btn">About the Book</a>
+        <a href="#about-author" class="btn-outline">Meet the Author</a>
       </div>
-      <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Explore Model SXC Set &nbsp;<i class="fa-solid fa-arrow-right"></i></a>
     </div>
-  </div>
-</section>
+  </header>
 
-<div class="content-divider"></div>
+  <div class="content-divider"></div>
 
-<!-- ══ FEATURES ══ -->
-<section class="features-section">
-  <div style="width:85vw;max-width:1170px;margin:0 auto;">
-    <div class="section-title-center reveal">
-      <h3>What We Provide</h3>
-      <h2>Everything You Need to Succeed</h2>
-      <p>Carefully designed features that address every stage of a student's preparation journey.</p>
+  <!-- ══ MISSION STRIP ══ -->
+  <section class="mission-strip page-section--primary">
+    <div class="mission-grid section-inner--narrow">
+      <div class="mission-item reveal">
+        <i class="fa-solid fa-bullseye"></i>
+        <h4>Our Mission</h4>
+        <p>To equip every student with the knowledge and confidence to excel in their academic journey.</p>
+      </div>
+      <div class="mission-item reveal">
+        <i class="fa-solid fa-eye"></i>
+        <h4>Our Vision</h4>
+        <p>A world where quality academic resources are accessible to every learner, regardless of background.</p>
+      </div>
+      <div class="mission-item reveal">
+        <i class="fa-solid fa-heart"></i>
+        <h4>Our Values</h4>
+        <p>Clarity, rigor, and inclusivity drive every decision we make in curating this resource.</p>
+      </div>
+      <div class="mission-item reveal">
+        <i class="fa-solid fa-users"></i>
+        <h4>Our Community</h4>
+        <p>A growing network of students, educators, and lifelong learners pushing each other forward.</p>
+      </div>
     </div>
-    <div class="features-grid">
+  </section>
 
-      <div class="feature-card reveal">
-        <div class="feature-icon-wrap"><i class="fa-solid fa-book-open"></i></div>
-        <h4>Chapter-by-Chapter Breakdown</h4>
-        <p>Each chapter isolates a distinct concept area with clear learning objectives, ensuring structured progression through the material.</p>
-      </div>
+  <!-- ══ ABOUT THE BOOK ══ -->
+  <section class="page-section page-section--white" id="about-book">
+    <div class="about-book-inner section-inner--narrow">
 
-      <div class="feature-card reveal" style="transition-delay:.08s">
-        <div class="feature-icon-wrap"><i class="fa-solid fa-pen-to-square"></i></div>
-        <h4>Worked Examples</h4>
-        <p>Step-by-step solutions illustrate the thinking process behind every problem type, not just the final answer.</p>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:.16s">
-        <div class="feature-icon-wrap"><i class="fa-solid fa-clipboard-question"></i></div>
-        <h4>Practice Questions</h4>
-        <p>Hundreds of exam-style questions spanning difficulty levels — from warm-up exercises to challenging extension problems.</p>
-      </div>
-
-      <div class="feature-card reveal" style="transition-delay:.24s">
-        <div class="feature-icon-wrap"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
-        <h4>Model Set Papers</h4>
-        <p>Full-length model examination papers mirroring real exam structure, helping students build timing and test-taking discipline.</p>
-      </div>
-
-
-    </div>
-  </div>
-</section>
-
-<section class="author-section" id="about-author">
-  <div class="author-slider-wrapper"> <!-- Add this wrapper -->
-
-    <!-- AUTHOR 1 -->
-    <div class="author-inner active">
-      <div class="author-portrait">
-        <div class="author-img-frame">
-          <img src="{% static 'about/images/author-picture-1.png' %}" alt="Prashant Sharma" class="author-img">
-        </div>
-        <div class="author-stat-bubble">
-          <strong>
-            <a href="https://www.linkedin.com/in/prashant--sharma/" target="_blank">
-              <i class="fa-brands fa-linkedin-in" style="font-size: 30px;"></i>
-            </a>
-          </strong>
+      <div class="book-mockup reveal">
+        <div class="book-card">
+          <div class="book-spine"></div>
+          <div class="book-badge">New<br>Edition</div>
+          <div class="book-img-container">
+            <img src="{% static 'about/images/about-book.png' %}" alt="Book Title" class="book-cover-img">
+          </div>
         </div>
       </div>
-      <div class="author-info">
-        <div class="section-title"><h3>About the Author</h3></div>
-        <div class="author-name">Prashant Sharma</div>
-        <span class="author-title-label">Website Developer & Maths Author</span>
+
+      <div class="book-info reveal">
+        <div class="section-title">
+          <h3>About the Book</h3>
+          <h2>A Resource Built for Results</h2>
+        </div>
         <p>
-          As the author of this book, I’ve been in your shoes and have spent
-          years helping students navigate the jump from SEE to Grade 11. I wrote
-          this guide to be the mentor I wish I had—stripping away the fluff and
-          focusing on the exact concepts that top colleges actually test. My goal
-          isn’t just to help you pass; it’s to help you rank high enough to claim
-          the scholarships you deserve.
+          This guide is a high-impact preparation tool specifically engineered to be the ultimate
+          roadmap for students aiming for top-tier colleges. It cuts through the noise to strengthen
+          the core concepts you actually need to ace the exam and build a competitive edge.
         </p>
-        <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> Studying Computer Science </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="author-inner">
-      <div class="author-portrait">
-        <div class="author-img-frame">
-          <img src="{% static 'about/images/author-picture-2.png' %}" alt="Prabesh Shahi" class="author-img">
-        </div>
-        <div class="author-stat-bubble">
-          <a href="https://www.facebook.com/parbesh.shahi.71" target="_blank">
-            <strong><i class="fa-brands fa-facebook-f" style="font-size: 30px;"></i></strong>
-          </a>
-        </div>
-      </div>
-      <div class="author-info">
-        <div class="section-title"><h3>About the Author</h3></div>
-        <div class="author-name">Prabesh Shahi</div>
-        <span class="author-title-label">Science Author</span>
         <p>
-          Think of this guide as your personal shortcut. Having mentored countless students through the transition from SEE to Grade 11, I’ve seen exactly where most people stumble—and I’ve designed this book to fix that. We skip the filler and dive straight into the core logic that elite entrance exams actually care about. I’m not here to help you just survive the move to high school; I’m here to give you the competitive edge needed to dominate the rankings and lock in those full-ride scholarships.
+          From mastering SEE-level fundamentals to cracking advanced MCQ problem-solving strategies,
+          every chapter is designed to boost your speed and accuracy.
         </p>
-        <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> Studying Medical Science </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="author-inner">
-      <div class="author-portrait">
-        <div class="author-img-frame">
-          <img src="{% static 'about/images/author-picture-3.png' %}" alt="Prajwal Tamang" class="author-img">
-        </div>
-        <div class="author-stat-bubble">
-          <a href="https://www.instagram.com/the__theeng/" target="_blank">
-            <strong><i class="fa-brands fa-instagram" style="font-size: 30px;"></i></strong>
-          </a>
-        </div>
-      </div>
-      <div class="author-info">
-        <div class="section-title"><h3>About the Author</h3></div>
-        <div class="author-name">Prajwal Tamang</div>
-        <span class="author-title-label">Chief Editor & English Author</span>
         <p>
-          Most prep books guess; we analyzed. By auditing a decade of entrance exams from the country’s top-tier colleges, we’ve reverse-engineered the exact question patterns that determine the top 1%. This isn’t a textbook—it’s a tactical manual designed to sharpen your speed and accuracy. We don't just teach you the syllabus; we teach you how to outsmart the test itself to ensure your name is at the top of the scholarship list.
+          Whether you're starting your prep or doing a final marathon review, you'll find
+          crystal-clear shortcuts, solved model questions, and practice sets that mirror the
+          actual difficulty of exams at St. Xavier's, Budhanilkantha, and SOS.
         </p>
-        <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> Studying Comedy: Writing and Performance </span>
+        <div class="book-tags">
+          <span class="tag">+2 Entrance</span>
+          <span class="tag">Tips & Tricks</span>
+          <span class="tag">Detailed Concepts</span>
+          <span class="tag">3000+ Questions</span>
         </div>
-      </div>
-    </div>
-
-    <div class="author-inner">
-      <div class="author-portrait">
-        <div class="author-img-frame">
-          <img src="{% static 'about/images/author-picture-4.png' %}" alt="Prashant Bashyal" class="author-img">
-        </div>
-        <div class="author-stat-bubble">
-          <a href="https://www.instagram.com/01prashant_bashyal/" target="_blank">
-            <strong><i class="fa-brands fa-instagram" style="font-size: 30px;"></i></strong>
-          </a>
-        </div>
-      </div>
-      <div class="author-info">
-        <div class="section-title"><h3>About the Author</h3></div>
-        <a>
-          <div class="author-name">Prashant Bashyal</div>
+        <a href="{% url 'sxcmodel:dashboard' %}" class="btn">
+          Explore Model SXC Set &nbsp;<i class="fa-solid fa-arrow-right"></i>
         </a>
-        <span class="author-title-label">Biology & Chemistry Author</span>
-        <p>
-          Stop wasting hundreds of hours on low-impact memorization. This guide is built for the high-efficiency student who wants maximum results in minimum time. We’ve distilled thousands of pages of curriculum into high-yield 'Power Modules' that cover 90% of the tested material in 20% of the space. It’s the leanest, most aggressive preparation tool available for students who refuse to settle for anything less than a premier college placement.
-        </p>
-        <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> Studying MBBS </span>
-        </div>
       </div>
-    </div>
 
-    <div class="author-inner">
-      <div class="author-portrait">
-        <div class="author-img-frame">
-          <img src="{% static 'about/images/author-picture-5.png' %}" alt="Kishor Kafle" class="author-img">
-        </div>
-        <div class="author-stat-bubble">
-          <a href="https://www.instagram.com/_kishorkafle/" target="_blank">
-            <strong><i class="fa-brands fa-instagram" style="font-size: 30px;"></i></strong>
-          </a>
-        </div>
+    </div>
+  </section>
+
+  <div class="content-divider"></div>
+
+  <!-- ══ FEATURES ══ -->
+  <section class="page-section page-section--shaded">
+    <div class="section-inner--narrow">
+      <div class="section-title--center reveal">
+        <h3>What We Provide</h3>
+        <h2>Everything You Need to Succeed</h2>
+        <p>Carefully designed features that address every stage of a student's preparation journey.</p>
       </div>
-      <div class="author-info">
-        <div class="section-title"><h3>About the Author</h3></div>
-        <div class="author-name">Kishor Kafle</div>
-        <span class="author-title-label">Maths Author & Cover Designer</span>
-        <p>
-          Look, the jump from SEE to Grade 11 is a total skill issue if you’re going in blind. I’ve been in your shoes, and let’s be real—the transition is pure brain rot without a proper map. I wrote this guide to be the main character mentor I wish I had, cutting out the yap and focusing only on the Sigma concepts that top colleges actually test.
-          We’re skipping the NPC filler and grinding straight for that Level 10 Gyatt tier ranking. My goal isn’t just to help you pass; it’s to help you mog the competition so hard that you secure the scholarships you deserve. Don't be a beta student—grab this book and get ready to fanum tax those top scores.
-        </p>
-        <div class="author-credentials">
-          <span class="credential"><i class="fa-solid fa-star"></i> Studying Computer Engineering </span>
-        </div>
-      </div>
-    </div>
-  </div> <!-- End wrapper -->
-</section>
+      <div class="features-grid">
 
-<div class="content-divider"></div>
-
-<!-- ══ TESTIMONIALS ══ -->
-<section class="testimonials-section">
-  <div style="width:85vw;max-width:1170px;margin:0 auto;">
-    <div class="section-title-center reveal">
-      <h3>Student Stories</h3>
-      <h2 style="color:#fff;">What Learners Are Saying</h2>
-      <p>Real words from students who used this resource in their preparation.</p>
-    </div>
-
-    <!-- START SLIDER WRAPPER -->
-    <div class="testimonials-slider-viewport">
-      <div class="testimonials-slider-track" id="testimonialTrack">
-
-        <!-- Card 1 -->
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <p>
-            The book was truly outstanding. It covers all the essential topics
-            required for entrance examinations and presents them clearly and
-            well-structured. The inclusion of key points for quick revision
-            makes it especially useful for MCQ-based entrance tests.
-          </p>
-          <div class="testimonial-footer">
-            <div class="testimonial-avatar">R</div>
-            <div class="testimonial-meta">
-              <div class="stars">★★★★⯨</div>
-              <strong>Raunak Yadav</strong>
-              <span>Prasadi Academy</span>
-            </div>
-          </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon-wrap"><i class="fa-solid fa-book-open"></i></div>
+          <h4>Chapter-by-Chapter Breakdown</h4>
+          <p>Each chapter isolates a distinct concept area with clear learning objectives, ensuring structured progression through the material.</p>
         </div>
 
-        <!-- Card 2 -->
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <p>
-            The book helped me a lot, even though I purchased it comparatively late. The model sets were very much similar to the actual entrance exam and mixed with the support of the alumni, it was a great book.
-          </p>
-          <div class="testimonial-footer">
-            <div class="testimonial-avatar">R</div>
-            <div class="testimonial-meta">
-              <div class="stars">★★★★★</div>
-              <strong>Kripesh Dhakal</strong>
-              <span>St. Xavier's College</span>
-            </div>
-          </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon-wrap"><i class="fa-solid fa-pen-to-square"></i></div>
+          <h4>Worked Examples</h4>
+          <p>Step-by-step solutions illustrate the thinking process behind every problem type, not just the final answer.</p>
         </div>
 
-        <!-- Card 3 -->
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <p>
-            According to me, this book provides you the path but you have to walk through that path by yourself,also the MCQs provided in the book were very much helpful.
-          </p>
-          <div class="testimonial-footer">
-            <div class="testimonial-avatar">B</div>
-            <div class="testimonial-meta">
-              <div class="stars">★★★★</div>
-              <strong>Bibash Bhandari</strong>
-              <span>St. Xavier's College</span>
-            </div>
-          </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon-wrap"><i class="fa-solid fa-clipboard-question"></i></div>
+          <h4>Practice Questions</h4>
+          <p>Hundreds of exam-style questions spanning difficulty levels — from warm-up exercises to challenging extension problems.</p>
         </div>
 
-        <!-- Card 4 -->
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <p>
-            This book helped me in mcq practice through its model sets and theories which helped me “Ace the Entrance”.
-          </p>
-          <div class="testimonial-footer">
-            <div class="testimonial-avatar">S</div>
-            <div class="testimonial-meta">
-              <div class="stars">★★★★⯨</div>
-              <strong>Darshil Jha</strong>
-              <span>St. Xavier's College </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="testimonial-card">
-          <div class="testimonial-quote">"</div>
-          <p>
-            This book literally changed my life. Before this book, I was just
-            studying now I’m preparing to win. The questions, strategies, and
-            techniques completely transformed my mindset and confidence. Honestly,
-            this book is the reason I believe in my success now. Absolute life-changer.
-          </p>
-          <div class="testimonial-footer">
-            <div class="testimonial-avatar">S</div>
-            <div class="testimonial-meta">
-              <div class="stars">★★★★★</div>
-              <strong>Sujan Khadka</strong>
-              <span>Kalika Manavgyan Secondary School </span>
-            </div>
-          </div>
+        <div class="feature-card reveal">
+          <div class="feature-icon-wrap"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+          <h4>Model Set Papers</h4>
+          <p>Full-length model examination papers mirroring real exam structure, helping students build timing and test-taking discipline.</p>
         </div>
 
       </div>
     </div>
+  </section>
 
-    <!-- NAVIGATION DOTS -->
-    <div class="slider-dots" id="sliderDots"></div>
-  </div>
-</section>
+  <!-- ══ AUTHORS ══ -->
+  <section class="page-section page-section--white" id="about-author">
+    <div class="author-slider-wrapper section-inner--narrow">
 
-<!-- ══ CTA BAND ══ -->
-<section class="cta-band">
-  <div style="width:85vw;max-width:1170px;margin:0 auto;">
-    <h2>Ready to Start Learning?</h2>
-    <p>Join hundreds of students already using our book to prepare smarter, study deeper, and perform better.</p>
-    <div class="cta-btn-group">
-      <a href="{% url 'buy:index' %}" class="btn" style="background:#e9b949;color:#01257D;">
-        <i class="fa-solid fa-book"></i> Buy the Book
-      </a>
+      <!-- AUTHOR 1 -->
+      <div class="author-inner active">
+        <div class="author-portrait">
+          <div class="author-img-frame">
+            <img src="{% static 'about/images/author-picture-1.png' %}" alt="Prashant Sharma" class="author-img">
+          </div>
+          <div class="author-stat-bubble">
+            <strong>
+              <a href="https://www.linkedin.com/in/prashant--sharma/" target="_blank">
+                <i class="fa-brands fa-linkedin-in" style="font-size: 30px;"></i>
+              </a>
+            </strong>
+          </div>
+        </div>
+        <div class="author-info">
+          <div class="section-title"><h3>About the Author</h3></div>
+          <div class="author-name">Prashant Sharma</div>
+          <span class="author-title-label">Website Developer & Maths Author</span>
+          <p>
+            As the author of this book, I've been in your shoes and have spent years helping students
+            navigate the jump from SEE to Grade 11. I wrote this guide to be the mentor I wish I
+            had—stripping away the fluff and focusing on the exact concepts that top colleges actually
+            test. My goal isn't just to help you pass; it's to help you rank high enough to claim the
+            scholarships you deserve.
+          </p>
+          <div class="author-credentials">
+            <span class="credential"><i class="fa-solid fa-star"></i> Studying Computer Science</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUTHOR 2 -->
+      <div class="author-inner">
+        <div class="author-portrait">
+          <div class="author-img-frame">
+            <img src="{% static 'about/images/author-picture-2.png' %}" alt="Prabesh Shahi" class="author-img">
+          </div>
+          <div class="author-stat-bubble">
+            <a href="https://www.facebook.com/parbesh.shahi.71" target="_blank">
+              <strong><i class="fa-brands fa-facebook-f" style="font-size: 30px;"></i></strong>
+            </a>
+          </div>
+        </div>
+        <div class="author-info">
+          <div class="section-title"><h3>About the Author</h3></div>
+          <div class="author-name">Prabesh Shahi</div>
+          <span class="author-title-label">Science Author</span>
+          <p>
+            Think of this guide as your personal shortcut. Having mentored countless students through
+            the transition from SEE to Grade 11, I've seen exactly where most people stumble—and I've
+            designed this book to fix that. We skip the filler and dive straight into the core logic
+            that elite entrance exams actually care about. I'm not here to help you just survive the
+            move to high school; I'm here to give you the competitive edge needed to dominate the
+            rankings and lock in those full-ride scholarships.
+          </p>
+          <div class="author-credentials">
+            <span class="credential"><i class="fa-solid fa-star"></i> Studying Medical Science</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUTHOR 3 -->
+      <div class="author-inner">
+        <div class="author-portrait">
+          <div class="author-img-frame">
+            <img src="{% static 'about/images/author-picture-3.png' %}" alt="Prajwal Tamang" class="author-img">
+          </div>
+          <div class="author-stat-bubble">
+            <a href="https://www.instagram.com/the__theeng/" target="_blank">
+              <strong><i class="fa-brands fa-instagram" style="font-size: 30px;"></i></strong>
+            </a>
+          </div>
+        </div>
+        <div class="author-info">
+          <div class="section-title"><h3>About the Author</h3></div>
+          <div class="author-name">Prajwal Tamang</div>
+          <span class="author-title-label">Chief Editor & English Author</span>
+          <p>
+            Most prep books guess; we analyzed. By auditing a decade of entrance exams from the
+            country's top-tier colleges, we've reverse-engineered the exact question patterns that
+            determine the top 1%. This isn't a textbook—it's a tactical manual designed to sharpen
+            your speed and accuracy. We don't just teach you the syllabus; we teach you how to
+            outsmart the test itself to ensure your name is at the top of the scholarship list.
+          </p>
+          <div class="author-credentials">
+            <span class="credential"><i class="fa-solid fa-star"></i> Studying Comedy: Writing and Performance</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUTHOR 4 -->
+      <div class="author-inner">
+        <div class="author-portrait">
+          <div class="author-img-frame">
+            <img src="{% static 'about/images/author-picture-4.png' %}" alt="Prashant Bashyal" class="author-img">
+          </div>
+          <div class="author-stat-bubble">
+            <a href="https://www.instagram.com/01prashant_bashyal/" target="_blank">
+              <strong><i class="fa-brands fa-instagram" style="font-size: 30px;"></i></strong>
+            </a>
+          </div>
+        </div>
+        <div class="author-info">
+          <div class="section-title"><h3>About the Author</h3></div>
+          <div class="author-name">Prashant Bashyal</div>
+          <span class="author-title-label">Biology & Chemistry Author</span>
+          <p>
+            Stop wasting hundreds of hours on low-impact memorization. This guide is built for the
+            high-efficiency student who wants maximum results in minimum time. We've distilled thousands
+            of pages of curriculum into high-yield 'Power Modules' that cover 90% of the tested
+            material in 20% of the space. It's the leanest, most aggressive preparation tool available
+            for students who refuse to settle for anything less than a premier college placement.
+          </p>
+          <div class="author-credentials">
+            <span class="credential"><i class="fa-solid fa-star"></i> Studying MBBS</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUTHOR 5 -->
+      <div class="author-inner">
+        <div class="author-portrait">
+          <div class="author-img-frame">
+            <img src="{% static 'about/images/author-picture-5.png' %}" alt="Kishor Kafle" class="author-img">
+          </div>
+          <div class="author-stat-bubble">
+            <a href="https://www.instagram.com/_kishorkafle/" target="_blank">
+              <strong><i class="fa-brands fa-instagram" style="font-size: 30px;"></i></strong>
+            </a>
+          </div>
+        </div>
+        <div class="author-info">
+          <div class="section-title"><h3>About the Author</h3></div>
+          <div class="author-name">Kishor Kafle</div>
+          <span class="author-title-label">Maths Author & Cover Designer</span>
+          <p>
+            Look, the jump from SEE to Grade 11 is a total skill issue if you're going in blind.
+            I've been in your shoes, and let's be real—the transition is pure brain rot without a
+            proper map. I wrote this guide to be the main character mentor I wish I had, cutting out
+            the yap and focusing only on the Sigma concepts that top colleges actually test.
+            We're skipping the NPC filler and grinding straight for that Level 10 Gyatt tier ranking.
+            My goal isn't just to help you pass; it's to help you mog the competition so hard that
+            you secure the scholarships you deserve. Don't be a beta student—grab this book and get
+            ready to fanum tax those top scores.
+          </p>
+          <div class="author-credentials">
+            <span class="credential"><i class="fa-solid fa-star"></i> Studying Computer Engineering</span>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="cta-btn-group" style="margin-top:0.75rem;">
-      <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Browse Model Sets</a>
-      <a href="{% url 'daily:quiz' %}" class="btn" style="background:var(--clr-primary-light);color:var(--clr-primary);">Try Daily Question</a>
+  </section>
+
+  <div class="content-divider"></div>
+
+  <!-- ══ TESTIMONIALS ══ -->
+  <section class="testimonials-section page-section--primary">
+    <div class="section-inner--narrow">
+      <div class="section-title--center reveal">
+        <h3>Student Stories</h3>
+        <h2>What Learners Are Saying</h2>
+        <p>Real words from students who used this resource in their preparation.</p>
+      </div>
+
+      <div class="testimonials-slider-viewport">
+        <div class="testimonials-slider-track" id="testimonialTrack">
+
+          <div class="testimonial-card">
+            <div class="testimonial-quote">"</div>
+            <p>
+              The book was truly outstanding. It covers all the essential topics required for entrance
+              examinations and presents them clearly and well-structured. The inclusion of key points
+              for quick revision makes it especially useful for MCQ-based entrance tests.
+            </p>
+            <div class="testimonial-footer">
+              <div class="testimonial-avatar">R</div>
+              <div class="testimonial-meta">
+                <div class="stars">★★★★⯨</div>
+                <strong>Raunak Yadav</strong>
+                <span>Prasadi Academy</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-quote">"</div>
+            <p>
+              The book helped me a lot, even though I purchased it comparatively late. The model sets
+              were very much similar to the actual entrance exam and mixed with the support of the
+              alumni, it was a great book.
+            </p>
+            <div class="testimonial-footer">
+              <div class="testimonial-avatar">K</div>
+              <div class="testimonial-meta">
+                <div class="stars">★★★★★</div>
+                <strong>Kripesh Dhakal</strong>
+                <span>St. Xavier's College</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-quote">"</div>
+            <p>
+              According to me, this book provides you the path but you have to walk through that path
+              by yourself, also the MCQs provided in the book were very much helpful.
+            </p>
+            <div class="testimonial-footer">
+              <div class="testimonial-avatar">B</div>
+              <div class="testimonial-meta">
+                <div class="stars">★★★★</div>
+                <strong>Bibash Bhandari</strong>
+                <span>St. Xavier's College</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-quote">"</div>
+            <p>
+              This book helped me in mcq practice through its model sets and theories which helped
+              me "Ace the Entrance".
+            </p>
+            <div class="testimonial-footer">
+              <div class="testimonial-avatar">D</div>
+              <div class="testimonial-meta">
+                <div class="stars">★★★★⯨</div>
+                <strong>Darshil Jha</strong>
+                <span>St. Xavier's College</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-quote">"</div>
+            <p>
+              This book literally changed my life. Before this book, I was just studying now I'm
+              preparing to win. The questions, strategies, and techniques completely transformed my
+              mindset and confidence. Honestly, this book is the reason I believe in my success now.
+              Absolute life-changer.
+            </p>
+            <div class="testimonial-footer">
+              <div class="testimonial-avatar">S</div>
+              <div class="testimonial-meta">
+                <div class="stars">★★★★★</div>
+                <strong>Sujan Khadka</strong>
+                <span>Kalika Manavgyan Secondary School</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="slider-dots" id="sliderDots"></div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- ══ CTA BAND ══ -->
+  <section class="cta-band page-section--shaded">
+    <div class="section-inner--narrow">
+      <h2>Ready to Start Learning?</h2>
+      <p>Join hundreds of students already using our book to prepare smarter, study deeper, and perform better.</p>
+      <div class="cta-btn-group">
+        <a href="{% url 'buy:index' %}" class="btn btn--gold">
+          <i class="fa-solid fa-book"></i> Buy the Book
+        </a>
+      </div>
+      <div class="cta-btn-group">
+        <a href="{% url 'sxcmodel:dashboard' %}" class="btn">Browse Model Sets</a>
+        <a href="{% url 'daily:quiz' %}" class="btn btn--light">Try Daily Question</a>
+      </div>
+    </div>
+  </section>
+
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'about/js/app.js' %}"></script>
+  <script src="{% static 'about/js/app.js' %}"></script>
 {% endblock %}

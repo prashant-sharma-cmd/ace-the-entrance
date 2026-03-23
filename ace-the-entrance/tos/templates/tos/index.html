@@ -1,14 +1,14 @@
 {% extends "base_template.html" %}
 {% load static %}
 
-{% block title %}Terms & Privacy – {% endblock %}
+{% block title %}Terms & Privacy –{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'tos/css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'tos/css/styles.css' %}">
 {% endblock %}
 
 {% block header %}
-  <header class="hero">
+  <header class="page-hero page-hero--tos">
     <div class="hero-badge">Legal Documents</div>
     <h1>Terms &amp; Privacy</h1>
     <p class="hero-sub">Effective Date: February 28, 2026</p>
@@ -62,7 +62,10 @@
       <div class="tab-panel active" id="tos" role="tabpanel">
 
         <div class="highlight-box">
-          <p><i class="fa-solid fa-circle-info"></i> &nbsp;Please read these Terms of Service carefully before using our website. By accessing or using our services, you agree to be bound by these terms.</p>
+          <p>
+            <i class="fa-solid fa-circle-info"></i> &nbsp;Please read these Terms of Service carefully
+            before using our website. By accessing or using our services, you agree to be bound by these terms.
+          </p>
         </div>
 
         <div class="legal-section" id="tos-acceptance">
@@ -162,7 +165,9 @@
         <div class="contact-card">
           <h3>Questions About Our Terms?</h3>
           <p>Our team is happy to clarify anything about our Terms of Service. Don't hesitate to reach out.</p>
-          <a href="{% url 'tos:contact' %}" class="btn" target="_blank"><i class="fa-solid fa-envelope"></i> &nbsp;Contact Us</a>
+          <a href="{% url 'tos:contact' %}" class="btn" target="_blank">
+            <i class="fa-solid fa-envelope"></i> &nbsp;Contact Us
+          </a>
         </div>
 
       </div><!-- /tos -->
@@ -171,7 +176,10 @@
       <div class="tab-panel" id="privacy" role="tabpanel">
 
         <div class="highlight-box">
-          <p><i class="fa-solid fa-lock"></i> &nbsp;Your privacy matters to us. This policy explains what data we collect, how we use it, and the choices you have regarding your information.</p>
+          <p>
+            <i class="fa-solid fa-lock"></i> &nbsp;Your privacy matters to us. This policy explains what
+            data we collect, how we use it, and the choices you have regarding your information.
+          </p>
         </div>
 
         <div class="legal-section" id="prv-intro">
@@ -312,7 +320,9 @@
         <div class="contact-card">
           <h3>Privacy Concerns?</h3>
           <p>If you have any questions about our Privacy Policy or how we handle your data, we'd love to hear from you.</p>
-          <a href="{% url 'tos:contact' %}" class="btn" target="_blank"><i class="fa-solid fa-envelope"></i> &nbsp;Contact Us</a>
+          <a href="{% url 'tos:contact' %}" class="btn" target="_blank">
+            <i class="fa-solid fa-envelope"></i> &nbsp;Contact Us
+          </a>
         </div>
 
       </div><!-- /privacy -->
@@ -328,17 +338,16 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'tos/js/app.js' %}"></script>
-<script>
-  /* Mobile TOC toggle — thin wrapper, main logic stays in app.js */
-  function toggleMobileToc() {
-    var btn = document.getElementById('toc-toggle');
-    var toc = document.getElementById('mobile-toc');
-    var isOpen = toc.classList.contains('visible');
-    toc.classList.toggle('visible', !isOpen);
-    btn.classList.toggle('open', !isOpen);
-    btn.setAttribute('aria-expanded', String(!isOpen));
-    toc.setAttribute('aria-hidden', String(isOpen));
-  }
-</script>
+  <script src="{% static 'tos/js/app.js' %}"></script>
+  <script>
+    function toggleMobileToc() {
+      var btn = document.getElementById('toc-toggle');
+      var toc = document.getElementById('mobile-toc');
+      var isOpen = toc.classList.contains('visible');
+      toc.classList.toggle('visible', !isOpen);
+      btn.classList.toggle('open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      toc.setAttribute('aria-hidden', String(isOpen));
+    }
+  </script>
 {% endblock %}
