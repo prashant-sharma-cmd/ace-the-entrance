@@ -1,13 +1,3 @@
-/* buy/css/styles.css — requires global.css
-   Removed (now in global):
-     .content-divider, .hero-inner, .eyebrow--hero, .hero-desc,
-     .page-hero + modifiers, .reveal, .tab-panel,
-     @keyframes spinSlow, slideFromLeft, show
-*/
-
-/* ══ HERO ══ */
-/* .page-hero.page-hero--buy handles base styles.
-   Only buy-specific overrides live here. */
 .buy-hero .hero-inner {
   max-width: 700px;
   margin: 0 auto;

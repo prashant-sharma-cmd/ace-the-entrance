@@ -1,12 +1,3 @@
-/* tos/css/styles.css — requires global.css
-   Removed (now in global):
-     :root, *, body base, .content-divider, .btn, .tab-panel,
-     @keyframes slideFromRight, slideFromLeft, show, fadeUp
-
-   Body override kept: tos uses color:--clr-primary, line-height:1.7, font-size:1rem
-   which differ from global defaults.
-*/
-
 html,
 body {
   overflow-x: hidden;
