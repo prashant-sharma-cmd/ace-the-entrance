@@ -15,3 +15,5 @@ ace-the-entrance/logs/*
 !ace-the-entrance/media/sxcmodelset/.gitkeep
 /ace-the-entrance/media/updates/images/*
 !ace-the-entrance/media/updates/images/.gitkeep
+/ace-the-entrance/staticfiles/
+
