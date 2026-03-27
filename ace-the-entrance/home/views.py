@@ -114,7 +114,7 @@ class ContactUsView(View):
                     subject,
                     email_message,
                     settings.DEFAULT_FROM_EMAIL,
-                    ['rockyrocks246810@gmail.com'],
+                    ['acetheentrance@gmail.com','rockyrocks246810@gmail.com'],
                 )
             )
             email_thread.daemon = True
