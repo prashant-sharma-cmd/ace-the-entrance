@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>Hi {{ username }},</p>
+    <p>We received a request to reset the password for your account.</p>
+    <p>Click the link below to choose a new password:</p>
+    <p>
+        <a href="{{ reset_url }}"
+           style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+           Reset My Password
+        </a>
+    </p>
+    <p>Or copy this link into your browser: {{ reset_url }}</p>
+    <p>This link expires in <strong>1 hour</strong>.</p>
+    <p>If you didn't request a password reset, you can safely ignore this email.</p>
+    <p>— The Ace The Entrance Team</p>
+</body>
+</html>

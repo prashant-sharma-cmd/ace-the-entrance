@@ -1,10 +1,8 @@
-import re
 import logging
 import threading
 
 from django.shortcuts import redirect
 from django.views.generic import View, TemplateView
-from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.conf import settings
@@ -12,6 +10,8 @@ from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django_ratelimit.decorators import ratelimit
 from django.core.cache import cache
+
+from utils.email_service import send_smart_email
 
 logger = logging.getLogger(__name__)
 
@@ -27,21 +27,24 @@ MAX_LENGTHS = {
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
 def sanitise(value: str) -> str:
-    """Strip newlines to prevent email header/body injection."""
+    if not value:
+        return ""
     return value.replace('\n', ' ').replace('\r', ' ').strip()
 
 
-def send_email_in_background(subject, message, sender, recipients):
+def send_email_in_background(subject, message, sender_email, recipient_list):
     try:
-        send_mail(
-            subject,
-            message,
-            sender,
-            recipients,
-            fail_silently=False,
+        send_smart_email(
+            subject=subject,
+            recipient_list=recipient_list,
+            template_name="emails/contact_form.html",
+            context={
+                "message": message,
+                "user_email": sender_email,
+            }
         )
     except Exception as e:
-        logger.error(f"Contact email failed: {e}", exc_info=True)
+        logger.error(f"Background email failed: {e}", exc_info=True)
 
 
 # ── Views ──────────────────────────────────────────────────────────────────────
@@ -111,7 +114,7 @@ class ContactUsView(View):
                     subject,
                     email_message,
                     settings.DEFAULT_FROM_EMAIL,
-                    ['acetheentrance@gmail.com'],
+                    ['rockyrocks246810@gmail.com'],
                 )
             )
             email_thread.daemon = True

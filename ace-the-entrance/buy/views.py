@@ -3,15 +3,15 @@ import logging
 import threading
 
 from django.shortcuts import render, redirect
-from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from django.conf import settings
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.views import View
 from django_ratelimit.decorators import ratelimit
 from django.core.cache import cache
+
+from utils.email_service import send_smart_email
 
 logger = logging.getLogger(__name__)
 
@@ -33,18 +33,19 @@ VALID_QUANTITIES = {'1', '2', '3', '4', '5'}
 
 def sanitise(value: str) -> str:
     """Strip newlines to prevent email body injection."""
+    if not value: return ""
     return value.replace('\n', ' ').replace('\r', ' ').strip()
 
 
-def send_order_email_in_background(subject, message, from_email, recipient_list):
+def send_order_email_in_background(subject, context, recipient_list, reply_to_email):
     """Send email in a background thread so the request is not blocked."""
     try:
-        send_mail(
+        send_smart_email(
             subject=subject,
-            message=message,
-            from_email=from_email,
             recipient_list=recipient_list,
-            fail_silently=False,
+            template_name="emails/order_notification.html",
+            context=context,
+            reply_to=reply_to_email
         )
     except Exception as e:
         logger.error(f"Order email failed: {e}", exc_info=True)
@@ -128,27 +129,31 @@ class BuyPageView(View):
         cache.set(phone_key, 1, timeout=300)   # block same phone for 5 minutes
 
         # 10. Build and send email
-        subject = f"New Book Order from {full_name}"
-        email_body = f"""
-New Book Order Request
-======================
+        subject = f"📚 New Order: {full_name} ({quantity} qty)"
 
-Full Name        : {full_name}
-Phone            : {phone}
-Email            : {email or 'Not provided'}
-City / District  : {city}
-Delivery Address : {address}
-Quantity         : {quantity}
-Additional Notes : {notes or 'N/A'}
-"""
+        # We pass a dictionary (context) instead of a formatted string
+        email_context = {
+            'full_name': full_name,
+            'phone': phone,
+            'email': email,
+            'address': address,
+            'city': city,
+            'quantity': quantity,
+            'notes': notes,
+        }
+
         try:
+            # We use the customer's email as 'reply_to' so you can just click
+            # 'Reply' in your Gmail to contact them.
+            customer_email = email if email else None
+
             email_thread = threading.Thread(
                 target=send_order_email_in_background,
                 args=(
                     subject,
-                    email_body,
-                    settings.DEFAULT_FROM_EMAIL,
+                    email_context,
                     ['acetheentrance@gmail.com', 'rockyrocks246810@gmail.com'],
+                    customer_email,  # This is the reply_to
                 )
             )
             email_thread.daemon = True
@@ -156,6 +161,7 @@ Additional Notes : {notes or 'N/A'}
             messages.success(request, 'Order Sent Successfully!')
         except Exception as e:
             logger.error(f"Failed to start email thread: {e}", exc_info=True)
-            messages.error(request, 'Failed to place order! Please contact us if issue persists.')
+            messages.error(request,
+                           'Failed to place order! Please contact us via phone.')
 
         return redirect('buy:index')
