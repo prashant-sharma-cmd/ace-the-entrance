@@ -306,7 +306,6 @@
   justify-content: center;
   padding: 1rem;
   cursor: zoom-out;
-  animation: lightboxFadeIn 0.25s ease both;
 }
 
 .lightbox-overlay.open {
@@ -323,7 +322,6 @@
   max-width: min(92vw, 900px);
   max-height: 90vh;
   cursor: default;
-  animation: lightboxZoomIn 0.28s ease both;
 }
 
 @keyframes lightboxZoomIn {

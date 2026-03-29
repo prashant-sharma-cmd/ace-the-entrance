@@ -56,7 +56,6 @@
   border-radius: 50%;
   border: 2px dashed rgba(86,232,220,0.2);
   top: -60px; right: -60px;
-  animation: spinSlow 30s linear infinite;
   pointer-events: none;
 }
 
@@ -75,7 +74,6 @@
   letter-spacing: 2px;
   display: block;
   margin-bottom: 0.5rem;
-  animation: slideFromRight 0.9s ease-out both;
 }
 
 .forum-hero h1 {
@@ -85,7 +83,6 @@
   letter-spacing: 4px;
   line-height: 1.1;
   margin-bottom: 1.25rem;
-  animation: slideFromLeft 0.9s ease-out 0.15s both;
 }
 
 .forum-hero .hero-desc {
@@ -94,7 +91,6 @@
   color: rgba(255,255,255,0.75);
   font-size: 1rem;
   line-height: 1.7;
-  animation: show 0.9s ease-out 0.3s both;
 }
 
 .hero-cta-group {
@@ -102,7 +98,6 @@
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
-  animation: show 0.9s ease-out 0.45s both;
 }
 
 /* ════════════════════════════
@@ -611,7 +606,6 @@
   pointer-events: auto !important;
   opacity: 0 !important;
   transform: translateX(20px) !important;
-  animation: toastIn 0.3s ease forwards, toastOut 0.4s ease forwards 3.5s !important;
 }
 
 .toast-success { background: #dcfce7 !important; color: #15803d !important; border-left: 3px solid #22c55e !important; }
@@ -737,7 +731,6 @@
   z-index: 10000;
   display: flex; align-items: center; justify-content: center;
   cursor: zoom-out;
-  animation: fadeIn 0.22s ease;
 }
 
 .lightbox-overlay img {
@@ -745,7 +738,6 @@
   object-fit: contain;
   border-radius: var(--radius);
   box-shadow: 0 12px 50px rgba(0,0,0,0.5);
-  animation: lbZoom 0.25s ease both;
 }
 
 @keyframes lbZoom {

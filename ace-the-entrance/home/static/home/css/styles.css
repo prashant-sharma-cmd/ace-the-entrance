@@ -112,56 +112,6 @@ p {
 
 /*
 ===========
-ANIMATIONS
-===========
-*/
-@keyframes bounce {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.6); }
-  100% { transform: scale(1); }
-}
-
-@keyframes slideFromRight {
-  0%   { transform: translateX(1000px);  opacity: 0; }
-  50%  { transform: translateX(-200px);  opacity: 0.5; }
-  75%  { transform: translateX(50px);    opacity: 0.75; }
-  100% { transform: translateX(0px);     opacity: 1; }
-}
-
-@keyframes slideFromLeft {
-  0%   { transform: translateX(-1000px); opacity: 0; }
-  50%  { transform: translateX(200px);   opacity: 0.5; }
-  75%  { transform: translateX(-50px);   opacity: 0.75; }
-  100% { transform: translateX(0px);     opacity: 1; }
-}
-
-@keyframes show {
-  0%   { transform: scale(1.5);  opacity: 0; }
-  50%  { transform: scale(1.75); opacity: 0.5; }
-  100% { transform: scale(1);    opacity: 1; }
-}
-
-@keyframes spinSlow {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes toastIn {
-  from { opacity: 0; transform: translateX(20px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes toastOut {
-  from { opacity: 1; transform: translateX(0); }
-  to   { opacity: 0; transform: translateX(20px); }
-}
-
-/*
-===========
 UTILITIES — BUTTONS
 ===========
 */
@@ -345,7 +295,6 @@ UTILITIES — SECTION TITLES
   color: var(--clr-primary-light);
   letter-spacing: 2px;
   margin-bottom: 0.5rem;
-  animation: slideFromRight 0.9s ease-out both;
 }
 
 /*
@@ -403,7 +352,6 @@ Shared base for about, buy, updates, tos
   border: 1.5px dashed rgba(86, 232, 220, 0.18);
   top: -80px;
   right: -80px;
-  animation: spinSlow 35s linear infinite;
   pointer-events: none;
 }
 
@@ -432,7 +380,6 @@ Shared base for about, buy, updates, tos
   letter-spacing: 4px;
   line-height: 1.1;
   margin-bottom: 1.1rem;
-  animation: slideFromLeft 0.9s ease-out 0.15s both;
 }
 
 /* Hero description paragraph */
@@ -442,7 +389,6 @@ Shared base for about, buy, updates, tos
   color: rgba(255, 255, 255, 0.73);
   font-size: 1rem;
   line-height: 1.75;
-  animation: show 0.9s ease-out 0.3s both;
 }
 
 /* Hero CTA group */
@@ -451,7 +397,6 @@ Shared base for about, buy, updates, tos
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
-  animation: show 0.9s ease-out 0.45s both;
 }
 
 /*
@@ -482,7 +427,6 @@ Shared show/hide + entrance animation — updates & tos
 
 .tab-panel.active {
   display: block;
-  animation: fadeUp 0.4s ease both;
 }
 
 /*

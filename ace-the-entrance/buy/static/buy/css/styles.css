@@ -20,7 +20,6 @@
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  animation: show 0.9s ease-out 0.45s both;
 }
 
 /* ══ SECTION WRAPPER ══ */
@@ -104,8 +103,8 @@
 }
 
 .option-card.shop    { border-top-color: var(--clr-primary); }
-.option-card.daraz   { border-top-color: #f85c00; }
-.option-card.deliver { border-top-color: #12b97a; }
+.option-card.daraz   { border-top-color: var(--clr-primary); }
+.option-card.deliver { border-top-color: var(--clr-primary); }
 
 .option-icon {
   width: 52px;
@@ -119,8 +118,8 @@
 }
 
 .option-card.shop    .option-icon { background: rgba(1, 37, 125, 0.1);   color: var(--clr-primary); }
-.option-card.daraz   .option-icon { background: rgba(248, 92, 0, 0.1);   color: #f85c00; }
-.option-card.deliver .option-icon { background: rgba(18, 185, 122, 0.1); color: #12b97a; }
+.option-card.daraz   .option-icon { background: rgba(1, 37, 125, 0.1);   color: var(--clr-primary); }
+.option-card.deliver .option-icon { background: rgba(1, 37, 125, 0.1);   color: var(--clr-primary); }
 
 .option-card h3 {
   font-size: 1rem;
@@ -152,8 +151,8 @@
 }
 
 .option-card.shop    .option-arrow { color: var(--clr-primary); }
-.option-card.daraz   .option-arrow { color: #f85c00; }
-.option-card.deliver .option-arrow { color: #12b97a; }
+.option-card.daraz   .option-arrow { color: var(--clr-primary); }
+.option-card.deliver .option-arrow { color: var(--clr-primary); }
 
 .option-card:hover .option-arrow {
   gap: 0.7rem;
@@ -276,7 +275,7 @@
   align-items: center;
   gap: 0.4rem;
   background: rgba(248, 92, 0, 0.1);
-  color: #f85c00;
+  color: var(--clr-primary);
   padding: 0.3rem 0.9rem;
   border-radius: 2rem;
   font-size: 0.75rem;
@@ -318,7 +317,7 @@
 }
 
 .daraz-perk i {
-  color: #f85c00;
+  color: var(--clr-primary);
   font-size: 0.8rem;
 }
 
@@ -394,7 +393,7 @@
 .daraz-logo-box span {
   font-size: 1.8rem;
   font-weight: 900;
-  color: #f85c00;
+  color: var(--clr-primary);
   letter-spacing: -1px;
 }
 

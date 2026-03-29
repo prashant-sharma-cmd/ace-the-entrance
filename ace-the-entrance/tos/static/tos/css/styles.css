@@ -21,14 +21,12 @@ body {
   color: var(--clr-primary-light);
   letter-spacing: 2px;
   margin-bottom: 0.5rem;
-  animation: slideFromRight 1s ease-out both;
   position: relative;
 }
 
 .page-hero--tos h1 {
   font-size: clamp(1.6rem, 5vw, 3.8rem);
   letter-spacing: clamp(1px, 1vw, 4px);
-  animation: slideFromLeft 1s ease-out 0.2s both;
   position: relative;
 }
 
@@ -38,7 +36,6 @@ body {
   font-size: 0.85rem;
   letter-spacing: 1px;
   text-transform: uppercase;
-  animation: show 1s ease-out 0.5s both;
   position: relative;
 }
 
