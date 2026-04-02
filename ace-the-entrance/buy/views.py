@@ -37,7 +37,7 @@ def sanitise(value: str) -> str:
     return value.replace('\n', ' ').replace('\r', ' ').strip()
 
 
-def send_order_email_in_background(subject, context, recipient_list, reply_to_email):
+def send_order_email_in_background(subject, context, recipient_list):
     """Send email in a background thread so the request is not blocked."""
     try:
         send_smart_email(
@@ -45,7 +45,6 @@ def send_order_email_in_background(subject, context, recipient_list, reply_to_em
             recipient_list=recipient_list,
             template_name="emails/order_notification.html",
             context=context,
-            reply_to=reply_to_email
         )
     except Exception as e:
         logger.error(f"Order email failed: {e}", exc_info=True)
@@ -153,7 +152,6 @@ class BuyPageView(View):
                     subject,
                     email_context,
                     ['acetheentrance@gmail.com', 'rockyrocks246810@gmail.com'],
-                    customer_email,  # This is the reply_to
                 )
             )
             email_thread.daemon = True
