@@ -11,7 +11,10 @@
       <div class="banner">
         <h2>Entrance Mastery Starts Here</h2>
         <h1>Ace The <br/> Entrance</h1>
-        <a href="{% url 'daily:quiz'%}" class="btn banner-btn">Explore Daily Questions</a>
+        <div class="banner-btn-container">
+          <a href="{% url 'daily:quiz'%}" class="btn banner-btn">Daily Questions</a>
+          <a href="{% url 'buy:index'%}#order-delivery" class="btn banner-btn btn-outline">Buy Our Book</a>
+        </div>
       </div>
     </header>
     <div class="content-divider"></div>
@@ -56,10 +59,10 @@
               <h2>Book</h2>
             </div>
               <p class="about-text">
-                Ace the Entrance is the ultimate preparation manual for students aiming to secure a seat at St. Xavier's College, Maitighar, and other premier +2 institutions in Nepal. This book is authored by St. Xavier's alumni and top-ranking medical students to provide an authentic, high-yield study experience.
+                Ace the Entrance is the ultimate manual for students targeting St. Xavier's and Nepal's top +2 colleges. Authored by alumni and medical toppers, it provides an authentic, high-yield preparation experience.
               </p>
               <p class="about-text">
-                It features over 2,500 practice MCQs, real past entrance papers, and exclusive "Quick Tricks" designed to help you master Science, Mathematics, and English concepts with speed and precision. Whether you are targeting a scholarship or entrance into a competitive stream, this guide is your essential roadmap to cracking the St. Xavier's entrance exam and starting your journey at Nepal's most prestigious college.
+                With 2,500+ MCQs, past papers, and exclusive "Quick Tricks," this guide helps you master Science, Math, and English with speed and precision—your essential roadmap to entrance success.
               </p>
               <a href="{% url 'about:index' %}" class="btn">Learn More</a>
         </article>
@@ -86,27 +89,27 @@
       <button class="scroll-btn left-btn" onclick="scrollProducts(-1)">&#8249;</button>
       <article class="products-inventory">
         <div class="product">
-          <img src="{% static 'home/images/author-picture-1.png' %}" alt="Prashant Sharma" class="product-img">
+          <img src="{% static 'home/images/author-picture-1.jpg' %}" alt="Prashant Sharma" class="product-img">
           <h4 class="product-title">Prashant Sharma</h4>
           <h4 class="product-price">Nerd🤓</h4>
         </div>
         <div class="product">
-          <img src="{% static 'home/images/author-picture-2.png' %}" alt="Prabesh Shahi" class="product-img">
+          <img src="{% static 'home/images/author-picture-2.jpg' %}" alt="Prabesh Shahi" class="product-img">
           <h4 class="product-title">Prabesh Shahi</h4>
           <h4 class="product-price">Podcast Addict🎤</h4>
         </div>
         <div class="product">
-          <img src="{% static 'home/images/author-picture-3.png' %}" alt="Prajwol Tamang" class="product-img">
+          <img src="{% static 'home/images/author-picture-3.jpg' %}" alt="Prajwol Tamang" class="product-img">
           <h4 class="product-title">Prajwol Tamang</h4>
           <h4 class="product-price">Body Builder🏋️</h4>
         </div>
         <div class="product">
-          <img src="{% static 'home/images/author-picture-4.png' %}" alt="Prashant Bashyal" class="product-img">
+          <img src="{% static 'home/images/author-picture-4.jpg' %}" alt="Prashant Bashyal" class="product-img">
           <h4 class="product-title">Prashant Bashyal</h4>
           <h4 class="product-price">Dactar Sahab🧑‍⚕️️</h4>
         </div>
         <div class="product">
-          <img src="{% static 'home/images/author-picture-5.png' %}" alt="Kishor Kafle" class="product-img">
+          <img src="{% static 'home/images/author-picture-5.jpg' %}" alt="Kishor Kafle" class="product-img">
           <h4 class="product-title">Kishor Kafle</h4>
           <h4 class="product-price">Mogger🧏</h4>
         </div>
@@ -132,7 +135,7 @@
           </div>
           <div class="service-info">
             <h4>Daily Questions</h4>
-            <p>Challenge yourself every 24 hours with a fresh set of problems from Science, Maths, English and IQ/GK to train your brain for mastering exams.</p>
+            <p>Fresh daily problems across Science, Maths, English, and IQ/GK to keep your entrance prep on track.</p>
             <a href="{% url 'daily:quiz' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
@@ -143,7 +146,7 @@
           </div>
           <div class="service-info">
             <h4>SXC Model Set</h4>
-            <p>Think you're ready for SXC? Take on 100 actual memory questions from last year's entrance exam with only 90 minutes on the clock.</p>
+            <p>Test your readiness with 100 actual past questions from last year's exam under real timed conditions.</p>
             <a href="{% url 'sxcmodel:dashboard' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
@@ -154,7 +157,7 @@
           </div>
           <div class="service-info">
             <h4>Discussion Forum</h4>
-            <p>Don't study in isolation. Our Discussion Forum is the ultimate hub for SXC aspirants to brainstorm solutions, debate answers, and stay updated.</p>
+            <p>Connect with fellow aspirants to brainstorm solutions, debate answers, and stay updated on the latest news.</p>
             <a href="{% url 'forum:index' %}" class="btn service-btn">Take Me There</a>
           </div>
         </article>
