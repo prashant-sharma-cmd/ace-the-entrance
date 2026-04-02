@@ -41,7 +41,8 @@ def send_email_in_background(subject, message, sender_email, recipient_list):
             context={
                 "message": message,
                 "user_email": sender_email,
-            }
+            },
+            reply_to=sender_email
         )
     except Exception as e:
         logger.error(f"Background email failed: {e}", exc_info=True)

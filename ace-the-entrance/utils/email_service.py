@@ -6,9 +6,8 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-
 def send_smart_email(subject, recipient_list, template_name, context,
-                     from_email=None):
+                     from_email=None, reply_to=None):
     """
     A universal email utility.
     - subject: String
@@ -34,6 +33,7 @@ def send_smart_email(subject, recipient_list, template_name, context,
             from_email=sender,
             recipient_list=recipient_list,
             html_message=html_message,
+            reply_to=reply_to,
             fail_silently=False,
         )
         return True
