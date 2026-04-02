@@ -664,7 +664,6 @@ HOME PAGE HEADER
 .header {
   padding-top: 64px;
   min-height: 100vh;
-  background: url("../images/main-bcg.jpeg") center/cover no-repeat fixed;
   position: relative;
   overflow-x: hidden;
 }

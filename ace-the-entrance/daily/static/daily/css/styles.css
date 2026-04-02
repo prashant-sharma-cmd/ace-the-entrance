@@ -744,22 +744,40 @@ Do NOT re-link styles.css in the quiz template — causes conflicts.
    RESPONSIVE
 =========================================== */
 
-@media screen and (max-width: 560px) {
-  .quiz-scope { padding: 1rem 0.5rem; align-items: flex-start; }
+@media screen and (max-width: 600px) {
+  .quiz-scope { padding: 1rem 0.5rem; align-items: center; }
+
+  .splash-banner { padding: 2rem 1.25rem 1.5rem; }
+  .splash-banner h2 { font-size: 1.8rem; }
+  .splash-icon { width: 60px; height: 60px; }
+  .splash-icon svg { width: 30px; height: 30px; }
 
   .splash-actions { flex-direction: column; padding: 1rem 1.25rem 1.75rem; }
-  .btn-splash-start, .btn-splash-back { max-width: 100%; justify-content: center; }
+  .btn-splash-start, .btn-splash-back { max-width: 100%; justify-content: center; width: 100%; }
   .splash-meta { flex-wrap: wrap; }
-  .splash-meta-item { min-width: 50%; }
+  .splash-meta-item { flex: 1 1 50%; padding: 1rem 0.5rem; }
+  .splash-meta-item .meta-value { font-size: 1.3rem; }
 
-  .question-area { padding: 1.75rem 1.25rem 1rem; }
-  .quiz-footer { flex-direction: column; align-items: stretch; padding: 1rem 1.25rem 1.5rem; }
-  .nav-actions { justify-content: flex-end; }
-  .score-circle { width: 110px; height: 110px; }
-  #percentage { font-size: 2.75rem; }
+  .question-area { padding: 1.5rem 1.25rem 1rem; min-height: auto; }
+  .question-text { font-size: 1rem; margin-bottom: 1.25rem; }
+  .choice-btn { padding: 0.75rem 1rem; font-size: 0.85rem; }
 
-  .results-actions { flex-direction: column; align-items: stretch; }
-  .results-actions .btn-primary,
-  .results-actions .btn-outline-primary { text-align: center; justify-content: center; }
+  .quiz-footer { flex-direction: column-reverse; align-items: stretch; padding: 1rem 1.25rem 1.5rem; gap: 1.25rem; }
+  .nav-actions { justify-content: space-between; width: 100%; }
+  .nav-actions .btn { flex: 1; text-align: center; justify-content: center; }
+  .score-pill { align-self: center; }
+
+  .results-content { padding: 2rem 1.25rem; }
+  .score-circle { width: 100px; height: 100px; }
+  #percentage { font-size: 2.5rem; }
+  .results-content h2 { font-size: 1.7rem; }
+
+  .results-actions { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+  .results-actions .btn { width: 100%; text-align: center; justify-content: center; }
   .fb-cta-banner { max-width: 100%; }
+}
+
+@media screen and (max-width: 400px) {
+  .splash-meta-item { flex: 1 1 100%; border-right: none; border-bottom: 1px solid rgba(1,37,125,0.08); }
+  .splash-meta-item:last-child { border-bottom: none; }
 }

@@ -1,0 +1,22 @@
+﻿   RESPONSIVE
+=========================================== */
+
+@media screen and (max-width: 560px) {
+  .quiz-scope { padding: 1rem 0.5rem; align-items: flex-start; }
+
+  .splash-actions { flex-direction: column; padding: 1rem 1.25rem 1.75rem; }
+  .btn-splash-start, .btn-splash-back { max-width: 100%; justify-content: center; }
+  .splash-meta { flex-wrap: wrap; }
+  .splash-meta-item { min-width: 50%; }
+
+  .question-area { padding: 1.75rem 1.25rem 1rem; }
+  .quiz-footer { flex-direction: column; align-items: stretch; padding: 1rem 1.25rem 1.5rem; }
+  .nav-actions { justify-content: flex-end; }
+  .score-circle { width: 110px; height: 110px; }
+  #percentage { font-size: 2.75rem; }
+
+  .results-actions { flex-direction: column; align-items: stretch; }
+  .results-actions .btn-primary,
+  .results-actions .btn-outline-primary { text-align: center; justify-content: center; }
+  .fb-cta-banner { max-width: 100%; }
+}
