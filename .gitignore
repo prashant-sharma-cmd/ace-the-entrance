@@ -16,4 +16,4 @@ ace-the-entrance/logs/*
 /ace-the-entrance/media/updates/images/*
 !ace-the-entrance/media/updates/images/.gitkeep
 /ace-the-entrance/staticfiles/
-__pycache__/
+
