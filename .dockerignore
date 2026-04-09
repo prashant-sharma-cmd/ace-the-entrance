@@ -19,5 +19,3 @@ ace-the-entrance/media/updates/*
 .git/
 .gitignore
 
-# Environment
-ace-the-entrance/.env
