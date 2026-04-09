@@ -1,0 +1,189 @@
+{% extends "navbar.html" %}
+{% load static %}
+{% load sxcmodel_extras %}
+{% block title %} SXC Model – {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'sxcmodel/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'sxcmodel/css/modal.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Start exam confirm modal ── -->
+<div class="qmodal-backdrop" id="startModal" role="dialog" aria-modal="true">
+    <div class="qmodal">
+        <span class="qmodal-icon"></span>
+        <div class="qmodal-title">Start a new exam?</div>
+        <div class="qmodal-body">
+            {% if incomplete_attempt %}
+                Your current unfinished exam will be <strong>discarded</strong>.<br>This cannot be undone.
+            {% else %}
+                This will begin a fresh 90-minute attempt.<br>Make sure you're ready!
+            {% endif %}
+        </div>
+        <div class="qmodal-actions">
+            <button class="qmodal-btn qmodal-btn-cancel" id="startModalCancel">Not yet</button>
+            <button class="qmodal-btn {% if incomplete_attempt %}qmodal-btn-danger{% else %}qmodal-btn-confirm{% endif %}"
+                    id="startModalConfirm">
+                Let's go
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="quiz-page">
+
+    <!-- Page header -->
+    <div class="quiz-page-header">
+        <div>
+            <h2>Welcome back, {{ user.get_full_name|default:user.username }} </h2>
+            <p>Ready for your entrance exam? Good luck!</p>
+        </div>
+        <a href="{% url 'sxcmodel:leaderboard' %}" class="btn"> Leaderboard</a>
+    </div>
+
+    <!-- Resume banner -->
+    {% if incomplete_attempt %}
+    <div class="quiz-resume-banner">
+        <div>
+            <strong>⏸ You have an unfinished exam.</strong>
+            Started on {{ incomplete_attempt.start_time|date:"M j, Y" }} at {{ incomplete_attempt.start_time|time:"H:i" }}.
+            You can continue from where you left off.
+        </div>
+        <a href="{% url 'sxcmodel:resume' session_key=incomplete_attempt.session_key %}" class="btn">▶ Resume Exam</a>
+    </div>
+    {% endif %}
+
+    <!-- Best score stats -->
+    {% if best_attempt %}
+    <div class="quiz-card">
+        <div class="quiz-card-header">
+            <span> Your Best Performance</span>
+            <span>{{ best_attempt.end_time|date:"M j, Y" }}</span>
+        </div>
+        <div class="quiz-card-body">
+            <div class="quiz-stats-grid">
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value">{{ best_attempt.final_grade|floatformat:1 }}</div>
+                    <div class="quiz-stat-label">Score / 100</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value clr-correct">{{ best_attempt.correct_count }}</div>
+                    <div class="quiz-stat-label">Correct</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value clr-wrong">{{ best_attempt.incorrect_count }}</div>
+                    <div class="quiz-stat-label">Wrong</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value clr-muted">{{ best_attempt.unattempted_count }}</div>
+                    <div class="quiz-stat-label">Skipped</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value" style="font-size:1.3rem;">{{ best_attempt.total_time_seconds|time_display }}</div>
+                    <div class="quiz-stat-label">Time Taken</div>
+                </div>
+                <div class="quiz-stat-card">
+                    <div class="quiz-stat-value" style="font-size:1.3rem;">{{ best_attempt.raw_score|floatformat:1 }}</div>
+                    <div class="quiz-stat-label">Raw Score</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Attempt history -->
+    {% if completed_attempts %}
+    <div class="quiz-card">
+        <div class="quiz-card-header"> All Attempts</div>
+        <div class="quiz-table-wrapper">
+            <table class="quiz-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Final Score</th>
+                        <th>Correct</th>
+                        <th>Wrong</th>
+                        <th>Raw Score</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attempt in completed_attempts %}
+                    <tr>
+                        <td class="clr-muted">{{ forloop.counter }}</td>
+                        <td>{{ attempt.start_time|date:"M j, Y H:i" }}</td>
+                        <td><span class="quiz-badge">{{ attempt.final_grade|floatformat:1 }}</span></td>
+                        <td class="clr-correct">{{ attempt.correct_count }}</td>
+                        <td class="clr-wrong">{{ attempt.incorrect_count }}</td>
+                        <td>{{ attempt.raw_score|floatformat:1 }}</td>
+                        <td>
+                            <a href="{% url 'sxcmodel:results' session_key=attempt.session_key %}"
+                               class="btn" style="font-size:0.75rem;padding:0.3rem 0.7rem;">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Exam info -->
+    <div class="quiz-card">
+        <div class="quiz-card-header">ℹ Exam Information</div>
+        <div class="quiz-card-body">
+            <div class="quiz-info-grid">
+                <div class="quiz-info-item">
+                    <p class="quiz-info-item-label"> Subjects</p>
+                    <p class="quiz-info-item-value">Physics · Chemistry · Biology · Maths · English · IQ/GK</p>
+                </div>
+                <div class="quiz-info-item">
+                    <p class="quiz-info-item-label"> Questions</p>
+                    <p class="quiz-info-item-value">20 per subject · 100 total</p>
+                </div>
+                <div class="quiz-info-item">
+                    <p class="quiz-info-item-label"> Duration</p>
+                    <p class="quiz-info-item-value">90 minutes</p>
+                </div>
+                <div class="quiz-info-item">
+                    <p class="quiz-info-item-label"> Marking</p>
+                    <p class="quiz-info-item-value">+1 correct &nbsp;·&nbsp; −¼ wrong &nbsp;·&nbsp; 0 skipped</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start CTA -->
+    <div class="quiz-cta">
+        <button type="button" id="startExamBtn" class="quiz-cta-btn">
+            🚀 Start New Exam
+        </button>
+        {% if not best_attempt and not incomplete_attempt %}
+        <p>This will be your first attempt — give it your best shot!</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'sxcmodel/js/modal.js' %}"></script>
+<script>
+    var startUrl = '{% url "sxcmodel:start" %}';
+
+    document.getElementById('startExamBtn').addEventListener('click', function () {
+        QuizModal.open('startModal');
+    });
+
+    document.getElementById('startModalCancel').addEventListener('click', function () {
+        QuizModal.close('startModal');
+    });
+
+    document.getElementById('startModalConfirm').addEventListener('click', function () {
+        window.location.href = startUrl;
+    });
+</script>
+{% endblock %}
