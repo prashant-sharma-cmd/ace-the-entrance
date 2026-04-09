@@ -1,0 +1,304 @@
+{% extends "base_template.html" %}
+{% load static %}
+{% load sxcmodel_extras %}
+{% block title %}{{ subject_label }} – Section {{ section_number }} of {{ total_sections }} {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'sxcmodel/css/section.css' %}">
+<link rel="stylesheet" href="{% static 'sxcmodel/css/modal.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Submit confirm modal ── -->
+<div class="qmodal-backdrop" id="submitModal" role="dialog" aria-modal="true">
+    <div class="qmodal">
+        <span class="qmodal-icon"></span>
+        <div class="qmodal-title">Submit your exam?</div>
+        <div class="qmodal-body">
+            You're about to submit all your answers.<br>
+            <strong>You cannot make changes after this.</strong>
+        </div>
+        <div class="qmodal-actions">
+            <button class="qmodal-btn qmodal-btn-cancel"  id="submitCancel">Go back</button>
+            <button class="qmodal-btn qmodal-btn-confirm" id="submitConfirm">Submit</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Next section confirm modal ── -->
+<div class="qmodal-backdrop" id="nextModal" role="dialog" aria-modal="true">
+    <div class="qmodal">
+        <span class="qmodal-icon"></span>
+        <div class="qmodal-title">Move to next section?</div>
+        <div class="qmodal-body">
+            Unanswered questions in this section will be counted as <strong>skipped</strong>.
+        </div>
+        <div class="qmodal-actions">
+            <button class="qmodal-btn qmodal-btn-cancel"  id="nextCancel">Stay here</button>
+            <button class="qmodal-btn qmodal-btn-confirm" id="nextConfirm">Continue</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Fixed timer bar ── -->
+<div class="exam-timer-bar">
+    <div class="exam-timer-display" id="examTimer">--:--</div>
+    <div class="exam-timer-track">
+        <div class="exam-timer-fill" id="examTimerFill" style="width:100%;"></div>
+    </div>
+    <div class="exam-section-pill">
+        Section {{ section_number }}/{{ total_sections }} &nbsp;|&nbsp; {{ subject_label }}
+    </div>
+    <div class="exam-save-status">
+        <div class="exam-save-dot" id="examSaveDot"></div>
+        <span id="examSaveText">Saving…</span>
+    </div>
+</div>
+
+<!-- ── Exam form ── -->
+<div class="exam-container">
+
+    <div class="exam-section-header">
+        <span class="exam-section-badge">{{ subject_label }}</span>
+        <span class="exam-section-count">{{ questions|length }} question{{ questions|length|pluralize }}</span>
+    </div>
+
+    <form method="post" id="examForm">
+        {% csrf_token %}
+        <input type="hidden" name="time_taken_seconds" id="examTimeTaken" value="0">
+
+        {% for question in questions %}
+        <div class="exam-q-card" id="qcard-{{ question.id }}">
+            <div class="exam-q-head">
+                <span class="exam-q-num">Q{{ forloop.counter }}</span>
+                <span class="exam-q-text">{{ question.text }}</span>
+            </div>
+            {% if question.image %}
+            <img src="{{ question.image.url }}" alt="Question diagram" class="exam-q-image">
+            {% endif %}
+            <div class="exam-q-options">
+                {% for i, opt in question.options_list %}
+                <label class="exam-option-label {% if existing_answers|get_item:question.id == i %}selected{% endif %}"
+                       for="q{{ question.id }}_opt{{ i }}">
+                    <input type="radio"
+                           name="answer_{{ question.id }}"
+                           id="q{{ question.id }}_opt{{ i }}"
+                           value="{{ i }}"
+                           {% if existing_answers|get_item:question.id == i %}checked{% endif %}>
+                    <span class="exam-option-circle">{{ i }}</span>
+                    <span>{{ opt }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <div style="height:4rem;"></div>
+
+        <!-- Fixed bottom nav -->
+        <div class="exam-nav-footer">
+            <div class="exam-answered-info">
+                <strong id="examAnsweredCount">0</strong> / {{ questions|length }} answered
+            </div>
+            <div>
+                {% if is_last_section %}
+                <button type="button" class="btn" id="submitBtn"> Submit Exam</button>
+                {% else %}
+                <button type="button" class="btn" id="nextBtn">Next Section →</button>
+                {% endif %}
+            </div>
+        </div>
+    </form>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'sxcmodel/js/modal.js' %}"></script>
+<script>
+(function () {
+    'use strict';
+
+    var SESSION_KEY   = '{{ session_key }}';
+    var MAX_TIME      = {{ max_time }};
+    var IS_LAST       = {{ is_last_section|yesno:"true,false" }};
+    var PAGE_LOAD_TS  = Date.now();
+    var INIT_REMAIN   = {{ time_remaining }};
+
+    var timerEl    = document.getElementById('examTimer');
+    var fillEl     = document.getElementById('examTimerFill');
+    var timeTaken  = document.getElementById('examTimeTaken');
+    var saveDot    = document.getElementById('examSaveDot');
+    var saveText   = document.getElementById('examSaveText');
+    var answeredEl = document.getElementById('examAnsweredCount');
+
+    /* ── Helpers ── */
+    function fmt(s) {
+        s = Math.max(0, s);
+        return String(Math.floor(s / 60)).padStart(2,'0') + ':' + String(s % 60).padStart(2,'0');
+    }
+
+    function getRemaining() {
+        return INIT_REMAIN - Math.floor((Date.now() - PAGE_LOAD_TS) / 1000);
+    }
+
+    /* ── Wall-clock timer ──
+       Remaining time is derived from Date.now(), not tick-counting,
+       so it stays accurate even when the tab is backgrounded/throttled. */
+    function updateTimer() {
+        var remaining = getRemaining();
+        timeTaken.value = Math.max(0, MAX_TIME - remaining);
+
+        if (remaining <= 0) {
+            clearInterval(timerInterval);
+            timerEl.textContent = '00:00';
+            fillEl.style.width  = '0%';
+            autoSubmit();
+            return;
+        }
+
+        timerEl.textContent = fmt(remaining);
+        fillEl.style.width  = (remaining / MAX_TIME * 100) + '%';
+
+        if (remaining <= 300) {
+            timerEl.className       = 'exam-timer-display danger';
+            fillEl.style.background = '#dc2626';
+        } else if (remaining <= 600) {
+            timerEl.className       = 'exam-timer-display warning';
+            fillEl.style.background = '#d97706';
+        } else {
+            timerEl.className       = 'exam-timer-display';
+            fillEl.style.background = '';
+        }
+    }
+
+    updateTimer();
+    var timerInterval = setInterval(updateTimer, 1000);
+
+    /* Snap back to correct time immediately when user returns to tab */
+    document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) updateTimer();
+    });
+
+    /* ── Answered counter ── */
+    function countAnswered() {
+        var names = new Set(
+            [].slice.call(document.querySelectorAll('input[type="radio"]:checked')).map(function(r){ return r.name; })
+        );
+        answeredEl.textContent = names.size;
+    }
+
+    document.querySelectorAll('input[type="radio"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            document.querySelectorAll('input[name="' + this.name + '"]').forEach(function (r) {
+                r.closest('label').classList.remove('selected');
+            });
+            this.closest('label').classList.add('selected');
+            countAnswered();
+        });
+    });
+    countAnswered();
+
+    /* ── Auto-save ── */
+    function collectAnswers() {
+        var data = {};
+        document.querySelectorAll('input[type="radio"]:checked').forEach(function (r) {
+            data[r.name.replace('answer_', '')] = parseInt(r.value);
+        });
+        return data;
+    }
+
+    function getCookie(name) {
+        var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : '';
+    }
+
+
+    function autoSave() {
+        saveDot.className    = 'exam-save-dot saving';
+        saveText.textContent = 'Saving…';
+        fetch('/sxcmodel/exam/' + SESSION_KEY + '/save/', {
+            method:  'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken':  getCookie('csrftoken'),  // ← from cookie, works even after token rotation
+            },
+            body: JSON.stringify({
+                answers: collectAnswers(),
+                elapsed: MAX_TIME - getRemaining()
+            }),
+        }).then(function (res) {
+            saveDot.className    = 'exam-save-dot';
+            saveText.textContent = res.ok ? 'Saved' : 'Error';
+        }).catch(function () {
+            saveDot.className        = 'exam-save-dot';
+            saveDot.style.background = '#dc2626';
+            saveText.textContent     = 'Save failed';
+        });
+    }
+
+    setInterval(autoSave, 30000);
+    autoSave();
+
+    /* ── Auto-submit on time-up ── */
+    function autoSubmit() {
+        timeTaken.value = MAX_TIME;
+        removeLeaveWarning();
+        document.getElementById('examForm').submit();
+    }
+
+    /* ── Save remaining time synchronously on tab close/refresh ──
+       sendBeacon survives page unload unlike fetch()              */
+    function saveOnLeave() {
+        var payload = JSON.stringify({
+            answers: collectAnswers(),
+            elapsed: MAX_TIME - getRemaining()
+        });
+        navigator.sendBeacon(
+            '/sxcmodel/exam/' + SESSION_KEY + '/save/',
+            new Blob([payload], { type: 'application/json' })
+        );
+    }
+
+    function warnLeave(e) {
+        saveOnLeave();      // fire-and-forget, no await needed
+        e.preventDefault();
+        e.returnValue = '';
+    }
+
+    function removeLeaveWarning() {
+        window.removeEventListener('beforeunload', warnLeave);
+    }
+
+    window.addEventListener('beforeunload', warnLeave);
+    document.getElementById('examForm').addEventListener('submit', removeLeaveWarning);
+
+
+    /* ── Modal wiring ── */
+    function doSubmit() {
+        removeLeaveWarning();
+        document.getElementById('examForm').submit();
+    }
+
+    if (IS_LAST) {
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            QuizModal.open('submitModal');
+        });
+        document.getElementById('submitCancel').addEventListener('click', function () {
+            QuizModal.close('submitModal');
+        });
+        document.getElementById('submitConfirm').addEventListener('click', doSubmit);
+    } else {
+        document.getElementById('nextBtn').addEventListener('click', function () {
+            QuizModal.open('nextModal');
+        });
+        document.getElementById('nextCancel').addEventListener('click', function () {
+            QuizModal.close('nextModal');
+        });
+        document.getElementById('nextConfirm').addEventListener('click', doSubmit);
+    }
+
+})();
+</script>
+{% endblock %}
