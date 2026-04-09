@@ -4,35 +4,35 @@ FONTS
 ===========
 */
 @font-face {
-  font-family: 'Catamaran';
+  font-family: "Catamaran";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../vendor/fonts/catamaran-400.woff2') format('woff2');
+  src: url("../vendor/fonts/catamaran-400.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Catamaran';
+  font-family: "Catamaran";
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../vendor/fonts/catamaran-700.woff2') format('woff2');
+  src: url("../vendor/fonts/catamaran-700.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Grand Hotel';
+  font-family: "Grand Hotel";
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../vendor/fonts/grand-hotel-400.woff2') format('woff2');
+  src: url("../vendor/fonts/grand-hotel-400.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: 'Nunito';
+  font-family: "Nunito";
   font-style: normal;
   font-weight: 400 800;
   font-display: swap;
-  src: url('../vendor/fonts/nunito.woff2') format('woff2');
+  src: url("../vendor/fonts/nunito.woff2") format("woff2");
 }
 
 /*
@@ -41,17 +41,17 @@ VARIABLES
 ===========
 */
 :root {
-  --clr-primary:       #01257D;
+  --clr-primary: #01257d;
   --clr-primary-light: #56e8dc;
-  --clr-grey-1:        #01257D;
-  --clr-grey-5:        #01257D;
-  --clr-grey-10:       #ADD8E6;
-  --clr-white:         #fff;
-  --ff-primary:        'Plus Jakarta Sans', sans-serif;
-  --ff-secondary:      "Grand Hotel", cursive;
-  --transition:        all 0.3s linear;
-  --spacing:           0.25rem;
-  --radius:            0.5rem;
+  --clr-grey-1: #01257d;
+  --clr-grey-5: #01257d;
+  --clr-grey-10: #add8e6;
+  --clr-white: #fff;
+  --ff-primary: "Plus Jakarta Sans", sans-serif;
+  --ff-secondary: "Grand Hotel", cursive;
+  --transition: all 0.3s linear;
+  --spacing: 0.25rem;
+  --radius: 0.5rem;
 }
 
 /*
@@ -92,22 +92,45 @@ h4 {
   margin-bottom: 0.75rem;
 }
 
-h1 { font-size: 3rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.5rem; }
-h4 { font-size: 0.875rem; }
+h1 {
+  font-size: 3rem;
+}
+h2 {
+  font-size: 2rem;
+}
+h3 {
+  font-size: 1.5rem;
+}
+h4 {
+  font-size: 0.875rem;
+}
 
 p {
   margin-bottom: 1.25rem;
 }
 
 @media screen and (min-width: 800px) {
-  h1 { font-size: 4rem; }
-  h2 { font-size: 2.5rem; }
-  h3 { font-size: 2rem; }
-  h4 { font-size: 1rem; }
-  body { font-size: 1rem; }
-  h1, h2, h3, h4 { line-height: 1; }
+  h1 {
+    font-size: 4rem;
+  }
+  h2 {
+    font-size: 2.5rem;
+  }
+  h3 {
+    font-size: 2rem;
+  }
+  h4 {
+    font-size: 1rem;
+  }
+  body {
+    font-size: 1rem;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1;
+  }
 }
 
 /*
@@ -328,23 +351,31 @@ Shared base for about, buy, updates, tos
   overflow: hidden;
   background:
     linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
-    linear-gradient(135deg, #01257D 0%, #0a3fa8 60%, #56e8dc 100%);
+    linear-gradient(135deg, #01257d 0%, #0a3fa8 60%, #56e8dc 100%);
 }
 
 /* Radial overlay — identical across all heroes */
 .page-hero::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 15% 90%, rgba(86, 232, 220, 0.15) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 60% at 85% 10%, rgba(1, 37, 125, 0.25) 0%, transparent 55%);
+    radial-gradient(
+      ellipse 70% 50% at 15% 90%,
+      rgba(86, 232, 220, 0.15) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 50% 60% at 85% 10%,
+      rgba(1, 37, 125, 0.25) 0%,
+      transparent 55%
+    );
   pointer-events: none;
 }
 
 /* Spinning dashed ring — about, buy, updates */
 .page-hero::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 360px;
   height: 360px;
@@ -356,10 +387,23 @@ Shared base for about, buy, updates, tos
 }
 
 /* Per-page size and padding modifiers */
-.page-hero--about   { min-height: 60vh; padding: 5rem 1.5rem 4rem; }
-.page-hero--buy     { min-height: 55vh; padding: 6rem 1.5rem 4rem; }
-.page-hero--updates { min-height: 48vh; padding: 5rem 1.5rem 4rem; }
-.page-hero--tos     { min-height: 38vh; padding: 3rem 1.5rem 2.5rem; flex-direction: column; }
+.page-hero--about {
+  min-height: 60vh;
+  padding: 5rem 1.5rem 4rem;
+}
+.page-hero--buy {
+  min-height: 55vh;
+  padding: 6rem 1.5rem 4rem;
+}
+.page-hero--updates {
+  min-height: 48vh;
+  padding: 5rem 1.5rem 4rem;
+}
+.page-hero--tos {
+  min-height: 38vh;
+  padding: 3rem 1.5rem 2.5rem;
+  flex-direction: column;
+}
 
 /* tos has no spinning ring */
 .page-hero--tos::after {
@@ -407,7 +451,9 @@ SCROLL REVEAL
 .reveal {
   opacity: 0;
   transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
 
 .reveal.visible {
@@ -662,6 +708,8 @@ HOME PAGE HEADER
 ===========
 */
 .header {
+  background: var(--main-bg) no-repeat center center/cover;
+  background-color: #1a1a2e;
   padding-top: 64px;
   min-height: 100vh;
   position: relative;
@@ -670,7 +718,7 @@ HOME PAGE HEADER
 
 @media screen and (max-width: 768px) {
   .header {
-    background-attachment: scroll;
+    background-attachment: scroll !important;
   }
 }
 
@@ -1291,14 +1339,17 @@ TOAST
   padding: 10px 16px !important;
   border-radius: 6px !important;
   font-size: 13px !important;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
   font-weight: 500 !important;
   line-height: 1.4 !important;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15) !important;
   pointer-events: auto !important;
   opacity: 0 !important;
   transform: translateX(20px) !important;
-  animation: toastIn 0.3s ease forwards, toastOut 0.4s ease forwards 3.5s !important;
+  animation:
+    toastIn 0.3s ease forwards,
+    toastOut 0.4s ease forwards 3.5s !important;
   box-sizing: border-box !important;
   white-space: normal !important;
   text-decoration: none !important;
