@@ -2,13 +2,13 @@ services:
   web:
     build:
       context: .
-      dockerfile: core/Dockerfile
+      dockerfile: ace-the-entrance/Dockerfile
     volumes:
       - .:/app
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - ./ace-the-entrance/.env
     environment:
       - DB_HOST=db
       - DB_PORT=5432
@@ -22,7 +22,7 @@ services:
   db:
     image: postgres:16
     env_file:
-      - ./core/.env
+      - ./ace-the-entrance/.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

@@ -6,11 +6,11 @@ __pycache__/
 *.pyd
 
 # Django
-core/logs/*
-core/media/discussion/replies/*
-core/media/discussion/threads/*
-core/media/sxcmodelset/*
-core/media/updates/*
+ace-the-entrance/logs/*
+ace-the-entrance/media/discussion/replies/*
+ace-the-entrance/media/discussion/threads/*
+ace-the-entrance/media/sxcmodelset/*
+ace-the-entrance/media/updates/*
 
 # IDE
 .idea/
@@ -20,4 +20,4 @@ core/media/updates/*
 .gitignore
 
 # Environment
-core/.env
+ace-the-entrance/.env
