@@ -9,7 +9,7 @@
  *  2. loadQuestions()   → fetches silently in the background
  *  3. Questions ready   → enable Start button, fill question count
  *  4. startQuiz()       → hide splash, show quiz card
- *  5. submitQuiz()      → hide quiz, show results
+ *  5. submitQuiz()      → hide quiz, show results, silently POST score
  *  6. restartQuiz()     → hide results, show splash
  */
 
@@ -33,12 +33,9 @@ function hideEl(id) {
    INIT — set initial state immediately
 ════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-    /* Force-hide everything except splash via inline style */
     hideEl('loading');
     hideEl('quiz-content');
     hideEl('results');
-
-    /* Splash is already visible in HTML — no need to show it */
     loadQuestions();
 });
 
@@ -50,15 +47,15 @@ async function loadQuestions() {
         const response = await fetch(window.QUIZ_API_URL);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-        const data   = await response.json();
+        const data = await response.json();
 
         if (data.weekend === true) {
             questionsReady = false;
 
             const indicator = document.getElementById('fetch-indicator');
             if (indicator) {
-            indicator.innerHTML =
-                '<span style="color:#008000;font-size:.85rem"> &#x1F6CF; Its saturday — take a rest! Fresh questions return on Sunday. </span>';
+                indicator.innerHTML =
+                    '<span style="color:#008000;font-size:.85rem"> &#x1F6CF; Its saturday — take a rest! Fresh questions return on Sunday. </span>';
             } else {
                 console.warn("Cannot show weekend message: #fetch-indicator element not found");
             }
@@ -66,18 +63,16 @@ async function loadQuestions() {
             const startBtn = document.getElementById('start-btn');
             if (startBtn) startBtn.disabled = true;
 
-            return; // ← stop processing
+            return;
         }
 
-        questions    = data.questions;
-        userAnswers  = new Array(questions.length).fill(null);
+        questions      = data.questions;
+        userAnswers    = new Array(questions.length).fill(null);
         questionsReady = true;
 
-        /* Update splash stats */
         const splashTotal = document.getElementById('splash-total');
         if (splashTotal) splashTotal.textContent = questions.length;
 
-        /* Hide fetch dots, unlock Start button */
         hideEl('fetch-indicator');
         const startBtn = document.getElementById('start-btn');
         if (startBtn) startBtn.disabled = false;
@@ -100,7 +95,6 @@ function startQuiz() {
 
     const splash = document.getElementById('splash');
 
-    /* Animate splash out */
     splash.style.transition = 'opacity .28s ease, transform .28s ease';
     splash.style.opacity    = '0';
     splash.style.transform  = 'translateY(-14px) scale(.98)';
@@ -113,7 +107,6 @@ function startQuiz() {
 
         document.getElementById('total-questions').textContent = questions.length;
 
-        /* Show quiz card */
         showEl('quiz-content', 'block');
         displayQuestion();
     }, 280);
@@ -122,17 +115,10 @@ function startQuiz() {
 /* ════════════════════════════════════════
    QUIZ DISPLAY
 ════════════════════════════════════════ */
-
-/**
- * Safely format text: escape HTML first, then apply chemistry formatting.
- * Order matters — escape before injecting <sub> tags.
- */
 function safeFormat(str) {
-    /* ── Step 1: Extract and protect LaTeX regions ── */
     const latexChunks = [];
     const placeholder = '\x00LATEX\x00';
 
-    // Protect $$…$$ first (display math), then $…$ (inline math)
     let result = str
         .replace(/\$\$([\s\S]+?)\$\$/g, (match) => {
             latexChunks.push(match);
@@ -143,13 +129,9 @@ function safeFormat(str) {
             return placeholder + (latexChunks.length - 1) + '\x00';
         });
 
-    /* ── Step 2: Escape HTML in the non-LaTeX parts only ── */
     result = escapeHtml(result);
-
-    /* ── Step 3: Apply subscript formatting to non-LaTeX text ── */
     result = result.replace(/_\{?(\w+)\}?/g, '<sub>$1</sub>');
 
-    /* ── Step 4: Restore LaTeX chunks completely unescaped ── */
     latexChunks.forEach((chunk, i) => {
         result = result.replace(placeholder + i + '\x00', chunk);
     });
@@ -235,17 +217,15 @@ function submitQuiz() {
     const unanswered = userAnswers.filter(a => a === null).length;
 
     if (unanswered > 0 && !document.getElementById('submit-warning')) {
-        // Show an inline warning instead of confirm() which can be blocked
-        const footer = document.querySelector('.quiz-footer');
+        const footer  = document.querySelector('.quiz-footer');
         const warning = document.createElement('p');
         warning.id = 'submit-warning';
         warning.style.cssText = 'color:#b91c1c;font-size:.82rem;margin:0.5rem 0 0;text-align:center;';
         warning.textContent = `${unanswered} question(s) unanswered. Click Finish again to submit anyway.`;
         footer.insertAdjacentElement('afterbegin', warning);
-        return; // First click just warns
+        return;
     }
 
-    // Second click (or no unanswered) — actually submit
     const warning = document.getElementById('submit-warning');
     if (warning) warning.remove();
 
@@ -260,6 +240,9 @@ function submitQuiz() {
     });
 
     showResults();
+
+    // ── Silently save score for logged-in users (no-op for anonymous) ──
+    saveScore(score, questions.length);
 }
 
 function showResults() {
@@ -284,6 +267,42 @@ function getPerformanceMessage(pct) {
 }
 
 /* ════════════════════════════════════════
+  SCORE SAVING (logged-in users only)
+════════════════════════════════════════ */
+
+/**
+ * Fire-and-forget POST to the Django submit endpoint.
+ *
+ * • Logged-in users  → server upserts a QuizAttempt row, returns {saved: true}
+ * • Anonymous users  → server returns {saved: false}, nothing is stored
+ *
+ * The results screen is already visible before this runs.
+ * Errors are swallowed silently — the user experience is never affected.
+ */
+async function saveScore(score, total) {
+    if (!window.QUIZ_SUBMIT_URL) return;
+
+    try {
+        const response = await fetch(window.QUIZ_SUBMIT_URL, {
+            method:  'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken':  window.QUIZ_CSRF_TOKEN || getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ score, total }),
+        });
+
+        const data = await response.json();
+
+        if (data.saved) {
+            console.info(`[DailyQuiz] Score saved: ${data.score}/${data.total} on ${data.date}`);
+        }
+    } catch (err) {
+        console.warn('[DailyQuiz] Score could not be saved:', err.message);
+    }
+}
+
+/* ════════════════════════════════════════
    RESTART → back to splash
 ════════════════════════════════════════ */
 function restartQuiz() {
@@ -301,6 +320,16 @@ function restartQuiz() {
 function escapeHtml(text) {
     const map = { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' };
     return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+/**
+ * Read a cookie by name — used to retrieve Django's csrftoken.
+ */
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return '';
 }
 
 /* ════════════════════════════════════════

@@ -1,7 +1,6 @@
 from django.utils import timezone
 from django.db import models
-
-# Create your models here.
+from django.conf import settings
 
 class Subject(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -33,3 +32,25 @@ class Choice(models.Model):
 class DailyQuiz(models.Model):
     date = models.DateField(unique=True, default=timezone.now)
     questions = models.ManyToManyField(Question)
+
+class QuizAttempt(models.Model):
+    """
+    Records one quiz sitting for an authenticated user.
+    Anonymous users are silently skipped — nothing is stored.
+    """
+    user = models.ForeignKey(
+                    settings.AUTH_USER_MODEL,
+                    on_delete=models.CASCADE,
+                    related_name='daily_quiz_attempts',
+                )
+    date       = models.DateField()          
+    score      = models.PositiveIntegerField()   
+    total      = models.PositiveIntegerField()   
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'date')
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"{self.user} | {self.date} | {self.score}/{self.total}"
