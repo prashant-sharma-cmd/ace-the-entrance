@@ -287,7 +287,7 @@ async function saveScore(score, total) {
             method:  'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken':  getCookie('csrftoken'),
+                'X-CSRFToken':  window.QUIZ_CSRF_TOKEN || getCookie('csrftoken'),
             },
             body: JSON.stringify({ score, total }),
         });

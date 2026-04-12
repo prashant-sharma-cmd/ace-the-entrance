@@ -147,7 +147,8 @@
 {% block extra_js %}
 <script>
   window.QUIZ_API_URL    = "{% url 'daily:get_questions' %}";
-  window.QUIZ_SUBMIT_URL = "{% url 'daily:submit_score' %}";  
+  window.QUIZ_SUBMIT_URL = "{% url 'daily:submit_score' %}";
+  window.QUIZ_CSRF_TOKEN = "{{ csrf_token }}";
 </script>
 
 <script src="{% static 'daily/js/app.js' %}"></script>
