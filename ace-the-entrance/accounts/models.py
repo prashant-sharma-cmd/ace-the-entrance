@@ -25,7 +25,12 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
+    
+    def save(self, *args, **kwargs):
+        # Ensure empty phone numbers are stored as NULL
+        if not self.phone_number:
+            self.phone_number = None
+        super().save(*args, **kwargs)
 
 class UserOnboarding(models.Model):
     PURPOSE_CHOICES = [
