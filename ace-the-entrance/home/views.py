@@ -140,4 +140,4 @@ def redirect_to_daraz(request):
     return redirect('https://www.daraz.com.np/products/ace-the-entrance-2-entrance-guide-2082-edition-blue-book-by-alumni-of-st-xaviers-college-i312612823.html')
 
 def redirect_to_whatsapp(request):
-    return redirect('https://wa.me/85270396856')
+    return redirect('https://wa.me/9779812680515')
